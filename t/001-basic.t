@@ -34,10 +34,6 @@ my $r = My::Resource->new(
         SERVER_NAME       => 'example.com',
         SCRIPT_NAME       => '/foo',
         REMOTE_ADDR       => '127.0.0.1',
-        'psgi.version'    => [ 1, 0 ],
-        'psgi.input'      => undef,
-        'psgi.errors'     => undef,
-        'psgi.url_scheme' => 'http',
     }),
     response => Plack::Response->new
 );

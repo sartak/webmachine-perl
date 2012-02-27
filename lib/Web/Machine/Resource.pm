@@ -15,6 +15,8 @@ has 'response' => (
     required => 1
 );
 
+has 'language' => ( is => 'rw', isa => 'Str' );
+
 sub resource_exists           { true  }
 sub service_available         { true  }
 sub is_authorized             { true  }
@@ -37,7 +39,7 @@ sub content_types_provided    { [ [ 'text/html' => 'to_html' ] ] }
 sub content_types_accepted    { [] }
 sub charsets_provided         { undef }
 sub languages_provided        { [] }
-sub language_chosen           { 'en_US' }
+sub language_chosen           { (shift)->language( shift ) }
 sub encodings_provided        { [ { 'identity' => sub { shift } } ] }
 sub variances                 { [] }
 sub is_conflict               { false }
