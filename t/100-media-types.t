@@ -77,4 +77,17 @@ boundary=----------------------------2c46a7bec2b9]);
     is($multiline->to_string, 'multipart/form-data;boundary=----------------------------2c46a7bec2b9', '... the string representation');
 }
 
+{
+    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json;v=3;foo=bar');
+
+    is($mt->type, 'application/json', '... got the right type');
+    is_deeply(
+        $mt->params,
+        { v => 3, foo => 'bar' },
+        '... got the right params'
+    );
+}
+
 done_testing;
+
+
