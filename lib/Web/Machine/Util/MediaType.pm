@@ -35,6 +35,11 @@ sub new_from_string {
 sub major { (split '/' => (shift)->type)[0] }
 sub minor { (split '/' => (shift)->type)[1] }
 
+sub to_string {
+    my $self = shift;
+    join ';' => $self->type, map { join '=' => $_, $self->params->{ $_ } } keys %{ $self->params };
+}
+
 sub matches_all {
     my $self = shift;
     $self->type eq '*/*' && $self->params_are_empty

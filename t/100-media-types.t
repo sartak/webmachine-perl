@@ -25,11 +25,14 @@ BEGIN {
     is($parsed_media_type->major, 'application', '... got the right major portion');
     is($parsed_media_type->minor, 'xml', '... got the right minor portion');
 
+    is($parsed_media_type->to_string, 'application/xml;charset=UTF-8', '... the string representation');
+
     my $media_type = Web::Machine::Util::MediaType->new(
         type   => 'application/xml',
         params => { 'charset' => 'UTF-8' }
     );
     isa_ok($media_type, 'Web::Machine::Util::MediaType');
+    is($media_type->to_string, 'application/xml;charset=UTF-8', '... the string representation');
 
     ok($parsed_media_type->equals( $media_type ), '... these types are equal');
     ok($parsed_media_type->equals('application/xml;charset=UTF-8'), '... these types are equal');
@@ -55,19 +58,23 @@ BEGIN {
         '... got the right params'
     );
 
+    is($matches_all->to_string, '*/*', '... the string representation');
+
     ok($matches_all->matches_all, '... this type does match all');
 }
 
 {
-    my $matches_all = Web::Machine::Util::MediaType->parse(q[multipart/form-data;
+    my $multiline = Web::Machine::Util::MediaType->new_from_string(q[multipart/form-data;
 boundary=----------------------------2c46a7bec2b9]);
 
-    is($matches_all->type, 'multipart/form-data', '... got the right type');
+    is($multiline->type, 'multipart/form-data', '... got the right type');
     is_deeply(
-        $matches_all->params,
+        $multiline->params,
         { 'boundary' => '----------------------------2c46a7bec2b9' },
         '... got the right params'
     );
+
+    is($multiline->to_string, 'multipart/form-data;boundary=----------------------------2c46a7bec2b9', '... the string representation');
 }
 
 done_testing;
