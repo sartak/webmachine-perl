@@ -13,6 +13,15 @@ has 'items' => (
     default => sub { +{} },
 );
 
+sub new_from_header_list {
+    my ($class, @header_list) = @_;
+    my $list = $class->new;
+    foreach my $header ( @header_list ) {
+        $list->add_header_value( $header );
+    }
+    $list;
+}
+
 sub add {
     my ($self, $q, $choice) = @_;
     $self->index->{ $choice } = $q;
