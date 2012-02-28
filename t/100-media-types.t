@@ -12,7 +12,7 @@ BEGIN {
 }
 
 {
-    my $parsed_media_type = Web::Machine::Util::MediaType->parse('application/xml;charset=UTF-8');
+    my $parsed_media_type = Web::Machine::Util::MediaType->new_from_string('application/xml;charset=UTF-8');
     isa_ok($parsed_media_type, 'Web::Machine::Util::MediaType');
 
     is($parsed_media_type->type, 'application/xml', '... got the right type');
@@ -46,7 +46,7 @@ BEGIN {
 }
 
 {
-    my $matches_all = Web::Machine::Util::MediaType->parse('*/*');
+    my $matches_all = Web::Machine::Util::MediaType->new_from_string('*/*');
 
     is($matches_all->type, '*/*', '... got the right type');
     is_deeply(

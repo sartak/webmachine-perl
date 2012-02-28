@@ -22,14 +22,14 @@ has 'params' => (
     }
 );
 
-sub parse {
+sub new_from_string {
     my ($class, $media_type) = @_;
     if ( $media_type =~ /$MEDIA_TYPE_REGEX/ ) {
         my ($type, $raw_params) = ($1, $2);
         my %params = ($raw_params =~ /$PARAMS_REGEX/);
         return $class->new( type => $type, params => \%params );
     }
-    confess "Unable to parse media type $media_type"
+    confess "Unable to parse media type from '$media_type'"
 }
 
 sub major { (split '/' => (shift)->type)[0] }
@@ -44,7 +44,7 @@ sub matches_all {
 # must be exactly the same
 sub equals {
     my ($self, $other) = @_;
-    $other = (ref $self)->parse( $other ) unless blessed $other;
+    $other = (ref $self)->new_from_string( $other ) unless blessed $other;
     $other->type eq $self->type && _compare_params( $self->params, $other->params )
         ? 1 : 0;
 }
@@ -52,7 +52,7 @@ sub equals {
 # types must be compatible and params much match exactly
 sub exact_match {
     my ($self, $other) = @_;
-    $other = (ref $self)->parse( $other ) unless blessed $other;
+    $other = (ref $self)->new_from_string( $other ) unless blessed $other;
     $self->type_matches( $other ) && _compare_params( $self->params, $other->params )
         ? 1 : 0;
 }
@@ -60,7 +60,7 @@ sub exact_match {
 # types must be be compatible and params should align
 sub match {
     my ($self, $other) = @_;
-    $other = (ref $self)->parse( $other ) unless blessed $other;
+    $other = (ref $self)->new_from_string( $other ) unless blessed $other;
     $self->type_matches( $other ) && $self->params_match( $other->params )
         ? 1 : 0;
 }
