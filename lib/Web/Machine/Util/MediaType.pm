@@ -83,7 +83,9 @@ sub params_match {
     my ($self, $other) = @_;
     my $params = $self->params;
     foreach my $k ( keys %$other ) {
-        return 0 unless exists $params->{ $k } && $params->{ $k } eq $other->{ $k };
+        if ( exists $params->{ $k } ) {
+            return 0 unless $params->{ $k } eq $other->{ $k };
+        }
     }
     return 1;
 }
