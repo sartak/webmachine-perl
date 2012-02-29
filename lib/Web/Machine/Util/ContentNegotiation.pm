@@ -36,6 +36,45 @@ sub choose_media_type {
     ($chosen || return)->to_string;
 }
 
+# sub choose_encoding {
+#     my ($provided, $header) = @_;
+#     do_choose( [ keys %$provided ], $header, 'identity' );
+# }
+#
+# sub choose_charset {
+#     my ($provided, $header) = @_;
+#     if ( @$provided ) {
+#         my $charsets = map {  } @$provided;
+#     }
+# }
+#
+# sub do_choose {
+#     my ($choices, $header, $default) = @_;
+#
+#     $choices = map { lc $_ } $choices;
+#
+#     my $accepted         = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*, \s/ => $header );
+#     my $default_priority = $accepted->priority_of( $default );
+#     my $star_priority    = $accepted->priority_of( '*' );
+#     my $default_ok       = ( defined $default_priority && $star_priority != 0.0 ) || $default_priority;
+#     my $any_ok           = $star_priority && $star_priority > 0.0;
+#
+#     my $chosen = find {
+#         my ($priority, $acceptable) = @$_;
+#         if ( $priority == 0.0 ) {
+#             $choices = grep { lc $acceptable ne $_ } @$choices;
+#             false;
+#         } else {
+#             first { lc $acceptable eq $_ } @$choices
+#         }
+#     } $accepted->iterable;
+#
+#     ($chosen)
+#         ||
+#     ($any_ok && $choices->[0])
+#         ||
+#     ($default_ok && (first { $default eq $_ } @$choices) && $default)
+# }
 
 sub media_match {
     my ($requested, $provided) = @_;
