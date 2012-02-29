@@ -32,13 +32,6 @@ sub new_from_string {
     confess "Unable to parse media type from '$media_type'"
 }
 
-sub BUILD {
-    my $self = shift;
-    my %params;
-    tie %params, 'Tie::IxHash', %{ $self->params };
-    $self->_set_params( \%params );
-}
-
 sub major { (split '/' => (shift)->type)[0] }
 sub minor { (split '/' => (shift)->type)[1] }
 
