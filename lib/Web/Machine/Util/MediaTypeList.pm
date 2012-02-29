@@ -39,13 +39,16 @@ sub iterable {
                             : ($a->[1]->params_are_empty
                                 ? 1
                                 : ($b->[1]->params_are_empty
-                                    ? - 1
+                                    ? -1
                                     : 0)))))
         }
         else {
             $b->[0] <=> $a->[0]
         }
-    } $self->SUPER::iterable;
+    } map {
+        my $q = $_;
+        map { [ $q+0, $_ ] } reverse @{ $self->items->{ $q } }
+    } keys %{ $self->items };
 }
 
 1;
