@@ -25,6 +25,13 @@ sub new_from_string {
     my ($class, $media_type) = @_;
     if ( $media_type =~ /^\s*([^;\s]+)\s*((?:;\s*\S+\s*)*)\s*$/ ) {
         my ($type, $raw_params) = ($1, $2);
+        # NOTE:
+        # if the media type comes in as a
+        # string, we want to be able to
+        # round-trip it, so we need to
+        # make sure the hash retains its
+        # ordering.
+        # - SL
         my %params;
         tie %params, 'Tie::IxHash', ($raw_params =~ /;\s*([^=]+)=([^;=\s]+)/g);
         return $class->new( type => $type, params => \%params );
@@ -45,6 +52,8 @@ sub matches_all {
     $self->type eq '*/*' && $self->params_are_empty
         ? 1 : 0;
 }
+
+## ...
 
 # must be exactly the same
 sub equals {
