@@ -1,16 +1,18 @@
 package Web::Machine::FSM;
-use Moose;
 
-use Sub::Identify qw[ sub_name ];
+use strict;
+use warnings;
+
 use Try::Tiny;
-use HTTP::Date qw[ str2time ];
+use Sub::Identify qw[ sub_name ];
+
 use Web::Machine::FSM::States qw[
     start_state
     is_status_code
     is_new_state
 ];
 
-use Web::Machine::Util;
+sub new { bless {} => shift }
 
 sub run {
     my ( $self, $resource ) = @_;
@@ -50,10 +52,6 @@ sub run {
     $response;
 }
 
-
-__PACKAGE__->meta->make_immutable;
-
-no Moose; 1;
 1;
 
 __END__

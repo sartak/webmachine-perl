@@ -1,21 +1,28 @@
 package Web::Machine::Resource;
-use Moose::Role;
+
+use strict;
+use warnings;
+
+use Scalar::Util qw[ blessed ];
+use Carp         qw[ confess ];
 
 use Web::Machine::Util;
 
-has 'request' => (
-    is       => 'ro',
-    isa      => 'Plack::Request',
-    required => 1
-);
+sub new {
+    my $class  = shift;
+    my %args = ref $_[0] ? %{ $_[0] } : @_;
 
-has 'response' => (
-    is       => 'ro',
-    isa      => 'Plack::Response',
-    required => 1
-);
+    (exists $args{'request'} && blessed $args{'request'} && $args{'request'}->isa('Plack::Request'))
+        || confess "The 'request' parameter is required and must be a Plack::Request";
 
-has 'language' => ( is => 'rw', isa => 'Str' );
+    (exists $args{'response'} && blessed $args{'response'} && $args{'response'}->isa('Plack::Response'))
+        || confess "The 'response' parameter is required and must be a Plack::Response";
+
+    bless { %args } => $class;
+}
+
+sub request  { (shift)->{'request'}  }
+sub response { (shift)->{'response'} }
 
 sub resource_exists           { true  }
 sub service_available         { true  }
@@ -39,7 +46,7 @@ sub content_types_provided    { [ [ 'text/html' => 'to_html' ] ] }
 sub content_types_accepted    { [] }
 sub charsets_provided         { undef }
 sub languages_provided        { [] }
-sub language_chosen           { (shift)->language( shift ) }
+sub language_chosen           { (shift)->{'language'} = shift }
 sub encodings_provided        { [ { 'identity' => sub { shift } } ] }
 sub variances                 { [] }
 sub is_conflict               { false }
@@ -52,9 +59,11 @@ sub expires                   { undef }
 sub generate_etag             { undef }
 sub finish_request            {}
 
-requires 'to_html';
+sub to_html {
+    q[<html></html>]
+}
 
-no Moose::Role; 1;
+1;
 
 __END__
 

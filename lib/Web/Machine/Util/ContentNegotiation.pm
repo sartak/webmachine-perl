@@ -3,24 +3,17 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
-our $VERSION   = '0.01';
-our $AUTHORITY = 'cpan:STEVAN';
-
 use List::AllUtils qw[ first ];
-use Sub::Exporter;
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::MediaTypeList;
 use Web::Machine::Util::PriorityList;
 
-my @exports = qw/
-    choose_media_type
-/;
-
-Sub::Exporter::setup_exporter({
-    exports => \@exports,
-    groups  => { default => \@exports }
-});
+use Sub::Exporter -setup => {
+    exports => [qw[
+        choose_media_type
+    ]]
+};
 
 sub choose_media_type {
     my ($provided, $header) = @_;

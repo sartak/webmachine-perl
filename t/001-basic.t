@@ -5,21 +5,23 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
-use Test::Moose;
 
 use Plack::Request;
 use Plack::Response;
 
 BEGIN {
-    use_ok('Web::Machine');
+    use_ok('Web::Machine::FSM');
 }
 
 {
     package My::Resource;
-    use Moose;
+
+    use strict;
+    use warnings;
+
     use Web::Machine::Util;
 
-    with 'Web::Machine::Resource';
+    use parent 'Web::Machine::Resource';
 
     sub to_html { '<html><body>Hello World</body></html>' }
 }
@@ -37,7 +39,7 @@ my $r = My::Resource->new(
     }),
     response => Plack::Response->new
 );
-does_ok($r, 'Web::Machine::Resource');
+isa_ok($r, 'Web::Machine::Resource');
 
 use Data::Dumper; warn Dumper $fsm->run( $r )->finalize;
 

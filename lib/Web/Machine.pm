@@ -3,9 +3,6 @@ package Web::Machine;
 use strict;
 use warnings;
 
-use Web::Machine::Resource;
-use Web::Machine::FSM;
-
 1;
 
 __END__
