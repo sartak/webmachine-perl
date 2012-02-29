@@ -1,6 +1,7 @@
 package Web::Machine::Util::MediaType;
 use Moose;
 
+use Tie::IxHash;
 use Syntax::Keyword::Junction qw[ any ];
 
 our $MEDIA_TYPE_REGEX = qr/^\s*([^;\s]+)\s*((?:;\s*\S+\s*)*)\s*$/;
@@ -15,6 +16,7 @@ has 'type' => (
 has 'params' => (
     traits   => [ 'Hash' ],
     is       => 'ro',
+    writer   => '_set_params',
     isa      => 'HashRef',
     required => 1,
     handles  => {
@@ -26,10 +28,18 @@ sub new_from_string {
     my ($class, $media_type) = @_;
     if ( $media_type =~ /$MEDIA_TYPE_REGEX/ ) {
         my ($type, $raw_params) = ($1, $2);
-        my %params = ($raw_params =~ /$PARAMS_REGEX/g);
+        my %params;
+        tie %params, 'Tie::IxHash', ($raw_params =~ /$PARAMS_REGEX/g);
         return $class->new( type => $type, params => \%params );
     }
     confess "Unable to parse media type from '$media_type'"
+}
+
+sub BUILD {
+    my $self = shift;
+    my %params;
+    tie %params, 'Tie::IxHash', %{ $self->params };
+    $self->_set_params( \%params );
 }
 
 sub major { (split '/' => (shift)->type)[0] }

@@ -77,6 +77,7 @@ boundary=----------------------------2c46a7bec2b9]);
     is($multiline->to_string, 'multipart/form-data;boundary=----------------------------2c46a7bec2b9', '... the string representation');
 }
 
+# test multiple params ...
 {
     my $mt = Web::Machine::Util::MediaType->new_from_string('application/json;v=3;foo=bar');
 
@@ -86,6 +87,22 @@ boundary=----------------------------2c46a7bec2b9]);
         { v => 3, foo => 'bar' },
         '... got the right params'
     );
+
+    is($mt->to_string, 'application/json;v=3;foo=bar', '... got the right string representation');
+}
+
+# test a lot of params ...
+{
+    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json;v=3;foo=bar;q=0.25;testing=123');
+
+    is($mt->type, 'application/json', '... got the right type');
+    is_deeply(
+        $mt->params,
+        { v => 3, foo => 'bar', q => 0.25, testing => 123 },
+        '... got the right params'
+    );
+
+    is($mt->to_string, 'application/json;v=3;foo=bar;q=0.25;testing=123', '... got the right string representation');
 }
 
 done_testing;
