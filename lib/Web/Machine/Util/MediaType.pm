@@ -4,9 +4,6 @@ use Moose;
 use Tie::IxHash;
 use Syntax::Keyword::Junction qw[ any ];
 
-our $MEDIA_TYPE_REGEX = qr/^\s*([^;\s]+)\s*((?:;\s*\S+\s*)*)\s*$/;
-our $PARAMS_REGEX     = qr/;\s*([^=]+)=([^;=\s]+)/;
-
 has 'type' => (
     is       => 'ro',
     isa      => 'Str',
@@ -26,10 +23,10 @@ has 'params' => (
 
 sub new_from_string {
     my ($class, $media_type) = @_;
-    if ( $media_type =~ /$MEDIA_TYPE_REGEX/ ) {
+    if ( $media_type =~ /^\s*([^;\s]+)\s*((?:;\s*\S+\s*)*)\s*$/ ) {
         my ($type, $raw_params) = ($1, $2);
         my %params;
-        tie %params, 'Tie::IxHash', ($raw_params =~ /$PARAMS_REGEX/g);
+        tie %params, 'Tie::IxHash', ($raw_params =~ /;\s*([^=]+)=([^;=\s]+)/g);
         return $class->new( type => $type, params => \%params );
     }
     confess "Unable to parse media type from '$media_type'"
