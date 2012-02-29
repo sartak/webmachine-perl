@@ -46,10 +46,11 @@ BEGIN {
     ok(!$parsed_media_type->exact_match('application/json;charset=UTF-8'), '... these types are not an exact match');
     ok(!$parsed_media_type->exact_match('application/xml;charset=Latin-1'), '... these types are not an exact match');
 
-    ok($parsed_media_type->match('application/xml;charset=UTF-8;version=1'), '... these types are a match');
-    ok($parsed_media_type->match('application/*;charset=UTF-8;version=1'), '... these types are a match');
-    ok($parsed_media_type->match('*/*;charset=UTF-8;version=1'), '... these types are a match');
+    ok($parsed_media_type->match('application/xml'), '... these types are a match');
 
+    ok(!$parsed_media_type->match('application/xml;charset=UTF-8;version=1'), '... these types are not a match');
+    ok(!$parsed_media_type->match('application/*;charset=UTF-8;version=1'), '... these types are not a match');
+    ok(!$parsed_media_type->match('*/*;charset=UTF-8;version=1'), '... these types are a match');
     ok(!$parsed_media_type->match('application/xml;charset=Latin-1;version=1'), '... these types are not a match');
     ok(!$parsed_media_type->match('application/json;charset=UTF-8;version=1'), '... these types are not a match');
 }
