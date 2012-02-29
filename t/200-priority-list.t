@@ -33,8 +33,8 @@ is($q->priority_of("application/xml"), 0.7, '... got the right priority for the 
 is_deeply(
     [ $q->iterable ],
     [
-        [ 3, 'baz' ],
         [ 3, 'foobaz' ],
+        [ 3, 'baz' ],
         [ 2.5, 'gorch' ],
         [ 2, 'bar' ],
         [ 1, 'foo' ],

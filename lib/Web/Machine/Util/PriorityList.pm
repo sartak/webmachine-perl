@@ -54,7 +54,7 @@ sub iterable {
     my $self = shift;
     map {
         my $q = $_;
-        map { [ $q, $_ ] } @{ $self->items->{ $q } }
+        map { [ $q, $_ ] } reverse @{ $self->items->{ $q } }
     } reverse sort map { ( $_ + 0 ) } keys %{ $self->items };
 }
 
