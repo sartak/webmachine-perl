@@ -3,7 +3,7 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
-use List::AllUtils qw[ first ];
+use List::AllUtils qw[ first any ];
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::MediaTypeList;
@@ -12,6 +12,7 @@ use Web::Machine::Util::PriorityList;
 use Sub::Exporter -setup => {
     exports => [qw[
         choose_media_type
+        choose_language
     ]]
 };
 
@@ -21,12 +22,50 @@ sub choose_media_type {
     my $parsed_provided = [ map { Web::Machine::Util::MediaType->new_from_string( $_ ) } @$provided ];
 
     my $chosen;
-    foreach my $requested ( $requested->iterable ) {
-        my $requested_type = $requested->[1];
+    foreach my $request ( $requested->iterable ) {
+        my $requested_type = $request->[1];
         $chosen = media_match( $requested_type, $parsed_provided );
         last if $chosen;
     }
     ($chosen || return)->to_string;
+}
+
+sub choose_language {
+    my ($provided, $header) = @_;
+
+    my $language;
+
+    if ( scalar @$provided ) {
+        my $requested     = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
+        my $star_priority = $requested->priority_of('*');
+        my $any_ok        = $star_priority && $star_priority > 0.0;
+
+        #use Data::Dumper; warn Dumper [ $requested->iterable ];
+        #use Data::Dumper; warn Dumper $provided;
+
+        my $accepted      = first {
+            my ($priority, $range) = @$_;
+
+            #warn join ", " => ($priority, $range);
+
+            if ( $priority == 0.0 ) {
+                $provided = [ grep { language_match( $range, $_ )  } @$provided ];
+                return 0;
+            }
+            else {
+                return any { language_match( $range, $_ ) } @$provided;
+            }
+        } $requested->iterable;
+
+        if ( $accepted ) {
+            $language = first { language_match( $accepted->[-1], $_ ) } @$provided;
+        }
+        elsif ( $any_ok ) {
+            $language = $provided->[0];
+        }
+    }
+
+    $language;
 }
 
 # sub choose_encoding {
@@ -73,6 +112,11 @@ sub media_match {
     my ($requested, $provided) = @_;
     return $provided->[0] if $requested->matches_all;
     return first { $_->match( $requested ) } @$provided;
+}
+
+sub language_match {
+    my ($range, $tag) = @_;
+    ((lc $range) eq (lc $tag)) || $range eq "*" || $tag =~ /^$range\-/i;
 }
 
 1;
