@@ -9,6 +9,8 @@ use Carp         qw[ confess ];
 use Tie::IxHash;
 use Syntax::Keyword::Junction qw[ any ];
 
+use overload '""' => 'to_string', fallback => 1;
+
 sub new {
     my $class = shift;
     my %args  = ref $_[0] ? %{ $_[0] } : @_;
