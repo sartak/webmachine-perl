@@ -27,7 +27,8 @@ sub choose_media_type {
         $chosen = media_match( $requested_type, $parsed_provided );
         last if $chosen;
     }
-    ($chosen || return)->to_string;
+
+    ($chosen || return)
 }
 
 sub choose_language {
