@@ -7,6 +7,12 @@ use List::AllUtils qw[ any ];
 use HTTP::Date     qw[ str2time ];
 
 use Web::Machine::Util;
+use Web::Machine::Util::MediaType;
+use Web::Machine::Util::ContentNegotiation qw[
+    choose_media_type
+    choose_language
+    choose_charset
+];
 
 use Sub::Exporter -setup => {
     exports => [qw[
@@ -38,21 +44,25 @@ sub _choose {
 
 ## States
 
+# Service available?
 sub b13 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->service_available == true ? \&b12 : \503;
 }
 
+# Known method?
 sub b12 {
     my ($resource, $request, $response, $metadata) = @_;
     _include( $request->method, $resource->known_methods ) == true ? \&b11 : \501;
 }
 
+# URI too long?
 sub b11 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->uri_too_long( $request->uri ) == true ? \414 : \&b10;
 }
 
+# Method allowed?
 sub b10 {
     my ($resource, $request, $response, $metadata) = @_;
     return \&b9 if _include( $request->method, $resource->allowed_methods );
@@ -60,11 +70,13 @@ sub b10 {
     return \405;
 }
 
+# Malformed?
 sub b9 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->malformed_request == true ? \400 : \&b8;
 }
 
+# Authorized
 sub b8 {
     my ($resource, $request, $response, $metadata) = @_;
     my $result = $resource->is_authorized( $request->header('Authorization') );
@@ -77,11 +89,13 @@ sub b8 {
     return \401;
 }
 
+# Forbidden?
 sub b7 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->forbidden == true ? \403 : \&b6;
 }
 
+# Okay Content-* Headers?
 sub b6 {
     my ($resource, $request, $response, $metadata) = @_;
 
@@ -94,16 +108,19 @@ sub b6 {
     $resource->valid_content_headers( $content_headers ) == true ? \&b5 : \501;
 }
 
+# Known Content-Type?
 sub b5 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->known_content_type( $request->content_type ) == true ? \&b4 : \415;
 }
 
+# Request Entity too Large?
 sub b4 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->valid_entity_length( $request->content_length ) == true ? \&b3 : \413;
 }
 
+# OPTIONS?
 sub b3 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( $request->method eq 'OPTIONS' ) {
@@ -113,20 +130,25 @@ sub b3 {
     return \&c3
 }
 
+# Accept exists?
 sub c3 {
     my ($resource, $request, $response, $metadata) = @_;
-    if ( not $request->header('Accept') ) {
-        $metadata->{'Content-Type'} = $resource->content_types_provided->[0];
+    if ( !$request->header('Accept') ) {
+        $metadata->{'Content-Type'} = Web::Machine::Util::MediaType->new_from_string(
+            $resource->content_types_provided->[0]->[0]
+        );
         return \&d4
     }
     return \&c4;
 }
 
+# Acceptable media type available?
 sub c4 {
     my ($resource, $request, $response, $metadata) = @_;
 
-    # FIXME: this needs work and is most likely totally wrong.
-    if ( my $chosen_type = _choose( $request->header('Accept'), $resource->content_types_provided ) ) {
+    my @types = map { $_->[0] } @{ $resource->content_types_provided };
+
+    if ( my $chosen_type = choose_media_type( \@types, $request->header('Accept') ) ) {
         $metadata->{'Content-Type'} = $chosen_type;
         return \&d4;
     }
@@ -134,36 +156,54 @@ sub c4 {
     return \406;
 }
 
+# Accept-Language exists?
 sub d4 {
     my ($resource, $request, $response, $metadata) = @_;
     (not $request->header('Accept-Language')) ? \&e5 : \&d5;
 }
 
+
+# Acceptable language available?
 sub d5 {
     my ($resource, $request, $response, $metadata) = @_;
 
-    # FIXME: this needs work and is most likely totally wrong.
-    if ( my $chosen_language = _choose( $request->header('Accept-Language'), $resource->languages_provided ) ) {
-        $resource->language_chosen( $chosen_language );
+    if ( my $language = choose_language( $resource->languages_provided, $request->header('Accept-Language') ) ) {
+        $metadata->{'Language'} = $language;
+        $response->header( 'Content-Language' => $language );
         return \&e4;
     }
 
     return \406;
 }
 
+# Accept-Charset exists?
 sub e5 {
     my ($resource, $request, $response, $metadata) = @_;
     (not $request->header('Accept-Charset')) ? \&f6 : \&e6;
 }
 
+# Acceptable Charset available?
 sub e6 {
     my ($resource, $request, $response, $metadata) = @_;
-    # FIXME: this needs work and is most likely totally wrong.
-    _choose( $request->header('Accept-Charset'), $resource->charsets_provided ) ? \&f6 : \406;
+
+    if ( my $charset = choose_charset( $resource->charsets_provided, $request->header('Accept-Charset') ) ) {
+        $metadata->{'Charset'} = $charset;
+        return \&f6;
+    }
+
+    return \406;
 }
 
+# Accept-Encoding exists?
+# (also, set content-type header here, now that charset is chosen)
 sub f6 {
     my ($resource, $request, $response, $metadata) = @_;
+    if ( my $charset = $metadata->{'Charset'} ) {
+        # Add the charset to the content type now ...
+        $metadata->{'Content-Type'}->params->{'charset'} = $charset;
+    }
+    # put the content type in the header now ...
+    $response->header( 'Content-Type' => $metadata->{'Content-Type'}->to_string );
     (not $request->header('Accept-Encoding')) ? \&g7 : \&f7;
 }
 
