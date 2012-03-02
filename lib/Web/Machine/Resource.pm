@@ -44,7 +44,7 @@ sub create_path               { undef }
 sub process_post              { false }
 sub content_types_provided    { [ [ 'text/html' => 'to_html' ] ] }
 sub content_types_accepted    { [] }
-sub charsets_provided         { undef }
+sub charsets_provided         { [] }
 sub languages_provided        { [] }
 sub encodings_provided        { [ { 'identity' => sub { shift } } ] }
 sub variances                 { [] }
