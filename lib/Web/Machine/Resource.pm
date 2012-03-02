@@ -6,7 +6,7 @@ use warnings;
 use Scalar::Util qw[ blessed ];
 use Carp         qw[ confess ];
 
-use Web::Machine::Util;
+use Web::Machine::Util qw[ true false ];
 
 sub new {
     my $class  = shift;
