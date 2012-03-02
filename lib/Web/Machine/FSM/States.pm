@@ -33,16 +33,6 @@ sub _include {
     return false;
 }
 
-# FIXME: this needs work
-sub _choose {
-    my ($requested, $choices) = @_;
-    foreach my $provided ( @$choices ) {
-        if ( $provided =~ /$requested/i ) {
-            return $provided;
-        }
-    }
-}
-
 ## States
 
 # Service available?
