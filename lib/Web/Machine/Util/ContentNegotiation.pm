@@ -13,6 +13,7 @@ use Sub::Exporter -setup => {
     exports => [qw[
         choose_media_type
         choose_language
+        choose_charset
     ]]
 };
 
@@ -69,45 +70,26 @@ sub choose_language {
     $language;
 }
 
-# sub choose_encoding {
-#     my ($provided, $header) = @_;
-#     do_choose( [ keys %$provided ], $header, 'identity' );
-# }
-#
-# sub choose_charset {
-#     my ($provided, $header) = @_;
-#     if ( @$provided ) {
-#         my $charsets = map {  } @$provided;
-#     }
-# }
-#
-# sub do_choose {
-#     my ($choices, $header, $default) = @_;
-#
-#     $choices = map { lc $_ } $choices;
-#
-#     my $accepted         = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*, \s/ => $header );
-#     my $default_priority = $accepted->priority_of( $default );
-#     my $star_priority    = $accepted->priority_of( '*' );
-#     my $default_ok       = ( defined $default_priority && $star_priority != 0.0 ) || $default_priority;
-#     my $any_ok           = $star_priority && $star_priority > 0.0;
-#
-#     my $chosen = find {
-#         my ($priority, $acceptable) = @$_;
-#         if ( $priority == 0.0 ) {
-#             $choices = grep { lc $acceptable ne $_ } @$choices;
-#             false;
-#         } else {
-#             first { lc $acceptable eq $_ } @$choices
-#         }
-#     } $accepted->iterable;
-#
-#     ($chosen)
-#         ||
-#     ($any_ok && $choices->[0])
-#         ||
-#     ($default_ok && (first { $default eq $_ } @$choices) && $default)
-# }
+sub choose_charset {
+    my ($provided, $header) = @_;
+    if ( @$provided ) {
+        my @charsets = map { $_->[0] } @$provided;
+        # NOTE:
+        # Making the default charset UTF-8, which
+        # is maybe sensible, I dunno.
+        # - SL
+        if ( my $charset = make_choice( \@charsets, $header, 'UTF-8' )) {
+            return $charset;
+        }
+    }
+    return;
+}
+
+sub choose_encoding {
+    my ($provided, $header) = @_;
+}
+
+## ....
 
 sub media_match {
     my ($requested, $provided) = @_;
@@ -119,6 +101,39 @@ sub language_match {
     my ($range, $tag) = @_;
     ((lc $range) eq (lc $tag)) || $range eq "*" || $tag =~ /^$range\-/i;
 }
+
+sub make_choice {
+    my ($choices, $header, $default) = @_;
+
+    $choices = [ map { lc $_ } @$choices ];
+
+    my $accepted         = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
+    my $default_priority = $accepted->priority_of( $default );
+    my $star_priority    = $accepted->priority_of( '*' ) || 0.0;
+    my $default_ok       = ( defined $default_priority && $star_priority != 0 ) || $default_priority;
+    my $any_ok           = $star_priority && $star_priority > 0.0;
+
+    #use Data::Dumper; warn Dumper $accepted;
+
+    my $chosen = first {
+        my ($priority, $acceptable) = @$_;
+        if ( $priority == 0.0 ) {
+            $choices = [ grep { lc $acceptable ne $_ } @$choices ];
+            return 0;
+        } else {
+            return any { lc $acceptable eq $_ } @$choices;
+        }
+    } $accepted->iterable;
+
+    #use Data::Dumper; warn Dumper $chosen;
+
+    ($chosen && $chosen->[-1])
+        ||
+    ($any_ok && $choices->[0])
+        ||
+    ($default_ok && (any { $default eq $_ } @$choices) && $default)
+}
+
 
 1;
 
