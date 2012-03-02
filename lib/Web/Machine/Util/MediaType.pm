@@ -2,7 +2,6 @@ package Web::Machine::Util::MediaType;
 use Moose;
 
 use Tie::IxHash;
-use Syntax::Keyword::Junction qw[ any ];
 
 use overload '""' => 'to_string', fallback => 1;
 
@@ -80,7 +79,7 @@ sub match {
 
 sub type_matches {
     my ($self, $other) = @_;
-    return 1 if any('*', '*/*', $self->type) eq $other->type;
+    return 1 if $other->type eq '*' || $other->type eq '*/*' || $other->type eq $self->type;
     $other->major eq $self->major && $other->minor eq '*'
         ? 1 : 0;
 }

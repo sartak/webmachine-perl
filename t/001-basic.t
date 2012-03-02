@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
+use Test::Moose;
 
 use Plack::Request;
 use Plack::Response;
@@ -33,7 +34,7 @@ my $r = My::Resource->new(
     }),
     response => Plack::Response->new
 );
-isa_ok($r, 'Web::Machine::Resource');
+does_ok($r, 'Web::Machine::Resource');
 
 use Data::Dumper; warn Dumper $fsm->run( $r )->finalize;
 

@@ -2,12 +2,11 @@ package Web::Machine::FSM;
 use Moose;
 
 use Try::Tiny;
-use Sub::Identify qw[ sub_name ];
-
 use Web::Machine::FSM::States qw[
     start_state
     is_status_code
     is_new_state
+    get_state_name
 ];
 
 sub run {
@@ -21,7 +20,7 @@ sub run {
 
     try {
         while (1) {
-            warn "entering " . sub_name( $state ) . "\n";
+            warn "entering " . get_state_name( $state ) . "\n";
             my $result = $state->( $resource, $request, $response, $metadata );
             if ( ! ref $result ) {
                 warn "! ERROR with " . ($result || 'undef') . "\n";
@@ -36,7 +35,7 @@ sub run {
                 last;
             }
             elsif ( is_new_state( $result ) ) {
-                warn "-> transitioning to " . sub_name( $result ) . "\n";
+                warn "-> transitioning to " . get_state_name( $result ) . "\n";
                 $state = $result;
             }
         }

@@ -3,7 +3,8 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
-use List::AllUtils qw[ first any ];
+use List::Util      qw[ first ];
+use List::MoreUtils qw[ any ];
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::MediaTypeList;
@@ -20,7 +21,7 @@ use Sub::Exporter -setup => {
 
 sub choose_media_type {
     my ($provided, $header) = @_;
-    my $requested = Web::Machine::Util::MediaTypeList->new_from_header_list( split /\s*,\s*/ => $header );
+    my $requested       = Web::Machine::Util::MediaTypeList->new_from_header_list( split /\s*,\s*/ => $header );
     my $parsed_provided = [ map { Web::Machine::Util::MediaType->new_from_string( $_ ) } @$provided ];
 
     my $chosen;

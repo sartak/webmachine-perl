@@ -3,10 +3,9 @@ package Web::Machine::FSM::States;
 use strict;
 use warnings;
 
-use List::AllUtils qw[ any ];
-use HTTP::Date     qw[ str2time ];
+use List::MoreUtils qw[ any ];
+use HTTP::Date      qw[ str2time ];
 
-use Web::Machine::Util qw[ true false is_bool unquote_header ];
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::ContentNegotiation qw[
     choose_media_type
@@ -20,17 +19,27 @@ use Sub::Exporter -setup => {
         start_state
         is_status_code
         is_new_state
+        get_state_name
     ]]
 };
 
 sub start_state    { \&b13 }
 sub is_status_code { ref $_[0] eq 'SCALAR' }
 sub is_new_state   { ref $_[0] eq 'CODE'   }
+sub get_state_name { B::svref_2object( shift )->GV->NAME }
 
 sub _include {
     my ($value, $list) = @_;
-    return true if any { $_ eq $value } @$list;
-    return false;
+    return 1 if any { $_ eq $value } @$list;
+    return 0;
+}
+
+sub _unquote_header {
+    my $value = shift;
+    if ( $value = /^"(.*)"$/ ) {
+        return $1;
+    }
+    return $value;
 }
 
 ## States
@@ -38,19 +47,19 @@ sub _include {
 # Service available?
 sub b13 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->service_available == true ? \&b12 : \503;
+    $resource->service_available ? \&b12 : \503;
 }
 
 # Known method?
 sub b12 {
     my ($resource, $request, $response, $metadata) = @_;
-    _include( $request->method, $resource->known_methods ) == true ? \&b11 : \501;
+    _include( $request->method, $resource->known_methods ) ? \&b11 : \501;
 }
 
 # URI too long?
 sub b11 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->uri_too_long( $request->uri ) == true ? \414 : \&b10;
+    $resource->uri_too_long( $request->uri ) ? \414 : \&b10;
 }
 
 # Method allowed?
@@ -64,26 +73,37 @@ sub b10 {
 # Malformed?
 sub b9 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->malformed_request == true ? \400 : \&b8;
+    $resource->malformed_request ? \400 : \&b8;
 }
 
 # Authorized
 sub b8 {
     my ($resource, $request, $response, $metadata) = @_;
     my $result = $resource->is_authorized( $request->header('Authorization') );
-    unless ( ref $result ) {
-        $response->header( 'WWW-Authenticate' => $result );
+    # if we get back a status, then use it
+    if ( is_status_code( $result ) ) {
+        return $result;
+    }
+    # if we just get back true, then
+    # move onto the next state
+    elsif ( "$result" eq "1" ) {
+        return \&b7
+    }
+    # anything else will either be
+    # a WWW-Authenticate header or
+    # a simple false value
+    else {
+        if ( $result ) {
+            $response->header( 'WWW-Authenticate' => $result );
+        }
         return \401;
     }
-    return \&b7    if is_bool( $result ) && $result;
-    return $result if is_status_code( $result );
-    return \401;
 }
 
 # Forbidden?
 sub b7 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->forbidden == true ? \403 : \&b6;
+    $resource->forbidden ? \403 : \&b6;
 }
 
 # Okay Content-* Headers?
@@ -96,19 +116,19 @@ sub b6 {
         $content_headers->add( $name, $value ) if (lc $name) =~ /^content-/;
     });
 
-    $resource->valid_content_headers( $content_headers ) == true ? \&b5 : \501;
+    $resource->valid_content_headers( $content_headers ) ? \&b5 : \501;
 }
 
 # Known Content-Type?
 sub b5 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->known_content_type( $request->content_type ) == true ? \&b4 : \415;
+    $resource->known_content_type( $request->content_type ) ? \&b4 : \415;
 }
 
 # Request Entity too Large?
 sub b4 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->valid_entity_length( $request->content_length ) == true ? \&b3 : \413;
+    $resource->valid_entity_length( $request->content_length ) ? \&b3 : \413;
 }
 
 # OPTIONS?
@@ -228,7 +248,7 @@ sub g7 {
 
     $response->header( 'Vary' => join ', ' => @variances ) if @variances;
 
-    $resource->resource_exists == true ? \&g8 : \&h7;
+    $resource->resource_exists ? \&g8 : \&h7;
 }
 
 # If-Match exists?
@@ -246,14 +266,14 @@ sub g9 {
 # ETag in If-Match
 sub g11 {
     my ($resource, $request, $response, $metadata) = @_;
-    my @etags = map { unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-Match');
+    my @etags = map { _unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-Match');
     _include( $resource->generate_etag, \@etags ) ? \&h10 : \412;
 }
 
 # If-Match exists?
 sub h7 {
     my ($resource, $request, $response, $metadata) = @_;
-    ($request->header('If-Match') && unquote_header( $request->header('If-Match') ) eq "*") ? \412 : \&i7;
+    ($request->header('If-Match') && _unquote_header( $request->header('If-Match') ) eq "*") ? \412 : \&i7;
 }
 
 # If-Unmodified-Since exists?
@@ -334,13 +354,13 @@ sub k5 {
 # Previously existed?
 sub k7 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->previously_existed == true ? \&k5 : \&l7;
+    $resource->previously_existed ? \&k5 : \&l7;
 }
 
 # Etag in if-none-match?
 sub k13 {
     my ($resource, $request, $response, $metadata) = @_;
-    my @etags = map { unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-None-Match');
+    my @etags = map { _unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-None-Match');
     _include( $resource->generate_etag, \@etags ) ? \&j18 : \&l13;
 }
 
@@ -403,7 +423,7 @@ sub m5 {
 # Server allows POST to missing resource?
 sub m7 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->allow_missing_post == true ? \&n11 : \404
+    $resource->allow_missing_post ? \&n11 : \404
 }
 
 # DELETE?
@@ -415,19 +435,19 @@ sub m16 {
 # DELETE enacted immediately? (Also where DELETE is forced.)
 sub m20 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->delete_resource == true ? \&m20b : \500
+    $resource->delete_resource ? \&m20b : \500
 }
 
 # Did the DELETE complete?
 sub m20b {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->delete_completed == true ? \&o20 : \202
+    $resource->delete_completed ? \&o20 : \202
 }
 
 # Server allows POST to missing resource?
 sub n5 {
     my ($resource, $request, $response, $metadata) = @_;
-    $resource->allow_missing_post == true ? \&n11 : \410
+    $resource->allow_missing_post ? \&n11 : \410
 }
 
 # Redirect?
