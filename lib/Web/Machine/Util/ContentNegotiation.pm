@@ -43,14 +43,8 @@ sub choose_language {
         my $star_priority = $requested->priority_of('*');
         my $any_ok        = $star_priority && $star_priority > 0.0;
 
-        #use Data::Dumper; warn Dumper [ $requested->iterable ];
-        #use Data::Dumper; warn Dumper $provided;
-
         my $accepted      = first {
             my ($priority, $range) = @$_;
-
-            #warn join ", " => ($priority, $range);
-
             if ( $priority == 0.0 ) {
                 $provided = [ grep { language_match( $range, $_ )  } @$provided ];
                 return 0;
@@ -121,8 +115,6 @@ sub make_choice {
     my $default_ok       = ( defined $default_priority && $star_priority != 0 ) || $default_priority;
     my $any_ok           = $star_priority && $star_priority > 0.0;
 
-    #use Data::Dumper; warn Dumper $accepted;
-
     my $chosen = first {
         my ($priority, $acceptable) = @$_;
         if ( $priority == 0.0 ) {
@@ -132,8 +124,6 @@ sub make_choice {
             return any { lc $acceptable eq $_ } @$choices;
         }
     } $accepted->iterable;
-
-    #use Data::Dumper; warn Dumper $chosen;
 
     ($chosen && $chosen->[-1])
         ||
