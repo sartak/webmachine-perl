@@ -14,6 +14,7 @@ use Sub::Exporter -setup => {
         choose_media_type
         choose_language
         choose_charset
+        choose_encoding
     ]]
 };
 
@@ -87,6 +88,13 @@ sub choose_charset {
 
 sub choose_encoding {
     my ($provided, $header) = @_;
+    my @encodings = keys %$provided;
+    if ( @encodings ) {
+        if ( my $encoding = make_choice( \@encodings, $header, 'identity' ) ) {
+            return $encoding;
+        }
+    }
+    return;
 }
 
 ## ....
