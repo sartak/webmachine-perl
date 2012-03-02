@@ -46,7 +46,7 @@ sub content_types_provided    { [ [ 'text/html' => 'to_html' ] ] }
 sub content_types_accepted    { [] }
 sub charsets_provided         { [] }
 sub languages_provided        { [] }
-sub encodings_provided        { [ [ 'identity' => sub { shift } ] ] }
+sub encodings_provided        { { 'identity' => sub { shift } } }
 sub variances                 { [] }
 sub is_conflict               { false }
 sub multiple_choices          { false }
