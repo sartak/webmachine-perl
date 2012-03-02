@@ -3,27 +3,28 @@ package Web::Machine::Util;
 use strict;
 use warnings;
 
-our $VERSION   = '0.01';
-our $AUTHORITY = 'cpan:STEVAN';
+use JSON::XS ();
 
-use JSON::XS    ();
-use Sub::Exporter;
-
-my @exports = qw/
-    true
-    false
-    is_bool
-/;
-
-Sub::Exporter::setup_exporter({
-    exports => \@exports,
-    groups  => { default => \@exports }
-});
+use Sub::Exporter -setup => {
+    exports => [qw[
+        true
+        false
+        is_bool
+        unquote_header
+    ]]
+};
 
 sub true  () { JSON::XS::true()           }
 sub false () { JSON::XS::false()          }
 sub is_bool  { JSON::XS::is_bool( shift ) }
 
+sub unquote_header {
+    my $value = shift;
+    if ( $value = /^"(.*)"$/ ) {
+        return $1;
+    }
+    return $value;
+}
 
 1;
 
