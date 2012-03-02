@@ -6,12 +6,13 @@ use warnings;
 use List::AllUtils qw[ any ];
 use HTTP::Date     qw[ str2time ];
 
-use Web::Machine::Util;
+use Web::Machine::Util qw[ true false is_bool unquote_header ];
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::ContentNegotiation qw[
     choose_media_type
     choose_language
     choose_charset
+    choose_encoding
 ];
 
 use Sub::Exporter -setup => {
