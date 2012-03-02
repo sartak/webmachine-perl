@@ -1,28 +1,19 @@
 package Web::Machine::Resource;
-
-use strict;
-use warnings;
-
-use Scalar::Util qw[ blessed ];
-use Carp         qw[ confess ];
+use Moose::Role;
 
 use Web::Machine::Util qw[ true false ];
 
-sub new {
-    my $class  = shift;
-    my %args = ref $_[0] ? %{ $_[0] } : @_;
+has 'request' => (
+    is       => 'ro',
+    isa      => 'Plack::Request',
+    required => 1
+);
 
-    (exists $args{'request'} && blessed $args{'request'} && $args{'request'}->isa('Plack::Request'))
-        || confess "The 'request' parameter is required and must be a Plack::Request";
-
-    (exists $args{'response'} && blessed $args{'response'} && $args{'response'}->isa('Plack::Response'))
-        || confess "The 'response' parameter is required and must be a Plack::Response";
-
-    bless { %args } => $class;
-}
-
-sub request  { (shift)->{'request'}  }
-sub response { (shift)->{'response'} }
+has 'response' => (
+    is       => 'ro',
+    isa      => 'Plack::Response',
+    required => 1
+);
 
 sub resource_exists           { true  }
 sub service_available         { true  }
@@ -58,11 +49,7 @@ sub expires                   { undef }
 sub generate_etag             { undef }
 sub finish_request            {}
 
-sub to_html {
-    q[<html></html>]
-}
-
-1;
+no Moose::Role; 1;
 
 __END__
 

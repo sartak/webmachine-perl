@@ -15,11 +15,9 @@ BEGIN {
 
 {
     package My::Resource;
+    use Moose;
 
-    use strict;
-    use warnings;
-
-    use parent 'Web::Machine::Resource';
+    with 'Web::Machine::Resource';
 
     sub to_html { '<html><body>Hello World</body></html>' }
 }

@@ -1,31 +1,22 @@
 package Web::Machine::Util::MediaType;
-
-use strict;
-use warnings;
-
-use Scalar::Util qw[ blessed ];
-use Carp         qw[ confess ];
+use Moose;
 
 use Tie::IxHash;
 use Syntax::Keyword::Junction qw[ any ];
 
 use overload '""' => 'to_string', fallback => 1;
 
-sub new {
-    my $class = shift;
-    my %args  = ref $_[0] ? %{ $_[0] } : @_;
+has 'type' => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1
+);
 
-    (exists $args{'type'})
-        || confess "The type parameter is required";
-
-    bless {
-        type   => $args{'type'},
-        params => $args{'params'} || {}
-    } => $class;
-}
-
-sub type   { (shift)->{'type'}   }
-sub params { (shift)->{'params'} }
+has 'params' => (
+    is      => 'ro',
+    isa     => 'HashRef',
+    default => sub { +{} },
+);
 
 sub new_from_string {
     my ($class, $media_type) = @_;
@@ -126,7 +117,9 @@ sub _compare_params {
     return 1;
 }
 
-1;
+__PACKAGE__->meta->make_immutable;
+
+no Moose; 1;
 
 __END__
 

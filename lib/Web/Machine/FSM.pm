@@ -1,7 +1,5 @@
 package Web::Machine::FSM;
-
-use strict;
-use warnings;
+use Moose;
 
 use Try::Tiny;
 use Sub::Identify qw[ sub_name ];
@@ -11,8 +9,6 @@ use Web::Machine::FSM::States qw[
     is_status_code
     is_new_state
 ];
-
-sub new { bless {} => shift }
 
 sub run {
     my ( $self, $resource ) = @_;
@@ -52,7 +48,9 @@ sub run {
     $response;
 }
 
-1;
+__PACKAGE__->meta->make_immutable;
+
+no Moose; 1;
 
 __END__
 

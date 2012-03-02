@@ -1,12 +1,11 @@
 package Web::Machine::Util::PriorityList;
+use Moose;
 
-use strict;
-use warnings;
-
-use Scalar::Util qw[ blessed ];
-use Carp         qw[ confess ];
-
-sub new { bless { index => {}, items => {} } => shift }
+has [ 'index', 'items' ] => (
+    is      => 'ro',
+    isa     => 'HashRef',
+    default => sub { +{} },
+);
 
 sub new_from_header_list {
     my ($class, @header_list) = @_;
@@ -16,9 +15,6 @@ sub new_from_header_list {
     }
     $list;
 }
-
-sub index { (shift)->{'index'} }
-sub items { (shift)->{'items'} }
 
 sub add {
     my ($self, $q, $choice) = @_;
@@ -56,7 +52,9 @@ sub iterable {
     } reverse sort { $a <=> $b } map { ( $_ + 0 ) } keys %{ $self->items };
 }
 
-1;
+__PACKAGE__->meta->make_immutable;
+
+no Moose;1;
 
 __END__
 

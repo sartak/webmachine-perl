@@ -1,11 +1,9 @@
 package Web::Machine::Util::MediaTypeList;
-
-use strict;
-use warnings;
+use Moose;
 
 use Web::Machine::Util::MediaType;
 
-use parent 'Web::Machine::Util::PriorityList';
+extends 'Web::Machine::Util::PriorityList';
 
 sub add_header_value {
     my ($self, $c) = @_;
@@ -51,7 +49,9 @@ sub iterable {
     } keys %{ $self->items };
 }
 
-1;
+__PACKAGE__->meta->make_immutable;
+
+no Moose; 1;
 
 __END__
 
