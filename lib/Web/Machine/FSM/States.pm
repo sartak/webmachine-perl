@@ -4,11 +4,16 @@ use strict;
 use warnings;
 
 use Hash::MultiValue;
+use Carp            qw[ confess ];
 use List::Util      qw[ first ];
 use List::MoreUtils qw[ any ];
 use HTTP::Date      qw[ str2time ];
 
 use Web::Machine::Util::MediaType;
+use Web::Machine::Util::BodyEncoding qw[
+    encode_body_if_set
+    encode_body
+];
 use Web::Machine::Util::ContentNegotiation qw[
     choose_media_type
     match_acceptable_media_type
@@ -43,25 +48,26 @@ sub _include {
 
 sub _unquote_header {
     my $value = shift;
-    if ( $value = /^"(.*)"$/ ) {
+    if ( $value =~ /^"(.*)"$/ ) {
         return $1;
     }
     return $value;
 }
 
-sub _accept_helper {
+sub _ensure_quoted_header {
+    my $value = shift;
+    return $value if $value =~ /^"(.*)"$/;
+    return '"' . $value . '"';
+}
+
+sub _get_acceptable_content_type_handler {
     my ($resource, $request) = @_;
-
-    my $content_type = Web::Machine::Util::MediaType->new_from_string(
-        $request->header('Content-Type') || 'application/octet-stream'
+    my $acceptable = match_acceptable_media_type(
+        ($request->header('Content-Type') || 'application/octet-stream'),
+        $resource->content_types_accepted
     );
-
-    if ( my $acceptable = first { $content_type->match( $_ ) } @{ $resource->content_types_accepted } ) {
-        my $content_type_handler = $acceptable->[1];
-        return $resource->$content_type_handler();
-    }
-
-    return \415;
+    return \415 unless $acceptable;
+    return $acceptable->[1];
 }
 
 ## States
@@ -489,7 +495,8 @@ sub n11 {
         # - SL
         $response->header( 'Location' => $new_uri->as_string );
 
-        my $result = _accept_helper( $resource, $request );
+        my $handler = _get_acceptable_content_type_handler( $resource, $request );
+        my $result  = $resource->$handler();
 
         return $result if is_status_code( $result );
     }
@@ -497,7 +504,7 @@ sub n11 {
         my $result = $resource->process_post;
         if ( $result ) {
             return $result if is_status_code( $result );
-            _encode_body_if_set;
+            encode_body_if_set( $resource, $response, $metadata );
         }
         else {
             confess "Process Post Invalid";
@@ -522,13 +529,18 @@ sub n16 {
     $request->method eq 'POST' ? \&n11 : \&o16
 }
 
-$STATE_DESC{'014'} = 'in_conflict';
+$STATE_DESC{'o14'} = 'in_conflict';
 sub o14 {
     my ($resource, $request, $response, $metadata) = @_;
     return \409 if $resource->is_conflict;
-    #...
 
+    my $handler = _get_acceptable_content_type_handler( $resource, $request );
+    my $result  = $resource->$handler();
+
+    return $result if is_status_code( $result );
+    return \&p11;
 }
+
 
 
 # $STATE_DESC{''} = '';
