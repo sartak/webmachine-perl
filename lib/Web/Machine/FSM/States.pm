@@ -3,6 +3,8 @@ package Web::Machine::FSM::States;
 use strict;
 use warnings;
 
+use Hash::MultiValue;
+use List::Util      qw[ first ];
 use List::MoreUtils qw[ any ];
 use HTTP::Date      qw[ str2time ];
 
@@ -469,6 +471,45 @@ sub n5 {
 sub n11 {
     my ($resource, $request, $response, $metadata) = @_;
     # ...
+    if ( $resource->post_is_create ) {
+        my $uri = $resource->create_path;
+        confess "Create Path Nil" unless $uri;
+        my $base_uri = $resource->base_uri || $request->base;
+        my $new_uri  = URI->new( $base_uri . $uri );
+        # NOTE:
+        # the ruby and JS versions will set the path_info
+        # for the request object here, but since our requests
+        # are immutable, we don't allow that. I don't see
+        # where this ends up being useful so I am going to
+        # skip it and not bother.
+        # - SL
+        $response->header( 'Location' => $new_uri->as_string );
+
+        my $result = _accept_helper( $resource, $request );
+
+        return $result if is_status_code( $result );
+    }
+    else {
+        my $result = $resource->process_post;
+        if ( $result ) {
+            return $result if is_status_code( $result );
+            _encode_body_if_set;
+        }
+        else {
+            confess "Process Post Invalid";
+        }
+    }
+
+    if ( $response->is_redirect ) {
+        if ( $response->header( 'Location ') ) {
+            return \303;
+        }
+        else {
+            confess "Bad Redirect";
+        }
+    }
+
+    return \&p11;
 }
 
 # POST?
