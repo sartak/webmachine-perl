@@ -25,10 +25,14 @@ use Sub::Exporter -setup => {
     ]]
 };
 
+my %STATE_DESC;
+
 sub start_state    { \&b13 }
 sub is_status_code { ref $_[0] eq 'SCALAR' }
 sub is_new_state   { ref $_[0] eq 'CODE'   }
 sub get_state_name { B::svref_2object( shift )->GV->NAME }
+
+# some utilities ...
 
 sub _include {
     my ($value, $list) = @_;
@@ -61,25 +65,25 @@ sub _accept_helper {
 
 ## States
 
-# Service available?
+$STATE_DESC{'b13'} = 'service_available';
 sub b13 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->service_available ? \&b12 : \503;
 }
 
-# Known method?
+$STATE_DESC{'b12'} = 'known_method';
 sub b12 {
     my ($resource, $request, $response, $metadata) = @_;
     _include( $request->method, $resource->known_methods ) ? \&b11 : \501;
 }
 
-# URI too long?
+$STATE_DESC{'b11'} = 'uri_too_long';
 sub b11 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->uri_too_long( $request->uri ) ? \414 : \&b10;
 }
 
-# Method allowed?
+$STATE_DESC{'b10'} = 'method_allowed';
 sub b10 {
     my ($resource, $request, $response, $metadata) = @_;
     return \&b9 if _include( $request->method, $resource->allowed_methods );
@@ -87,13 +91,13 @@ sub b10 {
     return \405;
 }
 
-# Malformed?
+$STATE_DESC{'b9'} = 'malformed_request';
 sub b9 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->malformed_request ? \400 : \&b8;
 }
 
-# Authorized
+$STATE_DESC{'b8'} = 'is_authorized';
 sub b8 {
     my ($resource, $request, $response, $metadata) = @_;
     my $result = $resource->is_authorized( $request->header('Authorization') );
@@ -117,13 +121,13 @@ sub b8 {
     }
 }
 
-# Forbidden?
+$STATE_DESC{'b7'} = 'forbidden';
 sub b7 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->forbidden ? \403 : \&b6;
 }
 
-# Okay Content-* Headers?
+$STATE_DESC{'b6'} = 'content_headers_okay';
 sub b6 {
     my ($resource, $request, $response, $metadata) = @_;
 
@@ -136,19 +140,19 @@ sub b6 {
     $resource->valid_content_headers( $content_headers ) ? \&b5 : \501;
 }
 
-# Known Content-Type?
+$STATE_DESC{'b5'} = 'known_content_type';
 sub b5 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->known_content_type( $request->content_type ) ? \&b4 : \415;
 }
 
-# Request Entity too Large?
+$STATE_DESC{'b4'} = 'request_entity_too_large';
 sub b4 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->valid_entity_length( $request->content_length ) ? \&b3 : \413;
 }
 
-# OPTIONS?
+$STATE_DESC{'b3'} = 'method_is_options';
 sub b3 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( $request->method eq 'OPTIONS' ) {
@@ -158,7 +162,7 @@ sub b3 {
     return \&c3
 }
 
-# Accept exists?
+$STATE_DESC{'c3'} = 'accept_header_exists';
 sub c3 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( !$request->header('Accept') ) {
@@ -170,7 +174,7 @@ sub c3 {
     return \&c4;
 }
 
-# Acceptable media type available?
+$STATE_DESC{'c4'} = 'acceptable_media_type_available';
 sub c4 {
     my ($resource, $request, $response, $metadata) = @_;
 
@@ -184,14 +188,14 @@ sub c4 {
     return \406;
 }
 
-# Accept-Language exists?
+$STATE_DESC{'d4'} = 'accept_language_header_exists';
 sub d4 {
     my ($resource, $request, $response, $metadata) = @_;
     (not $request->header('Accept-Language')) ? \&e5 : \&d5;
 }
 
 
-# Acceptable language available?
+$STATE_DESC{'d5'} = 'accept_language_choice_available';
 sub d5 {
     my ($resource, $request, $response, $metadata) = @_;
 
@@ -204,13 +208,13 @@ sub d5 {
     return \406;
 }
 
-# Accept-Charset exists?
+$STATE_DESC{'e5'} = 'accept_charset_exists';
 sub e5 {
     my ($resource, $request, $response, $metadata) = @_;
     (not $request->header('Accept-Charset')) ? \&f6 : \&e6;
 }
 
-# Acceptable Charset available?
+$STATE_DESC{'e5'} = 'accept_charset_choice_available';
 sub e6 {
     my ($resource, $request, $response, $metadata) = @_;
 
@@ -222,7 +226,7 @@ sub e6 {
     return \406;
 }
 
-# Accept-Encoding exists?
+$STATE_DESC{'f6'} = 'accept_encoding_exists';
 # (also, set content-type header here, now that charset is chosen)
 sub f6 {
     my ($resource, $request, $response, $metadata) = @_;
@@ -235,7 +239,7 @@ sub f6 {
     (not $request->header('Accept-Encoding')) ? \&g7 : \&f7;
 }
 
-# Acceptable encoding available?
+$STATE_DESC{'f7'} = 'accept_encoding_choice_available';
 sub f7 {
     my ($resource, $request, $response, $metadata) = @_;
 
@@ -248,7 +252,7 @@ sub f7 {
     return \406;
 }
 
-# Resource exists?
+$STATE_DESC{'g7'} = 'resource_exists';
 sub g7 {
     my ($resource, $request, $response, $metadata) = @_;
 
@@ -268,38 +272,38 @@ sub g7 {
     $resource->resource_exists ? \&g8 : \&h7;
 }
 
-# If-Match exists?
+$STATE_DESC{'g8'} = 'if_match_exists';
 sub g8 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->header('If-Match') ? \&g9 : \&h10;
 }
 
-# If-Match: * exists?
+$STATE_DESC{'g9'} = 'if_match_is_wildcard';
 sub g9 {
     my ($resource, $request, $response, $metadata) = @_;
-    $request->header('If-Match') eq "*" ? \&h10 : \&g11;
+    _unquote_header( $request->header('If-Match') ) eq "*" ? \&h10 : \&g11;
 }
 
-# ETag in If-Match
+$STATE_DESC{'g11'} = 'etag_in_if_match_list';
 sub g11 {
     my ($resource, $request, $response, $metadata) = @_;
     my @etags = map { _unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-Match');
     _include( $resource->generate_etag, \@etags ) ? \&h10 : \412;
 }
 
-# If-Match exists?
+$STATE_DESC{'h7'} = 'if_match_exists_and_if_match_is_wildcard';
 sub h7 {
     my ($resource, $request, $response, $metadata) = @_;
     ($request->header('If-Match') && _unquote_header( $request->header('If-Match') ) eq "*") ? \412 : \&i7;
 }
 
-# If-Unmodified-Since exists?
+$STATE_DESC{'h10'} = 'if_unmodified_since_exists';
 sub h10 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->header('If-Unmodified-Since') ? \&h11 : \&i12;
 }
 
-# If-Unmodified-Since is valid date?
+$STATE_DESC{'h11'} = 'if_unmodified_since_is_valid_date';
 sub h11 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( my $date = str2time( $request->header('If-Unmodified-Since') ) ) {
@@ -309,7 +313,7 @@ sub h11 {
     return \&i12;
 }
 
-# Last-Modified > I-UM-S?
+$STATE_DESC{'h12'} = 'last_modified_is_greater_than_if_unmodified_since';
 sub h12 {
     my ($resource, $request, $response, $metadata) = @_;
     defined $resource->last_modified
@@ -318,7 +322,7 @@ sub h12 {
         ? \412 : \&i12;
 }
 
-# Moved permanently? (apply PUT to different URI)
+$STATE_DESC{'i4'} = 'moved_permanently';
 sub i4 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( my $uri = $resource->moved_permanently ) {
@@ -331,31 +335,31 @@ sub i4 {
     return \&p3;
 }
 
-# PUT?
+$STATE_DESC{'i7'} = 'method_is_put';
 sub i7 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->method eq 'PUT' ? \&i4 : \&k7
 }
 
-# If-none-match exists?
+$STATE_DESC{'i12'} = 'if_none_match_exists';
 sub i12 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->header('If-None-Match') ? \&i13 : \&l13
 }
 
-# If-none-match: * exists?
+$STATE_DESC{'i13'} = 'if_none_match_is_wildcard';
 sub i13 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->header('If-None-Match') eq "*" ? \&j13 : \&k13
 }
 
-# GET or HEAD?
+$STATE_DESC{'j18'} = 'method_is_get_or_head';
 sub j18 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->method eq 'GET' || $request->method eq 'HEAD' ? \304 : \412
 }
 
-# Moved permanently?
+$STATE_DESC{'k5'} = 'moved_permanently';
 sub k5 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( my $uri = $resource->moved_permanently ) {
@@ -368,20 +372,20 @@ sub k5 {
     return \&l5;
 }
 
-# Previously existed?
+$STATE_DESC{'k7'} = 'previously_existed';
 sub k7 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->previously_existed ? \&k5 : \&l7;
 }
 
-# Etag in if-none-match?
+$STATE_DESC{'k13'} = 'etag_in_if_none_match';
 sub k13 {
     my ($resource, $request, $response, $metadata) = @_;
     my @etags = map { _unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-None-Match');
     _include( $resource->generate_etag, \@etags ) ? \&j18 : \&l13;
 }
 
-# Moved temporarily?
+$STATE_DESC{'l5'} = 'moved_temporarily';
 sub l5 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( my $uri = $resource->moved_temporarily ) {
@@ -394,19 +398,19 @@ sub l5 {
     return \&m5;
 }
 
-# POST?
+$STATE_DESC{'l7'} = 'method_is_post';
 sub l7 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->method eq 'POST' ? \&m7 : \404
 }
 
-# If-Modified-Since exists?
+$STATE_DESC{'l13'} = 'if_modified_since_exists';
 sub l13 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->header('If-Modified-Since') ? \&l14 : \&m16
 }
 
-# If-Modified-Since is valid date?
+$STATE_DESC{'l14'} = 'if_modified_since_is_valid_date';
 sub l14 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( my $date = str2time( $request->header('If-Modified-Since') ) ) {
@@ -416,13 +420,13 @@ sub l14 {
     return \&m16;
 }
 
-# If-Modified-Since > Now?
+$STATE_DESC{'l15'} = 'if_modified_since_greater_than_now';
 sub l15 {
     my ($resource, $request, $response, $metadata) = @_;
     ($metadata->{'If-Modified-Since'} > (scalar time)) ? \&m16 : \&l17;
 }
 
-# Last-Modified > If-Modified-Since?
+$STATE_DESC{'l17'} = 'last_modified_is_greater_than_if_modified_since';
 sub l17 {
     my ($resource, $request, $response, $metadata) = @_;
     defined $resource->last_modified
@@ -431,46 +435,45 @@ sub l17 {
         ? \&m16 : \304;
 }
 
-# POST?
+$STATE_DESC{'m5'} = 'method_is_post';
 sub m5 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->method eq 'POST' ? \&n5 : \410
 }
 
-# Server allows POST to missing resource?
+$STATE_DESC{'m7'} = 'allow_post_to_missing_resource';
 sub m7 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->allow_missing_post ? \&n11 : \404
 }
 
-# DELETE?
+$STATE_DESC{'m16'} = 'method_is_delete';
 sub m16 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->method eq 'DELETE' ? \&m20 : \&n16
 }
 
-# DELETE enacted immediately? (Also where DELETE is forced.)
+$STATE_DESC{'m20'} = 'delete_enacted_immediately';
 sub m20 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->delete_resource ? \&m20b : \500
 }
 
-# Did the DELETE complete?
+$STATE_DESC{'m20b'} = 'did_delete_complete';
 sub m20b {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->delete_completed ? \&o20 : \202
 }
 
-# Server allows POST to missing resource?
+$STATE_DESC{'n5'} = 'allow_post_to_missing_resource';
 sub n5 {
     my ($resource, $request, $response, $metadata) = @_;
     $resource->allow_missing_post ? \&n11 : \410
 }
 
-# Redirect?
+$STATE_DESC{'n11'} = 'redirect';
 sub n11 {
     my ($resource, $request, $response, $metadata) = @_;
-    # ...
     if ( $resource->post_is_create ) {
         my $uri = $resource->create_path;
         confess "Create Path Nil" unless $uri;
@@ -512,13 +515,13 @@ sub n11 {
     return \&p11;
 }
 
-# POST?
+$STATE_DESC{'n16'} = 'method_is_post';
 sub n16 {
     my ($resource, $request, $response, $metadata) = @_;
     $request->method eq 'POST' ? \&n11 : \&o16
 }
 
-# Conflict?
+$STATE_DESC{'014'} = 'in_conflict';
 sub o14 {
     my ($resource, $request, $response, $metadata) = @_;
     return \409 if $resource->is_conflict;
@@ -526,6 +529,14 @@ sub o14 {
 
 }
 
+
+# $STATE_DESC{''} = '';
+# sub x {
+#     my ($resource, $request, $response, $metadata) = @_;
+#     #...
+#
+# }
+#
 
 1;
 
