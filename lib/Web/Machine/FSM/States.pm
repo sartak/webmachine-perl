@@ -42,6 +42,21 @@ sub _unquote_header {
     return $value;
 }
 
+sub _accept_helper {
+    my ($resource, $request) = @_;
+
+    my $content_type = Web::Machine::Util::MediaType->new_from_string(
+        $request->header('Content-Type') || 'application/octet-stream'
+    );
+
+    if ( my $acceptable = first { $content_type->match( $_ ) } @{ $resource->content_types_accepted } ) {
+        my $content_type_handler = $acceptable->[1];
+        return $resource->$content_type_handler();
+    }
+
+    return \415;
+}
+
 ## States
 
 # Service available?
