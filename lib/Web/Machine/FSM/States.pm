@@ -11,6 +11,7 @@ use HTTP::Date      qw[ str2time ];
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::ContentNegotiation qw[
     choose_media_type
+    match_acceptable_media_type
     choose_language
     choose_charset
     choose_encoding
