@@ -36,6 +36,18 @@ my $r = My::Resource->new(
 );
 does_ok($r, 'Web::Machine::Resource');
 
-use Data::Dumper; warn Dumper $fsm->run( $r )->finalize;
+is_deeply(
+    $fsm->run( $r )->finalize,
+    [
+        200,
+        [
+        'Vary'           => 'Accept, Accept-Encoding',
+        'Content-Length' => 37,
+        'Content-Type'   => 'text/html'
+        ],
+        [ '<html><body>Hello World</body></html>' ]
+    ],
+    '... got the response expected'
+);
 
 done_testing;
