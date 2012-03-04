@@ -3,6 +3,8 @@ package Web::Machine::Util::BodyEncoding;
 use strict;
 use warnings;
 
+use List::Util qw[ first ];
+
 use Sub::Exporter -setup => {
     exports => [qw[
         encode_body_if_set
