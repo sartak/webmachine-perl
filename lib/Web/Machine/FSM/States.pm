@@ -630,7 +630,6 @@ sub p11 {
     (not $response->header('Location')) ? \&o20 : \201
 }
 
-
 1;
 
 __END__
