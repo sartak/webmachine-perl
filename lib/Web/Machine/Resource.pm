@@ -31,7 +31,7 @@ sub delete_completed          { 1 }
 sub post_is_create            { 0 }
 sub create_path               { undef }
 sub process_post              { 0 }
-sub content_types_provided    { [ [ 'text/html' => 'to_html' ] ] }
+sub content_types_provided    { [] }
 sub content_types_accepted    { [] }
 sub charsets_provided         { [] }
 sub languages_provided        { [] }
