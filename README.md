@@ -5,7 +5,7 @@ a little bit of [the javascript version](https://github.com/tautologistics/nodem
 thrown in for good measure.
 
 It runs atop the [Plack](https://www.metacpan.org/module/Plack) but since it
-really handles the whole HTTP transation, it is not appropriate to use
+really handles the whole HTTP transaction, it is not appropriate to use
 most middleware modules. (NOTE: I will write more about this in the future.)
 
 ## Getting Started
