@@ -25,8 +25,8 @@ sub encode_body {
 
     my $chosen_charset  = $metadata->{'Charset'};
     my $charsetter      = $resource->charsets_provided
-                        && first { $_->[0] eq $chosen_charset } @{ $resource->charsets_provided }
-                        || sub { @_ };
+                        && (first { $_ && $_->[0] eq $chosen_charset } @{ $resource->charsets_provided })
+                        || sub { $_[1] };
     # TODO:
     # Make this support the other
     # body types that Plack supports
