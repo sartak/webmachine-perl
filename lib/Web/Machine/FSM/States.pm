@@ -70,6 +70,19 @@ sub _get_acceptable_content_type_handler {
     return $acceptable->[1];
 }
 
+sub _add_caching_headers {
+    my ($resource, $response) = @_;
+    if ( my $etag = $resource->generate_etag ) {
+        $response->header( 'Etag' => _ensure_quoted_header( $etag ) );
+    }
+    if ( my $expires = $resource->expires ) {
+        $response->header( 'Expires' => $expires );
+    }
+    if ( my $modified = $resource->last_modified ) {
+        $response->header( 'Last-Modified' => $modified );
+    }
+}
+
 ## States
 
 $STATE_DESC{'b13'} = 'service_available';
@@ -243,7 +256,20 @@ sub f6 {
     }
     # put the content type in the header now ...
     $response->header( 'Content-Type' => $metadata->{'Content-Type'}->to_string );
-    (not $request->header('Accept-Encoding')) ? \&g7 : \&f7;
+
+    if ( $request->header('Accept-Encoding') ) {
+        return \&f7
+    }
+    else {
+        if ( my $encoding = choose_encoding( $resource->encodings_provided, "identity;q=1.0,*;q=0.5" ) ) {
+            $response->header( 'Content-Encoding' => $encoding ) unless $encoding eq 'identity';
+            $metadata->{'Content-Encoding'} = $encoding;
+            return \&g7;
+        }
+        else {
+            return \406;
+        }
+    }
 }
 
 $STATE_DESC{'f7'} = 'accept_encoding_choice_available';
@@ -541,15 +567,69 @@ sub o14 {
     return \&p11;
 }
 
+$STATE_DESC{'o16'} = 'method_is_put';
+sub o16 {
+    my ($resource, $request, $response, $metadata) = @_;
+    $request->method eq 'PUT' ? \&o14 : \&o18;
+}
 
+$STATE_DESC{'o18'} = 'multiple_representations';
+sub o18 {
+    my ($resource, $request, $response, $metadata) = @_;
+    if ( $request->method eq 'GET' || $request->method eq 'HEAD' ) {
+        _add_caching_headers( $resource, $response );
 
-# $STATE_DESC{''} = '';
-# sub x {
-#     my ($resource, $request, $response, $metadata) = @_;
-#     #...
-#
-# }
-#
+        my $content_type = $metadata->{'Content-Type'};
+        my $match        = first {
+            my $ct = Web::Machine::Util::MediaType->new_from_string( $_->[0] );
+            $content_type->match( $ct )
+        } @{ $resource->content_types_provided };
+
+        my $handler = $match->[1];
+        my $result  = $resource->$handler();
+
+        return $result if is_status_code( $result );
+
+        $response->body( $result );
+        encode_body( $resource, $response, $metadata );
+        return \&o18b;
+    }
+    else {
+        return \&o18b;
+    }
+
+}
+
+$STATE_DESC{'o18b'} = 'multiple_choices';
+sub o18b {
+    my ($resource, $request, $response, $metadata) = @_;
+    $resource->multiple_choices ? \300 : \200;
+}
+
+$STATE_DESC{'o20'} = 'response_body_includes_entity';
+sub o20 {
+    my ($resource, $request, $response, $metadata) = @_;
+    $response->body ? \&o18 : \204;
+}
+
+$STATE_DESC{'p3'} = 'in_conflict';
+sub p3 {
+    my ($resource, $request, $response, $metadata) = @_;
+    return \409 if $resource->is_conflict;
+
+    my $handler = _get_acceptable_content_type_handler( $resource, $request );
+    my $result  = $resource->$handler();
+
+    return $result if is_status_code( $result );
+    return \&p11;
+}
+
+$STATE_DESC{'p11'} = 'new_resource';
+sub p11 {
+    my ($resource, $request, $response, $metadata) = @_;
+    (not $response->header('Location')) ? \&o20 : \201
+}
+
 
 1;
 
