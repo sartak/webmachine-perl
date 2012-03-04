@@ -20,22 +20,22 @@ sub run {
 
     try {
         while (1) {
-            warn "entering " . get_state_name( $state ) . "\n";
+            #warn "entering " . get_state_name( $state ) . "\n";
             my $result = $state->( $resource, $request, $response, $metadata );
             if ( ! ref $result ) {
-                warn "! ERROR with " . ($result || 'undef') . "\n";
+                #warn "! ERROR with " . ($result || 'undef') . "\n";
                 $response->status( 500 );
                 $response->body( "Got bad state: " . ($result || 'undef') );
                 last;
             }
             elsif ( is_status_code( $result ) ) {
-                warn ".. terminating with " . ${ $result } . "\n";
+                #warn ".. terminating with " . ${ $result } . "\n";
                 $response->status( ${ $result } );
                 $resource->finish_request;
                 last;
             }
             elsif ( is_new_state( $result ) ) {
-                warn "-> transitioning to " . get_state_name( $result ) . "\n";
+                #warn "-> transitioning to " . get_state_name( $result ) . "\n";
                 $state = $result;
             }
         }
