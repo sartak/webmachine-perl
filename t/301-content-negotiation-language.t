@@ -38,8 +38,8 @@ is(
 
 # From webmachine-ruby
 
-ok(!defined( choose_language( [], 'en' ) ), '... got nothing back');
-ok(!defined( choose_language( ['en'], 'es' ) ), '... got nothing back');
+is(choose_language( [], 'en' ), 1, '... got nothing back');
+is(choose_language( ['en'], 'es' ), undef, '... got nothing back');
 
 is(
     choose_language( ['en', 'en-US', 'es'], "en-US, es" ),
