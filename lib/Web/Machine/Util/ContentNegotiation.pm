@@ -73,7 +73,7 @@ sub choose_language {
         }
     }
 
-    $language;
+    $language || 1;
 }
 
 sub choose_charset {
