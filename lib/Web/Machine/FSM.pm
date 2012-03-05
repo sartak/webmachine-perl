@@ -12,6 +12,8 @@ use Web::Machine::FSM::States qw[
 sub run {
     my ( $self, $resource ) = @_;
 
+    my $DEBUG = $ENV{'WM_DEBUG'};
+
     my $request  = $resource->request;
     my $response = $resource->response;
     my $metadata = {};
@@ -20,22 +22,29 @@ sub run {
 
     try {
         while (1) {
-            #warn "entering " . get_state_name( $state ) . "\n";
+            warn "entering " . get_state_name( $state ) . "\n" if $DEBUG;
             my $result = $state->( $resource, $request, $response, $metadata );
             if ( ! ref $result ) {
-                #warn "! ERROR with " . ($result || 'undef') . "\n";
+                warn "! ERROR with " . ($result || 'undef') . "\n" if $DEBUG;
                 $response->status( 500 );
                 $response->body( "Got bad state: " . ($result || 'undef') );
                 last;
             }
             elsif ( is_status_code( $result ) ) {
-                #warn ".. terminating with " . ${ $result } . "\n";
+                warn ".. terminating with " . ${ $result } . "\n" if $DEBUG;
                 $response->status( ${ $result } );
                 $resource->finish_request;
+
+                if ( $DEBUG ) {
+                    require Data::Dumper;
+                    warn Data::Dumper::Dumper( $request->env );
+                    warn Data::Dumper::Dumper( $response->finalize );
+                }
+
                 last;
             }
             elsif ( is_new_state( $result ) ) {
-                #warn "-> transitioning to " . get_state_name( $result ) . "\n";
+                warn "-> transitioning to " . get_state_name( $result ) . "\n" if $DEBUG;
                 $state = $result;
             }
         }
