@@ -30,6 +30,7 @@ sub delete_resource           { 0 }
 sub delete_completed          { 1 }
 sub post_is_create            { 0 }
 sub create_path               { undef }
+sub base_uri                  { undef }
 sub process_post              { 0 }
 sub content_types_provided    { [] }
 sub content_types_accepted    { [] }
