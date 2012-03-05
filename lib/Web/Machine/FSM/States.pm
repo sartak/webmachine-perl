@@ -276,7 +276,7 @@ $STATE_DESC{'f7'} = 'accept_encoding_choice_available';
 sub f7 {
     my ($resource, $request, $response, $metadata) = @_;
 
-    if ( my $encoding = choose_encoding( $request->header('Accept-Encoding'), $resource->encodings_provided ) ) {
+    if ( my $encoding = choose_encoding( $resource->encodings_provided, $request->header('Accept-Encoding') ) ) {
         $response->header( 'Content-Encoding' => $encoding ) unless $encoding eq 'identity';
         $metadata->{'Content-Encoding'} = $encoding;
         return \&g7;
