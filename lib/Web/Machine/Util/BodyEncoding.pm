@@ -32,15 +32,15 @@ sub encode_body {
     # body types that Plack supports
     # (arrays, code refs, etc).
     # - SL
-    $response->body(
+    $response->body([
         $resource->$encoder(
             $resource->$charsetter(
                 $response->body
             )
         )
-    );
+    ]);
 
-    $response->header( 'Content-Length' => length $response->body );
+    $response->header( 'Content-Length' => length join "" => @{ $response->body } );
 }
 
 
