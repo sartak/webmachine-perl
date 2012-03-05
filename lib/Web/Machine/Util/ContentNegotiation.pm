@@ -47,33 +47,32 @@ sub match_acceptable_media_type {
 sub choose_language {
     my ($provided, $header) = @_;
 
+    return 1 if scalar @$provided == 0;
+
     my $language;
+    my $requested     = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
+    my $star_priority = $requested->priority_of('*');
+    my $any_ok        = $star_priority && $star_priority > 0.0;
 
-    if ( scalar @$provided ) {
-        my $requested     = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
-        my $star_priority = $requested->priority_of('*');
-        my $any_ok        = $star_priority && $star_priority > 0.0;
-
-        my $accepted      = first {
-            my ($priority, $range) = @$_;
-            if ( $priority == 0.0 ) {
-                $provided = [ grep { language_match( $range, $_ )  } @$provided ];
-                return 0;
-            }
-            else {
-                return any { language_match( $range, $_ ) } @$provided;
-            }
-        } $requested->iterable;
-
-        if ( $accepted ) {
-            $language = first { language_match( $accepted->[-1], $_ ) } @$provided;
+    my $accepted      = first {
+        my ($priority, $range) = @$_;
+        if ( $priority == 0.0 ) {
+            $provided = [ grep { language_match( $range, $_ )  } @$provided ];
+            return 0;
         }
-        elsif ( $any_ok ) {
-            $language = $provided->[0];
+        else {
+            return any { language_match( $range, $_ ) } @$provided;
         }
+    } $requested->iterable;
+
+    if ( $accepted ) {
+        $language = first { language_match( $accepted->[-1], $_ ) } @$provided;
+    }
+    elsif ( $any_ok ) {
+        $language = $provided->[0];
     }
 
-    $language || 1;
+    $language;
 }
 
 sub choose_charset {
