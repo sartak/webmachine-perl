@@ -221,6 +221,7 @@ sub d5 {
 
     if ( my $language = choose_language( $resource->languages_provided, $request->header('Accept-Language') ) ) {
         $metadata->{'Language'} = $language;
+        # handle the short circuit here ...
         $response->header( 'Content-Language' => $language ) if "$language" ne "1";
         return \&e5;
     }
@@ -239,7 +240,8 @@ sub e6 {
     my ($resource, $request, $response, $metadata) = @_;
 
     if ( my $charset = choose_charset( $resource->charsets_provided, $request->header('Accept-Charset') ) ) {
-        $metadata->{'Charset'} = $charset;
+        # handle the short circuit here ...
+        $metadata->{'Charset'} = $charset if "$charset" ne "1";
         return \&f6;
     }
 
