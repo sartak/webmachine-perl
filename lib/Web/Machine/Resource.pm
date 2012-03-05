@@ -34,7 +34,7 @@ sub base_uri                  { undef }
 sub process_post              { 0 }
 sub content_types_provided    { [] }
 sub content_types_accepted    { [] }
-sub charsets_provided         { [] }
+sub charsets_provided         { undef }
 sub languages_provided        { [] }
 sub encodings_provided        { { 'identity' => sub { $_[1] } } }
 sub variances                 { [] }
