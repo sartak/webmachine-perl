@@ -295,10 +295,10 @@ sub g7 {
     # - SL
     my @variances = @{ $resource->variances };
 
-    push @variances => 'Accept'          if @{ $resource->content_types_provided };
-    push @variances => 'Accept-Language' if @{ $resource->languages_provided };
-    push @variances => 'Accept-Charset'  if @{ $resource->charsets_provided };
-    push @variances => 'Accept-Encoding' if keys %{ $resource->encodings_provided };
+    push @variances => 'Accept'          if scalar @{ $resource->content_types_provided } > 1;
+    push @variances => 'Accept-Encoding' if scalar keys %{ $resource->encodings_provided } > 1;
+    push @variances => 'Accept-Charset'  if defined $resource->charsets_provided && scalar @{ $resource->charsets_provided } > 1;
+    push @variances => 'Accept-Language' if scalar @{ $resource->languages_provided } > 1;
 
     $response->header( 'Vary' => join ', ' => @variances ) if @variances;
 
