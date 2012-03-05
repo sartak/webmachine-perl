@@ -77,17 +77,19 @@ sub choose_language {
 
 sub choose_charset {
     my ($provided, $header) = @_;
-    if ( @$provided ) {
-        my @charsets = map { $_->[0] } @$provided;
-        # NOTE:
-        # Making the default charset UTF-8, which
-        # is maybe sensible, I dunno.
-        # - SL
-        if ( my $charset = make_choice( \@charsets, $header, 'UTF-8' )) {
-            return $charset;
-        }
+
+    return 1 if scalar @$provided == 0;
+
+    my @charsets = map { $_->[0] } @$provided;
+    # NOTE:
+    # Making the default charset UTF-8, which
+    # is maybe sensible, I dunno.
+    # - SL
+    if ( my $charset = make_choice( \@charsets, $header, 'UTF-8' )) {
+        return $charset;
     }
-    return 1;
+
+    return;
 }
 
 sub choose_encoding {
