@@ -10,8 +10,8 @@ BEGIN {
     use_ok('Web::Machine::Util::ContentNegotiation', 'choose_encoding');
 }
 
-ok(!defined( choose_encoding( {}, 'identity, gzip' ) ), '... got nothing back');
-ok(!defined( choose_encoding( { "gzip" => sub {} }, 'identity' ) ), '... got nothing back');
+is(choose_encoding( {}, 'identity, gzip' ), 'identity', '... got nothing back (encoding short circuited)');
+is(choose_encoding( { "gzip" => sub {} }, 'identity' ), 'identity', '... got nothing back (encoding short circuited)');
 
 is(
     choose_encoding( { "gzip" => sub {}, "identity" => sub {} }, "identity" ),

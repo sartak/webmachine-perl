@@ -95,12 +95,10 @@ sub choose_charset {
 sub choose_encoding {
     my ($provided, $header) = @_;
     my @encodings = keys %$provided;
-    if ( @encodings ) {
-        if ( my $encoding = make_choice( \@encodings, $header, 'identity' ) ) {
-            return $encoding;
-        }
+    if ( my $encoding = make_choice( \@encodings, $header, 'identity' ) ) {
+        return $encoding;
     }
-    return;
+    return 'identity';
 }
 
 ## ....
