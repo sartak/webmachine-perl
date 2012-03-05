@@ -221,8 +221,8 @@ sub d5 {
 
     if ( my $language = choose_language( $resource->languages_provided, $request->header('Accept-Language') ) ) {
         $metadata->{'Language'} = $language;
-        $response->header( 'Content-Language' => $language );
-        return \&e4;
+        $response->header( 'Content-Language' => $language ) if "$language" ne "1";
+        return \&e5;
     }
 
     return \406;
