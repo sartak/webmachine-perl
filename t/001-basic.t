@@ -45,7 +45,6 @@ is_deeply(
     [
         200,
         [
-        'Vary'           => 'Accept, Accept-Encoding',
         'Content-Length' => 37,
         'Content-Type'   => 'text/html'
         ],
