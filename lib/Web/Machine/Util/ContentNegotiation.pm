@@ -87,7 +87,7 @@ sub choose_charset {
             return $charset;
         }
     }
-    return;
+    return 1;
 }
 
 sub choose_encoding {
