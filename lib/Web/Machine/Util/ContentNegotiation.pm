@@ -124,7 +124,7 @@ sub make_choice {
 
     my $accepted         = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
     my $default_priority = $accepted->priority_of( $default );
-    my $star_priority    = $accepted->priority_of( '*' ) || 0.0;
+    my $star_priority    = $accepted->priority_of( '*' );
 
     my ($default_ok, $any_ok);
 
