@@ -28,6 +28,7 @@ use Sub::Exporter -setup => {
         is_status_code
         is_new_state
         get_state_name
+        get_state_desc
     ]]
 };
 
@@ -37,6 +38,7 @@ sub start_state    { \&b13 }
 sub is_status_code { ref $_[0] eq 'SCALAR' }
 sub is_new_state   { ref $_[0] eq 'CODE'   }
 sub get_state_name { B::svref_2object( shift )->GV->NAME }
+sub get_state_desc { $STATE_DESC{ ref $_[0] ? get_state_name( shift ) : shift } }
 
 # some utilities ...
 
