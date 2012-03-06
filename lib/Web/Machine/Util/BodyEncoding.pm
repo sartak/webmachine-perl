@@ -3,7 +3,7 @@ package Web::Machine::Util::BodyEncoding;
 use strict;
 use warnings;
 
-use List::Util qw[ first ];
+use Web::Machine::Util qw[ first ];
 
 use Sub::Exporter -setup => {
     exports => [qw[

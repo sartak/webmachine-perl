@@ -4,10 +4,8 @@ use strict;
 use warnings;
 
 use Hash::MultiValue;
-use Carp            qw[ confess ];
-use List::Util      qw[ first ];
-use List::MoreUtils qw[ any ];
-use HTTP::Date      qw[ str2time ];
+use Carp               qw[ confess ];
+use Web::Machine::Util qw[ first any str2time ];
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::BodyEncoding qw[

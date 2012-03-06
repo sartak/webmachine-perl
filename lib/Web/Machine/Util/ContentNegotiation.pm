@@ -3,8 +3,7 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
-use List::Util      qw[ first ];
-use List::MoreUtils qw[ any ];
+use Web::Machine::Util qw[ first any ];
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::MediaTypeList;
