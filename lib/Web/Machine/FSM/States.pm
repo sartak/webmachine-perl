@@ -5,7 +5,7 @@ use warnings;
 
 use Hash::MultiValue;
 use Carp               qw[ confess ];
-use Web::Machine::Util qw[ first any str2time ];
+use Web::Machine::Util qw[ first any str2time pair_key pair_value ];
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::BodyEncoding qw[
@@ -67,7 +67,7 @@ sub _get_acceptable_content_type_handler {
         $resource->content_types_accepted
     );
     return \415 unless $acceptable;
-    return $acceptable->[1];
+    return pair_value( $acceptable );
 }
 
 sub _add_caching_headers {
@@ -187,7 +187,7 @@ sub c3 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( !$request->header('Accept') ) {
         $metadata->{'Content-Type'} = Web::Machine::Util::MediaType->new_from_string(
-            $resource->content_types_provided->[0]->[0]
+            pair_key( $resource->content_types_provided->[0] )
         );
         return \&d4
     }
@@ -198,7 +198,7 @@ $STATE_DESC{'c4'} = 'acceptable_media_type_available';
 sub c4 {
     my ($resource, $request, $response, $metadata) = @_;
 
-    my @types = map { $_->[0] } @{ $resource->content_types_provided };
+    my @types = map { pair_key( $_ ) } @{ $resource->content_types_provided };
 
     if ( my $chosen_type = choose_media_type( \@types, $request->header('Accept') ) ) {
         $metadata->{'Content-Type'} = $chosen_type;
@@ -583,11 +583,11 @@ sub o18 {
 
         my $content_type = $metadata->{'Content-Type'};
         my $match        = first {
-            my $ct = Web::Machine::Util::MediaType->new_from_string( $_->[0] );
+            my $ct = Web::Machine::Util::MediaType->new_from_string( pair_key( $_ ) );
             $content_type->match( $ct )
         } @{ $resource->content_types_provided };
 
-        my $handler = $match->[1];
+        my $handler = pair_value( $match );
         my $result  = $resource->$handler();
 
         return $result if is_status_code( $result );

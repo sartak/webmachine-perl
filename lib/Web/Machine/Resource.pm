@@ -227,11 +227,9 @@ process any POST request. If it succeeds, it should return true.
 
 =item C<content_types_provided>
 
-This should return an ARRAY of pairs where each pair is of the
-form [ C<$mediatype>, C<&handler> ] where C<$mediatype> is a
-string of Content-Type format and C<&handler> is a CODE ref of
-a method which can provide a resource representation in that
-media type.
+This should return an ARRAY of HASH ref pairs where the key is
+name of the media type and the value is a CODE ref of a method
+which can provide a resource representation in that media type.
 
 For example, if a client request includes an 'Accept' header with
 a value that does not appear as a first element in any of the return
@@ -241,7 +239,7 @@ Default is an empty ARRAY ref.
 
 =item C<content_types_accepted>
 
-Similarly to content_types_provided, this should return an array
+Similarly to content_types_provided, this should return an ARRAY
 of mediatype/handler pairs, except that it is for incoming
 resource representations -- for example, PUT requests. Handler
 functions usually want to use C<< $request->body >> to access the
@@ -250,10 +248,9 @@ incoming entity.
 =item C<charsets_provided>
 
 If this is anything other than undef, it must be an ARRAY of pairs
-where each pair is of the form Charset, Converter where Charset
-is a string naming a charset and Converter is an arity-1 method
-in the resource which will be called on the produced body in a
-GET and ensure that it is in Charset.
+where each pair key is the charset name and the pair value is
+a CODE ref converter which is an arity-1 method which will be called
+on the produced body in a GET and ensure that it is in Charset.
 
 Default is undef.
 
@@ -265,7 +262,7 @@ in no specific language.
 
 =item C<encodings_provided>
 
-This should return a hash of encodings mapped to encoding
+This should return a HASH of encodings mapped to encoding
 methods for Content-Encodings your resource wants to
 provide. The encoding will be applied to the response body
 automatically by Webmachine.

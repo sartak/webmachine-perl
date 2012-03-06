@@ -3,7 +3,7 @@ package Web::Machine::Util::BodyEncoding;
 use strict;
 use warnings;
 
-use Web::Machine::Util qw[ first ];
+use Web::Machine::Util qw[ first pair_key ];
 
 use Sub::Exporter -setup => {
     exports => [qw[
@@ -25,7 +25,7 @@ sub encode_body {
 
     my $chosen_charset  = $metadata->{'Charset'};
     my $charsetter      = $resource->charsets_provided
-                        && (first { $_ && $_->[0] eq $chosen_charset } @{ $resource->charsets_provided })
+                        && (first { $_ && pair_key( $_ ) eq $chosen_charset } @{ $resource->charsets_provided })
                         || sub { $_[1] };
     # TODO:
     # Make this support the other

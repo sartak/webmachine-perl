@@ -17,8 +17,8 @@ use Sub::Exporter -setup => {
     ]]
 };
 
-sub pair_key   { $_[0]->[0] }
-sub pair_value { $_[0]->[1] }
+sub pair_key   { ( keys   %{ $_[0] } )[0] }
+sub pair_value { ( values %{ $_[0] } )[0] }
 
 1;
 

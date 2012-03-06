@@ -3,7 +3,7 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
-use Web::Machine::Util qw[ first any ];
+use Web::Machine::Util qw[ first any pair_key ];
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::MediaTypeList;
@@ -79,7 +79,7 @@ sub choose_charset {
 
     return 1 if scalar @$provided == 0;
 
-    my @charsets = map { $_->[0] } @$provided;
+    my @charsets = map { pair_key( $_ ) } @$provided;
     # NOTE:
     # Making the default charset UTF-8, which
     # is maybe sensible, I dunno.
