@@ -49,7 +49,7 @@ sub iterable {
     map {
         my $q = $_;
         map { [ $q, $_ ] } @{ $self->items->{ $q } }
-    } reverse sort { $a <=> $b } map { ( $_ + 0 ) } keys %{ $self->items };
+    } reverse sort keys %{ $self->items };
 }
 
 __PACKAGE__->meta->make_immutable;
