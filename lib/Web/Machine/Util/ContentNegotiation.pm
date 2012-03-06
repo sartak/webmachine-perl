@@ -157,9 +157,8 @@ sub make_choice {
         my ($priority, $acceptable) = @$_;
         if ( $priority == 0.0 ) {
             $choices = [ grep { lc $acceptable ne $_ } @$choices ];
-            return 0;
         } else {
-            return any { lc $acceptable eq $_ } @$choices;
+            return $acceptable if any { lc $acceptable eq $_ } @$choices;
         }
     } $accepted->iterable;
 
