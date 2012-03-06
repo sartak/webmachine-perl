@@ -98,7 +98,7 @@ sub choose_encoding {
     if ( my $encoding = make_choice( \@encodings, $header, 'identity' ) ) {
         return $encoding;
     }
-    return 'identity';
+    return;
 }
 
 ## ....
