@@ -7,6 +7,7 @@ use Web::Machine::FSM::States qw[
     is_status_code
     is_new_state
     get_state_name
+    get_state_desc
 ];
 
 sub run {
@@ -22,7 +23,7 @@ sub run {
 
     try {
         while (1) {
-            warn "entering " . get_state_name( $state ) . "\n" if $DEBUG;
+            warn "entering " . get_state_name( $state ) . " (" . get_state_desc( $state ) . ")\n" if $DEBUG;
             my $result = $state->( $resource, $request, $response, $metadata );
             if ( ! ref $result ) {
                 warn "! ERROR with " . ($result || 'undef') . "\n" if $DEBUG;
@@ -49,6 +50,7 @@ sub run {
             }
         }
     } catch {
+        warn $_ if $DEBUG;
         $response->status( 500 );
         $response->body( $_ );
     };
