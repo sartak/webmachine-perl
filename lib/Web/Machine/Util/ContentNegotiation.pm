@@ -117,6 +117,9 @@ sub language_match {
 sub make_choice {
     my ($choices, $header, $default) = @_;
 
+    return if @$choices == 0;
+    return if $header eq '';
+
     $choices = [ map { lc $_ } @$choices ];
 
     my $accepted         = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
