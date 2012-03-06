@@ -125,8 +125,33 @@ sub make_choice {
     my $accepted         = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
     my $default_priority = $accepted->priority_of( $default );
     my $star_priority    = $accepted->priority_of( '*' ) || 0.0;
-    my $default_ok       = ( defined $default_priority && $star_priority != 0 ) || $default_priority;
-    my $any_ok           = $star_priority && $star_priority > 0.0;
+
+    my ($default_ok, $any_ok);
+
+    if ( not defined $default_priority ) {
+        if ( defined $star_priority && $star_priority == 0.0 ) {
+            $default_ok = 0;
+        }
+        else {
+            $default_ok = 1;
+        }
+    }
+    elsif ( $default_priority == 0.0 ) {
+        $default_ok = 0;
+    }
+    else {
+        $default_ok = 1;
+    }
+
+    if ( not defined $star_priority ) {
+        $any_ok = 0;
+    }
+    elsif ( $star_priority == 0.0 ) {
+        $any_ok = 0;
+    }
+    else {
+        $any_ok = 1;
+    }
 
     my $chosen = first {
         my ($priority, $acceptable) = @$_;
