@@ -162,11 +162,10 @@ sub make_choice {
         }
     } $accepted->iterable;
 
-    ($chosen && $chosen->[-1])
-        ||
-    ($any_ok && $choices->[0])
-        ||
-    ($default_ok && (any { $default eq $_ } @$choices) && $default)
+    return $chosen->[-1] if $chosen;
+    return $choices->[0] if $any_ok;
+    return $default      if $default_ok && any { $default eq $_ } @$choices;
+    return;
 }
 
 
