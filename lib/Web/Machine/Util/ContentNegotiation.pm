@@ -37,7 +37,7 @@ sub choose_media_type {
 sub match_acceptable_media_type {
     my ($to_match, $accepted) = @_;
     my $content_type = Web::Machine::Util::MediaType->new_from_string( $to_match );
-    if ( my $acceptable = first { $content_type->match( $_ ) } @$accepted ) {
+    if ( my $acceptable = first { $content_type->match( pair_key( $_ ) ) } @$accepted ) {
         return $acceptable;
     }
     return;
