@@ -225,6 +225,21 @@ test_psgi
             is($res->content, '', '... got the expected content');
         }
 
+        {
+            my $res = $cb->(PUT "/WEB_MACHINE_AUTOMATED_TESTING", (
+                'Content-Type' => 'application/xml', 'Content' => '<FOOBAR/>'
+            ));
+            is($res->code, 415, '... got the expected status');
+            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->content, '', '... got the expected content');
+        }
+
+        {
+            my $res = $cb->(GET "/", 'Accept' => 'text/html');
+            is($res->code, 406, '... got the expected status');
+            is($res->content, '', '... got the expected content');
+        }
+
     };
 
 done_testing;
