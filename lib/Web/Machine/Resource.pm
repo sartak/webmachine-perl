@@ -13,8 +13,6 @@ has 'response' => (
     required => 1
 );
 
-has 'context' => ( is => 'rw', isa => 'Any' );
-
 sub resource_exists           { 1 }
 sub service_available         { 1 }
 sub is_authorized             { 1 }
