@@ -524,6 +524,8 @@ sub n11 {
         $response->header( 'Location' => $new_uri->as_string );
 
         my $handler = _get_acceptable_content_type_handler( $resource, $request );
+        return $handler if is_status_code( $handler );
+
         my $result  = $resource->$handler();
 
         return $result if is_status_code( $result );
@@ -563,6 +565,8 @@ sub o14 {
     return \409 if $resource->is_conflict;
 
     my $handler = _get_acceptable_content_type_handler( $resource, $request );
+    return $handler if is_status_code( $handler );
+
     my $result  = $resource->$handler();
 
     return $result if is_status_code( $result );
@@ -620,6 +624,8 @@ sub p3 {
     return \409 if $resource->is_conflict;
 
     my $handler = _get_acceptable_content_type_handler( $resource, $request );
+    return $handler if is_status_code( $handler );
+
     my $result  = $resource->$handler();
 
     return $result if is_status_code( $result );
