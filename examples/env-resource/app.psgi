@@ -40,7 +40,7 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
         my $self = shift;
         my $var  = $self->_get_path;
         if ( $var ) {
-            $self->context( $ENV{ $var } ) exists $ENV{ $var };
+            $self->context( $ENV{ $var } ) if exists $ENV{ $var };
         }
         else {
             $self->context( { map { $_ => $ENV{ $_ } } keys %ENV } );
@@ -61,9 +61,7 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
         }
     }
 
-    sub delete_resource {
-        delete $ENV{ (shift)->_get_path };
-    }
+    sub delete_resource { delete $ENV{ (shift)->_get_path } }
 
     # ...
 
