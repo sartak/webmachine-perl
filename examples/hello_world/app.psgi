@@ -13,7 +13,7 @@ use Web::Machine::FSM;
 
     with 'Web::Machine::Resource';
 
-    sub content_types_provided { [[ 'text/html' => 'to_html' ]] }
+    sub content_types_provided { [{ 'text/html' => 'to_html' }] }
 
     sub to_html {
         join "" =>
