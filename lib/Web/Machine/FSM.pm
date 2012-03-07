@@ -52,7 +52,7 @@ sub run {
     } catch {
         warn $_ if $DEBUG;
         $response->status( 500 );
-        $response->body( $_ );
+        $response->body( [ $_ ] );
     };
 
     $response;
