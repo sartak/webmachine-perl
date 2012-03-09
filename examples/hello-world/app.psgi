@@ -9,9 +9,10 @@ use Web::Machine::FSM;
 
 {
     package HelloWorld::Resource;
-    use Moose;
+    use strict;
+    use warnings;
 
-    with 'Web::Machine::Resource';
+    use parent 'Web::Machine::Resource';
 
     sub content_types_provided { [{ 'text/html' => 'to_html' }] }
 

@@ -1,9 +1,9 @@
 package Web::Machine::Util::MediaTypeList;
-use Moose;
 
-use Web::Machine::Util::MediaType;
+use strict;
+use warnings;
 
-extends 'Web::Machine::Util::PriorityList';
+use parent 'Web::Machine::Util::PriorityList';
 
 sub add_header_value {
     my ($self, $c) = @_;
@@ -13,7 +13,7 @@ sub add_header_value {
     # do not want it to be involved in the
     # matching of the params.
     # - SL
-    my $q  = delete $mt->params->{ 'q' } || 1.0;
+    my $q  = $mt->remove_param( 'q' ) || 1.0;
     $self->add( $q, $mt );
 }
 
@@ -49,13 +49,11 @@ sub iterable {
     } keys %{ $self->items };
 }
 
-__PACKAGE__->meta->make_immutable;
-
-no Moose; 1;
+1;
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: A Priority List customized for Media Types
 
 =head1 SYNOPSIS
 

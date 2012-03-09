@@ -1,5 +1,4 @@
 package Web::Machine::FSM;
-use Moose;
 
 use Try::Tiny;
 use Web::Machine::FSM::States qw[
@@ -9,6 +8,8 @@ use Web::Machine::FSM::States qw[
     get_state_name
     get_state_desc
 ];
+
+sub new { bless {} => (shift) }
 
 sub run {
     my ( $self, $resource ) = @_;
@@ -58,13 +59,11 @@ sub run {
     $response;
 }
 
-__PACKAGE__->meta->make_immutable;
-
-no Moose; 1;
+1;
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: The State Machine runner
 
 =head1 SYNOPSIS
 

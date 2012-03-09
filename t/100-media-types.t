@@ -26,10 +26,7 @@ BEGIN {
 
     is($parsed_media_type->to_string, 'application/xml;charset=UTF-8', '... the string representation');
 
-    my $media_type = Web::Machine::Util::MediaType->new(
-        type   => 'application/xml',
-        params => { 'charset' => 'UTF-8' }
-    );
+    my $media_type = Web::Machine::Util::MediaType->new('application/xml', => ( 'charset' => 'UTF-8' ));
     isa_ok($media_type, 'Web::Machine::Util::MediaType');
     is($media_type->to_string, 'application/xml;charset=UTF-8', '... the string representation');
 

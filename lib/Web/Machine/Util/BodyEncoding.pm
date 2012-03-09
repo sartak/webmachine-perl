@@ -48,7 +48,7 @@ sub encode_body {
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: Module to handle body encoding
 
 =head1 SYNOPSIS
 

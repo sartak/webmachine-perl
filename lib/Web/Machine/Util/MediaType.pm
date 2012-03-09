@@ -1,36 +1,43 @@
 package Web::Machine::Util::MediaType;
-use Moose;
 
-use Tie::IxHash;
+use strict;
+use warnings;
+
+use Carp         qw[ confess ];
+use Scalar::Util qw[ blessed ];
 
 use overload '""' => 'to_string', fallback => 1;
 
-has 'type' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1
-);
+sub new {
+    my $class = shift;
+    my ($type, @params) = @_;
 
-has 'params' => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    default => sub { +{} },
-);
+    confess "You must specify a type" unless $type;
+    confess "Params must be an even sized list" unless (((scalar @params) % 2) == 0);
+
+    my @param_order;
+    for ( my $i = 0; $i < $#params; $i += 2 ) {
+        push @param_order => $params[ $i ];
+    }
+
+    bless {
+        type        => $type,
+        params      => { @params },
+        param_order => \@param_order
+    } => $class;
+}
+
+sub type   { (shift)->{'type'}   }
+sub params { (shift)->{'params'} }
+
+sub _param_order { (shift)->{'param_order'} }
 
 sub new_from_string {
     my ($class, $media_type) = @_;
     if ( $media_type =~ /^\s*([^;\s]+)\s*((?:;\s*\S+\s*)*)\s*$/ ) {
         my ($type, $raw_params) = ($1, $2);
-        # NOTE:
-        # if the media type comes in as a
-        # string, we want to be able to
-        # round-trip it, so we need to
-        # make sure the hash retains its
-        # ordering.
-        # - SL
-        my %params;
-        tie %params, 'Tie::IxHash', ($raw_params =~ /;\s*([^=]+)=([^;=\s]+)/g);
-        return $class->new( type => $type, params => \%params );
+        my @params = ($raw_params =~ /;\s*([^=]+)=([^;=\s]+)/g);
+        return $class->new( $type => @params );
     }
     confess "Unable to parse media type from '$media_type'"
 }
@@ -38,9 +45,21 @@ sub new_from_string {
 sub major { (split '/' => (shift)->type)[0] }
 sub minor { (split '/' => (shift)->type)[1] }
 
+sub add_param {
+    my ($self, $k, $v) = @_;
+    $self->params->{ $k } = $v;
+    push @{ $self->_param_order } => $k;
+}
+
+sub remove_param {
+    my ($self, $k) = @_;
+    $self->{'param_order'} = [ grep { $_ ne $k } @{ $self->{'param_order'} } ];
+    return delete $self->params->{ $k };
+}
+
 sub to_string {
     my $self = shift;
-    join ';' => $self->type, map { join '=' => $_, $self->params->{ $_ } } keys %{ $self->params };
+    join ';' => $self->type, map { join '=' => $_, $self->params->{ $_ } } @{ $self->_param_order };
 }
 
 sub matches_all {
@@ -116,13 +135,11 @@ sub _compare_params {
     return 1;
 }
 
-__PACKAGE__->meta->make_immutable;
-
-no Moose; 1;
+1;
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: A Media Type
 
 =head1 SYNOPSIS
 

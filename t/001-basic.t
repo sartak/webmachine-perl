@@ -5,7 +5,6 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
-use Test::Moose;
 
 use Plack::Request;
 use Plack::Response;
@@ -16,9 +15,10 @@ BEGIN {
 
 {
     package My::Resource;
-    use Moose;
+    use strict;
+    use warnings;
 
-    with 'Web::Machine::Resource';
+    use parent 'Web::Machine::Resource';
 
     sub content_types_provided { [{ 'text/html' => 'to_html' }] }
 
@@ -59,7 +59,7 @@ foreach my $env ( @envs ) {
         request  => Plack::Request->new( $env ),
         response => Plack::Response->new
     );
-    does_ok($r, 'Web::Machine::Resource');
+    isa_ok($r, 'Web::Machine::Resource');
 
     is_deeply(
         $fsm->run( $r )->finalize,

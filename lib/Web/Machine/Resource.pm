@@ -1,17 +1,28 @@
 package Web::Machine::Resource;
-use Moose::Role;
 
-has 'request' => (
-    is       => 'ro',
-    isa      => 'Plack::Request',
-    required => 1
-);
+use strict;
+use warnings;
 
-has 'response' => (
-    is       => 'ro',
-    isa      => 'Plack::Response',
-    required => 1
-);
+use Carp         qw[ confess ];
+use Scalar::Util qw[ blessed ];
+
+sub new {
+    my ($class, %args) = @_;
+
+    (exists $args{'request'} && blessed $args{'request'} && $args{'request'}->isa('Plack::Request'))
+        || confess "You must supply a request and it must be a Plack::Request";
+
+    (exists $args{'response'} && blessed $args{'response'} && $args{'response'}->isa('Plack::Response'))
+        || confess "You must supply a response and it must be a Plack::Response";
+
+    bless {
+        request  => $args{'request'},
+        response => $args{'response'},
+    } => $class;
+}
+
+sub request  { (shift)->{'request'}  }
+sub response { (shift)->{'response'} }
 
 sub resource_exists           { 1 }
 sub service_available         { 1 }
@@ -48,11 +59,11 @@ sub expires                   { undef }
 sub generate_etag             { undef }
 sub finish_request            {}
 
-no Moose::Role; 1;
+1;
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: A base resource class
 
 =head1 SYNOPSIS
 

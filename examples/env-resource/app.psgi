@@ -17,14 +17,25 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
 
 {
     package Env::Resource;
-    use Moose;
+    use strict;
+    use warnings;
+
+    use parent 'Web::Machine::Resource';
+
     use JSON::XS ();
-
-    with 'Web::Machine::Resource';
-
-    has 'context' => ( is => 'rw', isa => 'Any' );
-
     my $JSON = JSON::XS->new->allow_nonref->pretty;
+
+    sub new {
+        my $self = shift->SUPER::new( @_ );
+        $self->{'context'} = undef;
+        $self;
+    }
+
+    sub context {
+        my $self = shift;
+        $self->{'context'} = shift if @_;
+        $self->{'context'}
+    }
 
     sub content_types_provided { [{ 'application/json' => 'to_json'   }] }
     sub content_types_accepted { [{ 'application/json' => 'from_json' }] }

@@ -7,7 +7,7 @@ use warnings;
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: A Perl port of WebMachine
 
 =head1 SYNOPSIS
 

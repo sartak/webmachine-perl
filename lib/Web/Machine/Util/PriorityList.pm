@@ -1,12 +1,12 @@
 package Web::Machine::Util::PriorityList;
-use Moose;
 
-has [ 'index', 'items' ] => (
-    init_arg => undef,
-    is       => 'ro',
-    isa      => 'HashRef',
-    default  => sub { +{} },
-);
+use strict;
+use warnings;
+
+sub new { bless { 'index' => {}, 'items' => {} } => (shift) }
+
+sub index { (shift)->{'index'} }
+sub items { (shift)->{'items'} }
 
 sub new_from_header_list {
     my ($class, @header_list) = @_;
@@ -53,13 +53,11 @@ sub iterable {
     } reverse sort keys %{ $self->items };
 }
 
-__PACKAGE__->meta->make_immutable;
-
-no Moose;1;
+1;
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: A Priority List
 
 =head1 SYNOPSIS
 

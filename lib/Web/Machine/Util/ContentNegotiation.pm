@@ -172,7 +172,7 @@ sub make_choice {
 
 __END__
 
-# ABSTRACT: A Moosey solution to this problem
+# ABSTRACT: Module to handle content negotiation
 
 =head1 SYNOPSIS
 
