@@ -2,9 +2,10 @@ package Web::Machine::Util::PriorityList;
 use Moose;
 
 has [ 'index', 'items' ] => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    default => sub { +{} },
+    init_arg => undef,
+    is       => 'ro',
+    isa      => 'HashRef',
+    default  => sub { +{} },
 );
 
 sub new_from_header_list {
