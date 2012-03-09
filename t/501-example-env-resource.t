@@ -12,6 +12,15 @@ use Plack::Util;
 
 use HTTP::Request::Common qw[ GET HEAD PUT POST DELETE ];
 
+BEGIN {
+    eval "use JSON::XS;";
+    if ( $@ ) {
+        diag('JSON::XS is required for this test');
+        done_testing;
+        exit;
+    }
+}
+
 test_psgi
     Plack::Util::load_psgi( "$FindBin::Bin/../examples/env-resource/app.psgi" ),
     sub {
