@@ -89,6 +89,11 @@ my @tests = (
         resource => 'D5',
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'en' },
         response => [ 406, [], [] ]
+    },
+    {
+        resource => 'E6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'en', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
+        response => [ 406, [], [] ]
     }
 );
 
