@@ -25,7 +25,7 @@ sub encode_body {
 
     my $chosen_charset  = $metadata->{'Charset'};
     my $charsetter      = $resource->charsets_provided
-                        && (first { $_ && pair_key( $_ ) eq $chosen_charset } @{ $resource->charsets_provided })
+                        && (first { $_ && $chosen_charset && pair_key( $_ ) eq $chosen_charset } @{ $resource->charsets_provided })
                         || sub { $_[1] };
     # TODO:
     # Make this support the other
