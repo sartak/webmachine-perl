@@ -79,8 +79,17 @@ my @tests = (
         resource => 'B3',
         request  => { REQUEST_METHOD => 'OPTIONS', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
         response => [ 200, [ 'X-Hello' => 'OH HAI!' ], [] ]
+    },
+    {
+        resource => 'C4',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/html' },
+        response => [ 406, [], [] ]
+    },
+    {
+        resource => 'D5',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'en' },
+        response => [ 406, [], [] ]
     }
-
 );
 
 foreach my $test ( @tests ) {
