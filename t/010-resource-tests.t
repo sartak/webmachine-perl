@@ -69,6 +69,16 @@ my @tests = (
         resource => 'B5',
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
         response => [ 415, [], [] ]
+    },
+    {
+        resource => 'B4',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 413, [], [] ]
+    },
+    {
+        resource => 'B3',
+        request  => { REQUEST_METHOD => 'OPTIONS', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 200, [ 'X-Hello' => 'OH HAI!' ], [] ]
     }
 
 );
