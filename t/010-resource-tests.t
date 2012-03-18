@@ -154,7 +154,7 @@ my @tests = (
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_ENCODING => 'gzip' },
         response => [ 406, [ 'Content-Type' => 'text/plain' ], [] ]
     },
-    # ...
+    # ... (test out all the different variance scenarios, this really is testing G7, but H7 is the terminal node)
     {
         resource => 'H7',
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
@@ -184,6 +184,30 @@ my @tests = (
         resource => 'H7f',
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
         response => [ 412, [ 'Vary' => 'Accept, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ]
+    },
+    # ...
+    {
+        resource => 'G11',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_MATCH => '0xDEADPORK' },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... H12 via G8->H10->H11
+    {
+        resource => 'H12',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT' },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... H12 via G8->G9->H10->H11
+    {
+        resource => 'H12',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_MATCH => '*', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT' },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... H12 via G8->G9->G11->H10->H11
+    {
+        resource => 'H12',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT', HTTP_IF_MATCH => '0xDEADPORK' },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
     },
 );
 
