@@ -85,16 +85,106 @@ my @tests = (
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/html' },
         response => [ 406, [], [] ]
     },
+    # ... (langauge doesn't match, but content type does)
     {
         resource => 'D5',
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'en' },
         response => [ 406, [], [] ]
     },
     {
+        resource => 'D5',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'en' },
+        response => [ 406, [], [] ] # won't have written the content type header yet
+    },
+    # ... (content type and language match, but charset doesn't)
+    {
         resource => 'E6',
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'en', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
         response => [ 406, [], [] ]
-    }
+    },
+    {
+        resource => 'E6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
+        response => [ 406, [ 'Content-Language' => 'de' ], [] ]
+    },
+    {
+        resource => 'E6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
+        response => [ 406, [ 'Content-Language' => 'de' ], [] ] # won't have written the content type header yet
+    },
+    # ... (no encoding asked for, and no identity provided, but content-type, language and charset matches)
+    {
+        resource => 'F6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8' },
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ]
+    },
+    {
+        resource => 'F6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8' },
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ]
+    },
+    {
+        resource => 'F6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'de' },
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'F6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 406, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... (same as F6, but now we are asking for an encoding)
+    {
+        resource => 'F7',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip' },
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ]
+    },
+    {
+        resource => 'F7',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip' },
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ]
+    },
+    {
+        resource => 'F7',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_ENCODING => 'gzip' },
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'F7',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT_ENCODING => 'gzip' },
+        response => [ 406, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ...
+    {
+        resource => 'H7',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
+        response => [ 412, [ 'Vary' => 'Accept, Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ]
+    },
+    {
+        resource => 'H7b',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
+        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ]
+    },
+    {
+        resource => 'H7c',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
+        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ]
+    },
+    {
+        resource => 'H7d',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
+        response => [ 412, [ 'Vary' => 'Accept-Encoding', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ]
+    },
+    {
+        resource => 'H7e',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ]
+    },
+    {
+        resource => 'H7f',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
+        response => [ 412, [ 'Vary' => 'Accept, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ]
+    },
 );
 
 foreach my $test ( @tests ) {
@@ -105,6 +195,7 @@ foreach my $test ( @tests ) {
         request  => Plack::Request->new( $test->{'request'} ),
         response => Plack::Response->new
     );
+    isa_ok($request, $test->{'resource'}, '... make sure we loaded the right class');
     isa_ok($request, 'Web::Machine::Resource', '... created resource (' . $test->{'resource'}. ') successfully');
 
     my $response;
