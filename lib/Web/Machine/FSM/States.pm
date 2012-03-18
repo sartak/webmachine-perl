@@ -240,7 +240,7 @@ sub e5 {
     (not $request->header('Accept-Charset')) ? \&f6 : \&e6;
 }
 
-$STATE_DESC{'e5'} = 'accept_charset_choice_available';
+$STATE_DESC{'e6'} = 'accept_charset_choice_available';
 sub e6 {
     my ($resource, $request, $response, $metadata) = @_;
 
