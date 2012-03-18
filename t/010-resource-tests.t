@@ -34,7 +34,43 @@ my @tests = (
         resource => 'B11',
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
         response => [ 414, [], [] ]
+    },
+    {
+        resource => 'B10',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 405, [ 'Allow' => 'PUT, DELETE' ], [] ]
+    },
+    {
+        resource => 'B9',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 400, [], [] ]
+    },
+    {
+        resource => 'B8',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 401, [ 'WWW-Authenticate' => 'Basic realm="Test"' ], [] ]
+    },
+    {
+        resource => 'B8b',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 500, [], [] ]
+    },
+    {
+        resource => 'B7',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 403, [], [] ]
+    },
+    {
+        resource => 'B6',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 501, [], [] ]
+    },
+    {
+        resource => 'B5',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 415, [], [] ]
     }
+
 );
 
 foreach my $test ( @tests ) {
