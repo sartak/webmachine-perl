@@ -390,7 +390,7 @@ sub i12 {
 $STATE_DESC{'i13'} = 'if_none_match_is_wildcard';
 sub i13 {
     my ($resource, $request, $response, $metadata) = @_;
-    $request->header('If-None-Match') eq "*" ? \&j13 : \&k13
+    $request->header('If-None-Match') eq "*" ? \&j18 : \&k13
 }
 
 $STATE_DESC{'j18'} = 'method_is_get_or_head';
