@@ -209,6 +209,127 @@ my @tests = (
         request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT', HTTP_IF_MATCH => '0xDEADPORK' },
         response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
     },
+    # ... I4 via H7->I7
+    {
+        resource => 'I4',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_MATCH => '0xDEADPORK' },
+        response => [ 301, [ 'Location' => '/foo/bar', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'I4b',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_MATCH => '0xDEADPORK' },
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... J18 via H10->I12->I13
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '*'  },
+        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'HEAD', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '*'  },
+        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '*'  },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... J18 via H10->H11->H12->I12
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '*', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT'  },
+        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'HEAD', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '*', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT'  },
+        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '*', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT'  },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... J18 via H10->I12->I13->K13
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '0xDEADBEEF'  },
+        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'HEAD', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '0xDEADBEEF'  },
+        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'J18',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', HTTP_IF_NONE_MATCH => '0xDEADBEEF'  },
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ...
+    {
+        resource => 'P3',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 409, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'P3b',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 415, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'P3b',
+        request  => { REQUEST_METHOD => 'PUT', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/', CONTENT_TYPE => 'text/plain' },
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... K5 via H7->I7->K7
+    {
+        resource => 'K5',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 301, [ 'Location' => '/foo/bar', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'K5b',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... L7 via H7->I7->K7
+    {
+        resource => 'L7',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 404, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... M7 via H7->I7->K7->L7
+    {
+        resource => 'M7',
+        request  => { REQUEST_METHOD => 'POST', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 404, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... L5 via H7->I7->K7->K5
+    {
+        resource => 'L5',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 307, [ 'Location' => '/foo/bar', 'Content-Type' => 'text/plain' ], [] ]
+    },
+    {
+        resource => 'L5b',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... M5 via H7->I7->K7->K5->L5
+    {
+        resource => 'M5',
+        request  => { REQUEST_METHOD => 'GET', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 410, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
+    # ... N5 via H7->I7->K7->K5->L5->M5
+    {
+        resource => 'N5',
+        request  => { REQUEST_METHOD => 'POST', SERVER_PROTOCOL => 'HTTP/1.1', SCRIPT_NAME => '/' },
+        response => [ 410, [ 'Content-Type' => 'text/plain' ], [] ]
+    },
 );
 
 foreach my $test ( @tests ) {
