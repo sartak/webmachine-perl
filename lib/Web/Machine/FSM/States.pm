@@ -546,13 +546,11 @@ sub n11 {
         }
     }
 
-    if ( $response->is_redirect ) {
-        if ( $response->header( 'Location ') ) {
-            return \303;
-        }
-        else {
-            confess "Bad Redirect";
-        }
+    if ( $response->location ) {
+        return \303;
+    }
+    else {
+        confess "Bad Redirect";
     }
 
     return \&p11;
