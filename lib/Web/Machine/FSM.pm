@@ -17,7 +17,8 @@ sub new {
     } => $class
 }
 
-sub tracing { (shift)->{'tracing'} }
+sub tracing        { (shift)->{'tracing'} }
+sub tracing_header { (shift)->{'tracing_header'} }
 
 sub run {
     my ( $self, $resource ) = @_;
