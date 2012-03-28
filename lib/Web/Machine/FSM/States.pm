@@ -518,7 +518,11 @@ sub n11 {
         my $uri = $resource->create_path;
         confess "Create Path Nil" unless $uri;
         my $base_uri = $resource->base_uri || $request->base;
-        my $new_uri  = URI->new( $base_uri . $uri );
+
+        # do a little cleanup
+        $base_uri =~ s!/$!! if $uri =~ m!^/!;
+        $base_uri .= '/'    if $uri !~ m!^/! && $base_uri !~ m!/$!;
+        my $new_uri = URI->new( $base_uri . $uri )->canonical;
         # NOTE:
         # the ruby and JS versions will set the path_info
         # for the request object here, but since our requests
@@ -526,7 +530,7 @@ sub n11 {
         # where this ends up being useful so I am going to
         # skip it and not bother.
         # - SL
-        $response->header( 'Location' => $new_uri->as_string );
+        $response->header( 'Location' => $new_uri->path );
 
         my $handler = _get_acceptable_content_type_handler( $resource, $request );
         return $handler if is_status_code( $handler );
