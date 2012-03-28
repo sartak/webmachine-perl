@@ -9,7 +9,15 @@ use Web::Machine::FSM::States qw[
     get_state_desc
 ];
 
-sub new { bless {} => (shift) }
+sub new {
+    my ($class, %args) = @_;
+    bless {
+        tracing        => !!$args{'tracing'},
+        tracing_header => $args{'tracing_header'} || 'X-Web-Machine-Trace'
+    } => $class
+}
+
+sub tracing { (shift)->{'tracing'} }
 
 sub run {
     my ( $self, $resource ) = @_;
@@ -20,16 +28,20 @@ sub run {
     my $response = $resource->response;
     my $metadata = {};
 
+    my @trace;
+    my $tracing = $self->tracing;
+
     my $state = start_state;
 
     try {
         while (1) {
             warn "entering " . get_state_name( $state ) . " (" . get_state_desc( $state ) . ")\n" if $DEBUG;
+            push @trace => get_state_name( $state ) if $tracing;
             my $result = $state->( $resource, $request, $response, $metadata );
             if ( ! ref $result ) {
                 warn "! ERROR with " . ($result || 'undef') . "\n" if $DEBUG;
                 $response->status( 500 );
-                $response->body( "Got bad state: " . ($result || 'undef') );
+                $response->body( [ "Got bad state: " . ($result || 'undef') ] );
                 last;
             }
             elsif ( is_status_code( $result ) ) {
@@ -55,6 +67,9 @@ sub run {
         $response->status( 500 );
         $response->body( [ $_ ] );
     };
+
+    $response->header( $self->tracing_header, (join ':' => @trace) )
+        if $tracing;
 
     $response;
 }
