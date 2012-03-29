@@ -13,7 +13,7 @@ sub previously_existed     { 1 }
 sub allow_missing_post     { 1 }
 sub post_is_create         { 1 }
 
-sub content_types_accepted { [ { 'application/octet-stream' => sub { \500 } } ] }
+sub content_types_accepted { [ { 'application/octet-stream' => sub { $_[1] } } ] }
 sub base_uri    { '/baz/bar' }
 sub create_path { 'foo' }
 

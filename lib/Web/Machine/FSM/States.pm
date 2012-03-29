@@ -88,6 +88,22 @@ sub _add_caching_headers {
     }
 }
 
+sub _is_redirect {
+    my ($response) = @_;
+    # NOTE:
+    # this makes a guess that the user has
+    # told the Plack::Response that they
+    # want to redirect. We do this based
+    # on the fact that the ->redirect method
+    # will set both the location value and
+    # the status, while in almost all other
+    # cases the status of the response will
+    # not be set yet.
+    # - SL
+    return 1 if $response->location && $response->status;
+    return;
+}
+
 ## States
 
 $STATE_DESC{'b13'} = 'service_available';
@@ -550,11 +566,13 @@ sub n11 {
         }
     }
 
-    if ( $response->location ) {
-        return \303;
-    }
-    else {
-        confess "Bad Redirect";
+    if ( _is_redirect( $response ) ) {
+        if ( $response->location ) {
+            return \303;
+        }
+        else {
+            confess "Bad Redirect"
+        }
     }
 
     return \&p11;

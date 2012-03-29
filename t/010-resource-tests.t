@@ -388,20 +388,6 @@ my @tests = (
         response => [ 410, [ 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5'
     },
-    # ... N11 via H7->I7->K7->K5->L5->M5->N5
-    {
-        resource => 'N11',
-        request  => { REQUEST_METHOD => 'POST' },
-        response => [ 303, [ 'Location' => '/foo', 'Content-Type' => 'text/plain' ], [] ],
-        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
-    },
-    # add a base to the request
-    {
-        resource => 'N11',
-        request  => { REQUEST_METHOD => 'POST', SCRIPT_NAME => '/bar' },
-        response => [ 303, [ 'Location' => '/bar/foo', 'Content-Type' => 'text/plain' ], [] ],
-        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
-    },
     # send a content type we dont handle
     {
         resource => 'N11',
@@ -413,15 +399,64 @@ my @tests = (
     {
         resource => 'N11b',
         request  => { REQUEST_METHOD => 'POST' },
-        response => [ 303, [ 'Location' => '/baz/bar/foo', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 500, [ 'Location' => '/baz/bar/foo', 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
     },
     # ...
     {
         resource => 'N11c',
         request  => { REQUEST_METHOD => 'POST' },
-        response => [ 500, [ 'Location' => '/baz/bar/foo', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
+    },
+    # ...
+    {
+        resource => 'N11d',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => qr/^Process Post Invalid/,
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
+    },
+    # ...
+    {
+        resource => 'N11e',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => qr/^Create Path Nil/,
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
+    },
+    # ... P11 via H7->I7->K7->K5->L5->M5->N5->N11
+    {
+        resource => 'P11',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => [ 201, [ 'Location' => '/foo', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11'
+    },
+    # add a base to the request
+    {
+        resource => 'P11',
+        request  => { REQUEST_METHOD => 'POST', SCRIPT_NAME => '/bar' },
+        response => [ 201, [ 'Location' => '/bar/foo', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11'
+    },
+    # ...
+    {
+        resource => 'P11b',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => [ 201, [ 'Location' => '/baz/bar/foo', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11'
+    },
+    # ...
+    {
+        resource => 'P11c',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => [ 201, [ 'Location' => '/foo/bar/baz', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11'
+    },
+    # O18 via N11
+    {
+        resource => 'O18',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => [ 200, [ 'Content-Length' => 11, 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11,o20,o18,o18b'
     },
 );
 
@@ -446,7 +481,16 @@ foreach my $test ( @tests ) {
     is( $trace, $test->{'trace'}, '... got the trace we expected' );
     $response->headers->remove_header( $fsm->tracing_header );
 
-    is_deeply( $response->finalize, $test->{'response'}, '... got the response for resource (' . $test->{'resource'}. ') we expected' );
+    my $finalized = $response->finalize;
+    if ( ref $test->{'response'} eq 'ARRAY' ) {
+        is_deeply( $finalized, $test->{'response'}, '... got the response for resource (' . $test->{'resource'}. ') we expected' );
+    }
+    else {
+        is( $finalized->[0], 500, '... got the error status for resource (' . $test->{'resource'}. ') we expected' );
+        like( $finalized->[2]->[0], $test->{'response'}, '... got the error response for resource (' . $test->{'resource'}. ') we expected' );
+    }
+
+
 }
 
 done_testing;
