@@ -95,12 +95,11 @@ sub _is_redirect {
     # told the Plack::Response that they
     # want to redirect. We do this based
     # on the fact that the ->redirect method
-    # will set both the location value and
-    # the status, while in almost all other
-    # cases the status of the response will
-    # not be set yet.
+    # will set the status, while in almost all
+    # other cases the status of the response
+    # will not be set yet.
     # - SL
-    return 1 if $response->location && $response->status;
+    return 1 if $response->status;
     return;
 }
 

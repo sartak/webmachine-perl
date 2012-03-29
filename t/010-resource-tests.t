@@ -423,6 +423,20 @@ my @tests = (
         response => qr/^Create Path Nil/,
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
     },
+    # ...
+    {
+        resource => 'N11f',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => [ 303, [ 'Location' => '/foo/bar/baz', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
+    },
+    # ...
+    {
+        resource => 'N11g',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => qr/^Bad Redirect/,
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11'
+    },
     # ... P11 via H7->I7->K7->K5->L5->M5->N5->N11
     {
         resource => 'P11',
