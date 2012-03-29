@@ -69,7 +69,7 @@ sub run {
         $response->body( [ $_ ] );
     };
 
-    $response->header( $self->tracing_header, (join ':' => @trace) )
+    $response->header( $self->tracing_header, (join ',' => @trace) )
         if $tracing;
 
     $response;
