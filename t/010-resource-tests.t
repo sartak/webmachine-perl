@@ -465,12 +465,106 @@ my @tests = (
         response => [ 201, [ 'Location' => '/foo/bar/baz', 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11'
     },
+    # ...
+    {
+        resource => 'P11d',
+        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain' },
+        response => [ 201, [ 'Location' => '/foo/bar/baz', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,i4,p3,p11'
+    },
     # O18 via N11
     {
         resource => 'O18',
         request  => { REQUEST_METHOD => 'POST' },
         response => [ 200, [ 'Content-Length' => 11, 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11,o20,o18,o18b'
+    },
+    {
+        resource => 'O18b',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => [ 300, [ 'Content-Length' => 11, 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11,o20,o18,o18b'
+    },
+    # ...
+    {
+        resource => 'O18d',
+        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain' },
+        response => [ 200, [ 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,i4,p3,p11,o20,o18,o18b'
+    },
+    # O20 via N11
+    {
+        resource => 'O20',
+        request  => { REQUEST_METHOD => 'POST' },
+        response => [ 204, [ 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,k7,k5,l5,m5,n5,n11,p11,o20'
+    },
+    {
+        resource => 'O20b',
+        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain' },
+        response => [ 204, [ 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,h7,i7,i4,p3,p11,o20'
+    },
+    # L17 via L13,L14,L15,L16
+    {
+        resource => 'L17',
+        request  => { REQUEST_METHOD => 'GET', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2001 15:49:00 GMT' },
+        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,l17'
+    },
+    # M20 via L15,M16
+    {
+        resource => 'M20',
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 202, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20,m20b'
+    },
+    {
+        resource => 'M20b',
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 500, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20'
+    },
+    # O20
+    {
+        resource => 'O20c',
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 204, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20,m20b,o20'
+    },
+    # O18
+    {
+        resource => 'O18c',
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 200, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20,m20b,o20,o18,o18b'
+    },
+    # N11
+    {
+        resource => 'N11h',
+        request  => { REQUEST_METHOD => 'POST', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 303, [ 'Location' => '/foo/bar', 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,n11'
+    },
+    # O14
+    {
+        resource => 'O14',
+        request  => { REQUEST_METHOD => 'PUT', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 409, [ 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,o16,o14'
+    },
+    {
+        resource => 'O14b',
+        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,o16,o14'
+    },
+    # P11
+    {
+        resource => 'P11e',
+        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        response => [ 201, [ 'Location' => '/foo/bar', 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,o16,o14,p11'
     },
 );
 
