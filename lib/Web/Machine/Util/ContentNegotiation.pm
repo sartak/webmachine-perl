@@ -3,7 +3,7 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
-use Web::Machine::Util qw[ first any pair_key ];
+use Web::Machine::Util qw[ first pair_key ];
 
 use Web::Machine::Util::MediaType;
 use Web::Machine::Util::MediaTypeList;
@@ -60,7 +60,7 @@ sub choose_language {
             return 0;
         }
         else {
-            return any { language_match( $range, $_ ) } @$provided;
+            return (grep { language_match( $range, $_ ) } @$provided) ? 1 : 0;
         }
     } $requested->iterable;
 
@@ -157,13 +157,13 @@ sub make_choice {
         if ( $priority == 0.0 ) {
             $choices = [ grep { lc $acceptable ne $_ } @$choices ];
         } else {
-            return $acceptable if any { lc $acceptable eq $_ } @$choices;
+            return $acceptable if grep { lc $acceptable eq $_ } @$choices;
         }
     } $accepted->iterable;
 
     return $chosen->[-1] if $chosen;
     return $choices->[0] if $any_ok;
-    return $default      if $default_ok && any { $default eq $_ } @$choices;
+    return $default      if $default_ok && grep { $default eq $_ } @$choices;
     return;
 }
 

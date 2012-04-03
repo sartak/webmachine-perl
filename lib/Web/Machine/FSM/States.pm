@@ -11,8 +11,6 @@ use Carp qw[ confess ];
 
 use Web::Machine::Util qw[
     first
-    any
-    includes
     str2time
     pair_key
     pair_value
@@ -114,7 +112,8 @@ sub b13 {
 $STATE_DESC{'b12'} = 'known_method';
 sub b12 {
     my ($resource, $request, $response, $metadata) = @_;
-    includes( $request->method, $resource->known_methods ) ? \&b11 : \501;
+    my $method = $request->method;
+    (grep { $method eq $_ } @{ $resource->known_methods }) ? \&b11 : \501;
 }
 
 $STATE_DESC{'b11'} = 'uri_too_long';
@@ -126,7 +125,8 @@ sub b11 {
 $STATE_DESC{'b10'} = 'method_allowed';
 sub b10 {
     my ($resource, $request, $response, $metadata) = @_;
-    return \&b9 if includes( $request->method, $resource->allowed_methods );
+    my $method = $request->method;
+    return \&b9 if grep { $method eq $_ } @{ $resource->allowed_methods };
     $response->header('Allow' => join ", " => @{ $resource->allowed_methods } );
     return \405;
 }
@@ -343,7 +343,8 @@ $STATE_DESC{'g11'} = 'etag_in_if_match_list';
 sub g11 {
     my ($resource, $request, $response, $metadata) = @_;
     my @etags = map { _unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-Match');
-    includes( $resource->generate_etag, \@etags ) ? \&h10 : \412;
+    my $etag  = $resource->generate_etag;
+    (grep { $etag eq $_ } @etags) ? \&h10 : \412;
 }
 
 $STATE_DESC{'h7'} = 'if_match_exists_and_if_match_is_wildcard';
@@ -437,7 +438,8 @@ $STATE_DESC{'k13'} = 'etag_in_if_none_match';
 sub k13 {
     my ($resource, $request, $response, $metadata) = @_;
     my @etags = map { _unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-None-Match');
-    includes( $resource->generate_etag, \@etags ) ? \&j18 : \&l13;
+    my $etag  = $resource->generate_etag;
+    (grep { $etag eq $_ } @etags) ? \&j18 : \&l13;
 }
 
 $STATE_DESC{'l5'} = 'moved_temporarily';
