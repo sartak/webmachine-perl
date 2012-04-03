@@ -63,7 +63,19 @@ my @tests = (
         trace    => 'b13,b12,b11,b10,b9,b8'
     },
     {
+        resource => 'B8c',
+        request  => { REQUEST_METHOD => 'GET' },
+        response => [ 401, [], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8'
+    },
+    {
         resource => 'B7',
+        request  => { REQUEST_METHOD => 'GET' },
+        response => [ 403, [], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7'
+    },
+    {
+        resource => 'B7b',
         request  => { REQUEST_METHOD => 'GET' },
         response => [ 403, [], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7'
@@ -565,6 +577,25 @@ my @tests = (
         request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
         response => [ 201, [ 'Location' => '/foo/bar', 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,o16,o14,p11'
+    },
+    # O18e
+    {
+        resource => 'O18e',
+        request  => { REQUEST_METHOD => 'GET', CONTENT_TYPE => 'text/plain' },
+        response => [ 200, [ 'Content-Length' => 11, 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,l13,m16,n16,o16,o18,o18b'
+    },
+    {
+        resource => 'O18e',
+        request  => { REQUEST_METHOD => 'HEAD', CONTENT_TYPE => 'text/plain' },
+        response => [ 200, [ 'Content-Length' => 11, 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,l13,m16,n16,o16,o18,o18b'
+    },
+    {
+        resource => 'O18f',
+        request  => { REQUEST_METHOD => 'GET', CONTENT_TYPE => 'text/plain' },
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], [] ],
+        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,l13,m16,n16,o16,o18'
     },
 );
 
