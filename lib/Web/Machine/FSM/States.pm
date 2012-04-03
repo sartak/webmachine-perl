@@ -1,4 +1,5 @@
 package Web::Machine::FSM::States;
+# ABSTRACT: The States for Web Machine
 
 use strict;
 use warnings;
@@ -668,31 +669,9 @@ sub p11 {
 
 __END__
 
-=pod
-
-=head1 NAME
-
 =head1 SYNOPSIS
+
+  use Web::Machine::FSM::States;
 
 =head1 DESCRIPTION
 
-=head1 BUGS
-
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan.little@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2012 Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut

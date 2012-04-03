@@ -1,4 +1,5 @@
 package Web::Machine::Util::PriorityList;
+# ABSTRACT: A Priority List
 
 use strict;
 use warnings;
@@ -56,8 +57,6 @@ sub iterable {
 1;
 
 __END__
-
-# ABSTRACT: A Priority List
 
 =head1 SYNOPSIS
 

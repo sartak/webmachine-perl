@@ -1,4 +1,5 @@
 package Web::Machine::Util::MediaType;
+# ABSTRACT: A Media Type
 
 use strict;
 use warnings;
@@ -138,8 +139,6 @@ sub _compare_params {
 1;
 
 __END__
-
-# ABSTRACT: A Media Type
 
 =head1 SYNOPSIS
 

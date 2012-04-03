@@ -1,4 +1,5 @@
 package Web::Machine::FSM;
+# ABSTRACT: The State Machine runner
 
 use Try::Tiny;
 use Web::Machine::FSM::States qw[
@@ -78,8 +79,6 @@ sub run {
 1;
 
 __END__
-
-# ABSTRACT: The State Machine runner
 
 =head1 SYNOPSIS
 

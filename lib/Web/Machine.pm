@@ -1,4 +1,5 @@
 package Web::Machine;
+# ABSTRACT: A Perl port of WebMachine
 
 use strict;
 use warnings;
@@ -6,8 +7,6 @@ use warnings;
 1;
 
 __END__
-
-# ABSTRACT: A Perl port of WebMachine
 
 =head1 SYNOPSIS
 

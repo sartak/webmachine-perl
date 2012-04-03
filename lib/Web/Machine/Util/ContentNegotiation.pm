@@ -1,4 +1,5 @@
 package Web::Machine::Util::ContentNegotiation;
+# ABSTRACT: Module to handle content negotiation
 
 use strict;
 use warnings;
@@ -171,8 +172,6 @@ sub make_choice {
 1;
 
 __END__
-
-# ABSTRACT: Module to handle content negotiation
 
 =head1 SYNOPSIS
 

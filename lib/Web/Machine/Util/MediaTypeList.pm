@@ -1,4 +1,5 @@
 package Web::Machine::Util::MediaTypeList;
+# ABSTRACT: A Priority List customized for Media Types
 
 use strict;
 use warnings;
@@ -52,8 +53,6 @@ sub iterable {
 1;
 
 __END__
-
-# ABSTRACT: A Priority List customized for Media Types
 
 =head1 SYNOPSIS
 

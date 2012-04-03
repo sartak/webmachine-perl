@@ -1,4 +1,5 @@
 package Web::Machine::Util::BodyEncoding;
+# ABSTRACT: Module to handle body encoding
 
 use strict;
 use warnings;
@@ -47,8 +48,6 @@ sub encode_body {
 1;
 
 __END__
-
-# ABSTRACT: Module to handle body encoding
 
 =head1 SYNOPSIS
 

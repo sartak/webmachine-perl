@@ -1,4 +1,5 @@
 package Web::Machine::Resource;
+# ABSTRACT: A base resource class
 
 use strict;
 use warnings;
@@ -62,8 +63,6 @@ sub finish_request            {}
 1;
 
 __END__
-
-# ABSTRACT: A base resource class
 
 =head1 SYNOPSIS
 
@@ -356,3 +355,4 @@ This method is called just before the final response is
 constructed and sent. The return value is ignored, so any effect
 of this method must be by modifying the response.
 
+=back
