@@ -13,7 +13,7 @@ use Plack::Response;
 use Plack::Util;
 
 BEGIN {
-    use_ok('Web::Machine::FSM');
+    use_ok('Web::Machine');
 }
 
 my $fsm = Web::Machine::FSM->new( tracing => 1 );

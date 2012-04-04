@@ -10,7 +10,7 @@ use Plack::Request;
 use Plack::Response;
 
 BEGIN {
-    use_ok('Web::Machine::FSM');
+    use_ok('Web::Machine');
 }
 
 {
