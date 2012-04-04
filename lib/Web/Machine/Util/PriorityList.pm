@@ -64,3 +64,47 @@ __END__
 
 =head1 DESCRIPTION
 
+This is a simple priority list implementation.
+
+=head1 METHODS
+
+=item C<new>
+
+=item C<new_from_header_list ( @header_list )>
+
+This accepts a list of HTTP header values which
+each get passed to C<add_header_value>
+
+=item C<index>
+
+=item C<items>
+
+=item C<add ( $quality, $choice )>
+
+Add in a new C<$choice> with a given C<$quality>.
+
+=item C<add_header_value ( $header_value )>
+
+This accepts an HTTP header value and parses out
+the quality and choice accordingly.
+
+=item C<get ( $quality )>
+
+Given a certain C<$quality>, it returns the various
+choices available.
+
+=item C<priority_of ( $choice )>
+
+Given a certain C<$choice> this returns the associated
+quality of it.
+
+=item C<iterable>
+
+This returns a list of two item ARRAY refs with the
+quality as the first item and the associated choice
+as the second item. These are sorted accordingly.
+
+=back
+
+
+

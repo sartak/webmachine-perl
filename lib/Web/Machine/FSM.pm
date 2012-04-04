@@ -86,3 +86,47 @@ __END__
 
 =head1 DESCRIPTION
 
+This is the heart of the L<Web::Machine>, this is the thing
+which runs the state machine whose states are contained in the
+L<Web::Machine::FSM::States> module.
+
+=head1 METHODS
+
+=over 4
+
+=item C<new ( %params )>
+
+This accepts two C<%params>, the first is a boolean to
+indicate if you should turn on tracing or not, and the second
+is optional name of the HTTP header in which to place the
+tracing information.
+
+=item C<tracing>
+
+Are we tracing or not?
+
+=item C<tracing_header>
+
+Accessor for the HTTP header name to store tracing data in.
+This default to C<X-Web-Machine-Trace>.
+
+=item C<run ( $resource )>
+
+Given a L<Web::Machine::Resource> instance, this will execute
+the state machine.
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Web Machine state diagram|http://wiki.basho.com/Webmachine-Diagram.html>
+
+=back
+
+
+
+
+
+

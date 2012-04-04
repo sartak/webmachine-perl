@@ -55,3 +55,28 @@ __END__
 
 =head1 DESCRIPTION
 
+This handles the body encoding.
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item C<encode_body_if_set ( $resource, $response, $metadata )>
+
+If the C<$response> has a body, this will call C<encode_body>.
+
+=item C<encode_body ( $resource, $response, $metadata )>
+
+This will find the right encoding (from the 'Content-Encoding' entry
+in the C<$metadata> HASH ref) adnd the right charset (from the 'Charset'
+entry in the C<$metadata> HASH ref), then find the right transformers
+in the C<$resource>. After that it will attempt to convert the charset
+and encode the body of the C<$response>. Once completed it will set
+the C<Content-Length> header in the response as well.
+
+B<NOTE:> At the moment we do not correctly handle all the various
+body types that L<Plack> supports, and we really on handle the case
+where the body is a simple string. We plan to add more support onto this
+later.
+
+=back

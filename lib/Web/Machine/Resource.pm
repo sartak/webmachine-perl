@@ -66,9 +66,40 @@ __END__
 
 =head1 SYNOPSIS
 
-  use Web::Machine::Resource;
+  package HelloWorld::Resource;
+  use strict;
+  use warnings;
+
+  use parent 'Web::Machine::Resource';
+
+  sub content_types_provided { [{ 'text/html' => 'to_html' }] }
+
+  sub to_html {
+      q{<html>
+          <head>
+              <title>Hello World Resource</title>
+          </head>
+          <body>
+              <h1>Hello World</h1>
+          </body>
+       </html>}
+  }
 
 =head1 DESCRIPTION
+
+This is the core representation of the web resource in
+L<Web::Machine>. It is this object which is interrogated
+through the state machine. It is important not to think
+of this as an instance of a single object, but as a web
+representation of a resource, there is a big difference.
+
+For now I am keeping the docs short, but much more needs
+to be written here. Below you will find a description of
+each method this object provides and what is expected of
+it. These docs were lovingly stolen from the ruby port
+of webmachine.
+
+=head1 METHODS
 
 =over 4
 

@@ -146,3 +146,105 @@ __END__
 
 =head1 DESCRIPTION
 
+This is an object which represents an HTTP media type
+defintion.
+
+=head1 METHODS
+
+=over 4
+
+=item C<new( $type, @params )>
+
+A media type is made up of a type name and a set of
+ordered parameter pairs.
+
+=item C<type>
+
+Accessor for the type.
+
+=item C<params>
+
+Accessor for the unordered hash-ref of params.
+
+=item C<new_from_string ( $media_type_string )>
+
+This will take an HTTP header media type definition
+and parse it into and object.
+
+=item C<major>
+
+The major portion of the media type name.
+
+=item C<minor>
+
+The minor portion of the media type name.
+
+=item C<add_param( $key, $value )>
+
+Add in a parameter, it will be placed at end
+very end of the parameter order.
+
+=item C<remove_param( $key )>
+
+Remove a parameter from the media type.
+
+=item C<to_string>
+
+This stringifys the media type respecting the
+parameter order.
+
+=item C<matches_all>
+
+A media type matched all if the type is C<*/*>
+and if it has no parameters.
+
+=item C<equals ( $media_type | $media_type_string )>
+
+This will attempt to determine if the C<$media_type> is
+exactly the same as itself. If given a C<$media_type_string>
+it will parse it into an object.
+
+In order for two type to be equal, the types must match
+exactly and the parameters much match exactly.
+
+=item C<exact_match ( $media_type | $media_type_string )>
+
+This will attempt to determine if the C<$media_type> is
+a match with itself using the C<type_matches> method below.
+If given a C<$media_type_string> it will parse it into an
+object.
+
+In order for an exact match to occur it the types must
+be compatible and the parameters much match exactly.
+
+=item C<match ( $media_type | $media_type_string )>
+
+This will attempt to determine if the C<$media_type> is
+a match with itself using the C<type_matches> method and
+C<params_match> method below. If given a C<$media_type_string>
+it will parse it into an object.
+
+In order for an exact match to occur it the types must
+be compatible and the parameters must be a subset.
+
+=item C<type_matches ( $media_type | $media_type_string )>
+
+This will determine type compatability, properly handling
+the C<*> types and major and minor elements of the type.
+
+=item C<params_match ( $parameters )>
+
+This determines if the C<$parameters> are a subset of the
+invocants parameters.
+
+=item C<params_are_empty>
+
+Returns false if there are no parameters on the invovant.
+
+=back
+
+
+
+
+
+

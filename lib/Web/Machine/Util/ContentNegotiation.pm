@@ -179,3 +179,44 @@ __END__
 
 =head1 DESCRIPTION
 
+This module provides a set of functions used in content negotiation.
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item C<choose_media_type ( $provided, $header )>
+
+Given an ARRAY ref of media type strings and an HTTP header, this will
+return the appropriatly matching L<Web::Machine::Util::MediaType> instance.
+
+=item C<match_acceptable_media_type ( $to_match, $accepted )>
+
+Given a media type string to match and an ARRAY ref of media type objects,
+this will return the first matching one.
+
+=item C<choose_language ( $provided, $header )>
+
+Given a list of language codes and an HTTP header value, this will attempt
+to negotiate the best language match.
+
+=item C<choose_charset ( $provided, $header )>
+
+Given a list of charset name and an HTTP header value, this will attempt
+to negotiate the best charset match.
+
+=item C<choose_encoding ( $provided, $header )>
+
+Given a list of encoding name and an HTTP header value, this will attempt
+to negotiate the best encoding match.
+
+=back
+
+
+
+
+
+
+
+
+

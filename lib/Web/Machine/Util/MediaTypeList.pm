@@ -60,3 +60,34 @@ __END__
 
 =head1 DESCRIPTION
 
+This is a subclass of the L<Web::Machine::Util::PriorityList>
+class with some specific media-type features.
+
+=head1 METHODS
+
+=over 4
+
+=item C<add_header_value ( $header )>
+
+This completely overrides the parent method and uses the
+L<Web::Machine::Util::MediaType> to parse the C<$header>
+and extract data on the quality.
+
+=item C<iterable>
+
+This returns the same data type as the parent (two element
+ARRAY ref with quality and choice), but the choice element
+will be a L<Web::Machine::Util::MediaType> object. This is
+also sorted in a very specific manner in order to align with
+RFC-2616 Sec14.
+
+  Media ranges can be overridden by more specific
+  media ranges or specific media types. If more
+  than one media range applies to a given type,
+  the most specific reference has precedence.
+
+=back
+
+
+
+
