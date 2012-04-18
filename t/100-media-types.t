@@ -24,14 +24,14 @@ BEGIN {
     is($parsed_media_type->major, 'application', '... got the right major portion');
     is($parsed_media_type->minor, 'xml', '... got the right minor portion');
 
-    is($parsed_media_type->to_string, 'application/xml;charset=UTF-8', '... the string representation');
+    is($parsed_media_type->to_string, 'application/xml; charset=UTF-8', '... the string representation');
 
     my $media_type = Web::Machine::Util::MediaType->new('application/xml', => ( 'charset' => 'UTF-8' ));
     isa_ok($media_type, 'Web::Machine::Util::MediaType');
-    is($media_type->to_string, 'application/xml;charset=UTF-8', '... the string representation');
+    is($media_type->to_string, 'application/xml; charset=UTF-8', '... the string representation');
 
     ok($parsed_media_type->equals( $media_type ), '... these types are equal');
-    ok($parsed_media_type->equals('application/xml;charset=UTF-8'), '... these types are equal');
+    ok($parsed_media_type->equals('application/xml; charset=UTF-8'), '... these types are equal');
 
     ok(!$parsed_media_type->matches_all, '... this is not a matches_all type');
 
@@ -77,12 +77,12 @@ boundary=----------------------------2c46a7bec2b9]);
         '... got the right params'
     );
 
-    is($multiline->to_string, 'multipart/form-data;boundary=----------------------------2c46a7bec2b9', '... the string representation');
+    is($multiline->to_string, 'multipart/form-data; boundary=----------------------------2c46a7bec2b9', '... the string representation');
 }
 
 # test multiple params ...
 {
-    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json;v=3;foo=bar');
+    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json;v= 3;foo=bar');
 
     is($mt->type, 'application/json', '... got the right type');
     is_deeply(
@@ -91,12 +91,12 @@ boundary=----------------------------2c46a7bec2b9]);
         '... got the right params'
     );
 
-    is($mt->to_string, 'application/json;v=3;foo=bar', '... got the right string representation');
+    is($mt->to_string, 'application/json; v=3; foo=bar', '... got the right string representation');
 }
 
 # test a lot of params ...
 {
-    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json;v=3;foo=bar;q=0.25;testing=123');
+    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json; v=3;foo=bar;q=0.25;testing=123');
 
     is($mt->type, 'application/json', '... got the right type');
     is_deeply(
@@ -105,7 +105,33 @@ boundary=----------------------------2c46a7bec2b9]);
         '... got the right params'
     );
 
-    is($mt->to_string, 'application/json;v=3;foo=bar;q=0.25;testing=123', '... got the right string representation');
+    is($mt->to_string, 'application/json; v=3; foo=bar; q=0.25; testing=123', '... got the right string representation');
+}
+
+# test with quoted strings
+{
+    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json; v=3; foo=bar; q=0.25; testing="1,23"');
+
+    is($mt->type, 'application/json', '... got the right type');
+    is_deeply(
+        $mt->params,
+        { v => 3, foo => 'bar', q => 0.25, testing => '1,23' },
+        '... got the right params'
+    );
+
+    is($mt->to_string, 'application/json; v=3; foo=bar; q=0.25; testing="1,23"', '... got the right string representation');
+}
+{
+    my $mt = Web::Machine::Util::MediaType->new_from_string('application/json; v=3; foo=bar; q=0.25; testing="1;23"');
+
+    is($mt->type, 'application/json', '... got the right type');
+    is_deeply(
+        $mt->params,
+        { v => 3, foo => 'bar', q => 0.25, testing => '1;23' },
+        '... got the right params'
+    );
+
+    is($mt->to_string, 'application/json; v=3; foo=bar; q=0.25; testing="1;23"', '... got the right string representation');
 }
 
 done_testing;
