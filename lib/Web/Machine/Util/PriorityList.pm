@@ -4,15 +4,17 @@ package Web::Machine::Util::PriorityList;
 use strict;
 use warnings;
 
+use HTTP::Headers::Util qw[ split_header_words ];
+
 sub new { bless { 'index' => {}, 'items' => {} } => (shift) }
 
 sub index { (shift)->{'index'} }
 sub items { (shift)->{'items'} }
 
-sub new_from_header_list {
-    my ($class, @header_list) = @_;
+sub new_from_header_string {
+    my ($class, $header_string) = @_;
     my $list = $class->new;
-    foreach my $header ( @header_list ) {
+    foreach my $header ( split_header_words( $header_string ) ) {
         $list->add_header_value( $header );
     }
     $list;
@@ -26,14 +28,16 @@ sub add {
 }
 
 sub add_header_value {
-    my ($self, $c) = @_;
-    if ( $c =~ /^\s*(\S+);\s*q=(\S*)\s*$/ ) {
-        my ($choice, $q) = ($1, $2);
-        $self->add( $q, $choice );
+    my ($self, $c ) = @_;
+
+    unless ( ref $c ) {
+        ($c) = split_header_words( $c );
     }
-    else {
-        $self->add( 1.0, $c );
-    }
+
+    my $choice = shift @$c;
+    shift @$c;
+    my %params = @$c;
+    $self->add( $params{'q'} || 1.0, $choice );
 }
 
 sub get {
@@ -70,7 +74,7 @@ This is a simple priority list implementation.
 
 =item C<new>
 
-=item C<new_from_header_list ( @header_list )>
+=item C<new_from_header_string ( @header_list )>
 
 This accepts a list of HTTP header values which
 each get passed to C<add_header_value>

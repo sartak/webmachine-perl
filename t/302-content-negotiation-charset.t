@@ -14,13 +14,13 @@ is(choose_charset( [], 'ISO-8859-1' ), 1, '... got nothing back (charset is shor
 
 is(
     choose_charset( [{ "UTF-8", sub {} },{ "US-ASCII", sub {} }], "US-ASCII, UTF-8" ),
-    'US-ASCII',
+    'us-ascii',
     '... got the right charset back'
 );
 
 is(
     choose_charset( [{ "UTF-8", sub {} },{ "US-ASCII", sub {} }], "US-ASCII;q=0.7, UTF-8" ),
-    'UTF-8',
+    'utf-8',
     '... got the right charset back'
 );
 

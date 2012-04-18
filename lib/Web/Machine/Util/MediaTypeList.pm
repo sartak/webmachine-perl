@@ -8,7 +8,19 @@ use parent 'Web::Machine::Util::PriorityList';
 
 sub add_header_value {
     my ($self, $c) = @_;
-    my $mt = Web::Machine::Util::MediaType->new_from_string( $c );
+
+    my $mt;
+    if ( ref $c ) {
+        my $type = shift @$c;
+        shift @$c; # will be undef
+        my @params = @$c;
+        $mt = Web::Machine::Util::MediaType->new( $type => @params );
+    }
+    else {
+        $mt = Web::Machine::Util::MediaType->new_from_string( $c );
+    }
+
+
     # NOTE:
     # we delete the q param here because we
     # do not want it to be involved in the

@@ -155,7 +155,7 @@ is(
         ["text/html", "text/html;level=1" ],
         "text/*, text/html, text/html;level=1, */*"
     ),
-    'text/html;level=1',
+    'text/html; level=1',
     '... got the right media type back (prefer text/html;level=1 because it is more specific)'
 );
 
@@ -184,7 +184,7 @@ is(
         ["text/html", "text/html;charset=iso8859-1" ],
         "text/html;charset=iso8859-1, application/xml"
     ),
-    'text/html;charset=iso8859-1',
+    'text/html; charset=iso8859-1',
     '... got the right media type back (choose the more specific text/html;charset=iso8859-1)'
 );
 
@@ -193,7 +193,7 @@ is(
         ["application/json;v=3;foo=bar", "application/json;v=2"],
         "text/html, application/json"
     ),
-    'application/json;v=3;foo=bar',
+    'application/json; v=3; foo=bar',
     '... got the right media type back (choose application/json;v=3;foo=bar because of preference ordering)'
 );
 

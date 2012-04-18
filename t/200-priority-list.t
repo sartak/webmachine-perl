@@ -45,11 +45,11 @@ BEGIN {
 }
 
 {
-    my $q = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => "en-US, es" );
+    my $q = Web::Machine::Util::PriorityList->new_from_header_string( "en-US, es" );
     is_deeply(
         [ $q->iterable ],
         [
-            [ 1, "en-US" ],
+            [ 1, "en-us" ],
             [ 1, "es" ],
         ],
         '... got the iterable form'

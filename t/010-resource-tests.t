@@ -146,13 +146,13 @@ my @tests = (
     {
         resource => 'F6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6'
     },
     {
         resource => 'F6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5,e5,e6,f6'
     },
     {
@@ -171,13 +171,13 @@ my @tests = (
     {
         resource => 'F7',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7'
     },
     {
         resource => 'F7',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8' ], [] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5,e5,e6,f6,f7'
     },
     {
@@ -196,37 +196,37 @@ my @tests = (
     {
         resource => 'H7',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept, Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ],
+        response => [ 412, [ 'Vary' => 'Accept, Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8',  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7b',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ],
+        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8',  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7c',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ],
+        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8',  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7d',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept-Encoding', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ],
+        response => [ 412, [ 'Vary' => 'Accept-Encoding', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8',  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7e',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ],
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8',  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7f',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain;charset=utf-8',  ], [] ],
+        response => [ 412, [ 'Vary' => 'Accept, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset=utf-8',  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     # ...

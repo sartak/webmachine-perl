@@ -22,7 +22,7 @@ use Sub::Exporter -setup => {
 
 sub choose_media_type {
     my ($provided, $header) = @_;
-    my $requested       = Web::Machine::Util::MediaTypeList->new_from_header_list( split /\s*,\s*/ => $header );
+    my $requested       = Web::Machine::Util::MediaTypeList->new_from_header_string( $header );
     my $parsed_provided = [ map { Web::Machine::Util::MediaType->new_from_string( $_ ) } @$provided ];
 
     my $chosen;
@@ -50,7 +50,7 @@ sub choose_language {
     return 1 if scalar @$provided == 0;
 
     my $language;
-    my $requested     = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
+    my $requested     = Web::Machine::Util::PriorityList->new_from_header_string( $header );
     my $star_priority = $requested->priority_of('*');
     my $any_ok        = $star_priority && $star_priority > 0.0;
 
@@ -122,7 +122,7 @@ sub make_choice {
 
     $choices = [ map { lc $_ } @$choices ];
 
-    my $accepted         = Web::Machine::Util::PriorityList->new_from_header_list( split /\s*,\s*/ => $header );
+    my $accepted         = Web::Machine::Util::PriorityList->new_from_header_string( $header );
     my $default_priority = $accepted->priority_of( $default );
     my $star_priority    = $accepted->priority_of( '*' );
 
