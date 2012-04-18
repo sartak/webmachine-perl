@@ -7,7 +7,6 @@ use warnings;
 use Carp       qw[ confess ];
 use List::Util qw[ first ];
 use HTTP::Date qw[ str2time ];
-use HTTP::Headers::Util;
 
 use Sub::Exporter -setup => {
     exports => [qw[
@@ -15,23 +14,8 @@ use Sub::Exporter -setup => {
         str2time
         pair_key
         pair_value
-        split_header_words
-        join_header_words
     ]]
 };
-
-sub split_header_words {
-    my $header = shift;
-    map {
-        splice @$_, 1, 1;
-        $_;
-    } HTTP::Headers::Util::_split_header_words( $header );
-}
-
-sub join_header_words {
-    my ($type, @params) = @_;
-    HTTP::Headers::Util::join_header_words( $type, undef, @params );
-}
 
 sub pair_key   { ( keys   %{ $_[0] } )[0] }
 sub pair_value { ( values %{ $_[0] } )[0] }

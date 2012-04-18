@@ -6,7 +6,7 @@ use warnings;
 
 use B ();
 use Hash::MultiValue;
-use Web::Machine::Util::MediaType;
+use HTTP::Headers::ActionPack::MediaType;
 
 use Carp qw[ confess ];
 
@@ -207,7 +207,7 @@ $STATE_DESC{'c3'} = 'accept_header_exists';
 sub c3 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( !$request->header('Accept') ) {
-        $metadata->{'Content-Type'} = Web::Machine::Util::MediaType->new_from_string(
+        $metadata->{'Content-Type'} = HTTP::Headers::ActionPack::MediaType->new_from_string(
             pair_key( $resource->content_types_provided->[0] )
         );
         return \&d4
@@ -614,7 +614,7 @@ sub o18 {
 
         my $content_type = $metadata->{'Content-Type'};
         my $match        = first {
-            my $ct = Web::Machine::Util::MediaType->new_from_string( pair_key( $_ ) );
+            my $ct = HTTP::Headers::ActionPack::MediaType->new_from_string( pair_key( $_ ) );
             $content_type->match( $ct )
         } @{ $resource->content_types_provided };
 
