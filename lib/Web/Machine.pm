@@ -4,6 +4,9 @@ package Web::Machine;
 use strict;
 use warnings;
 
+use Plack::Request;
+use Plack::Response;
+
 use Web::Machine::FSM;
 
 1;
