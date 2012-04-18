@@ -4,7 +4,7 @@ package Web::Machine::Util::PriorityList;
 use strict;
 use warnings;
 
-use HTTP::Headers::Util qw[ split_header_words ];
+use Web::Machine::Util qw[ split_header_words ];
 
 sub new { bless { 'index' => {}, 'items' => {} } => (shift) }
 
@@ -15,7 +15,7 @@ sub new_from_header_string {
     my ($class, $header_string) = @_;
     my $list = $class->new;
     foreach my $header ( split_header_words( $header_string ) ) {
-        $list->add_header_value( $header );
+        $list->_add_header_value( $header );
     }
     $list;
 }
@@ -27,16 +27,9 @@ sub add {
     push @{ $self->items->{ $q } } => $choice;
 }
 
-sub add_header_value {
-    my ($self, $c ) = @_;
-
-    unless ( ref $c ) {
-        ($c) = split_header_words( $c );
-    }
-
-    my $choice = shift @$c;
-    shift @$c;
-    my %params = @$c;
+sub _add_header_value {
+    my $self = shift;
+    my ($choice, %params) = @{ $_[0] };
     $self->add( $params{'q'} || 1.0, $choice );
 }
 
@@ -77,7 +70,7 @@ This is a simple priority list implementation.
 =item C<new_from_header_string ( @header_list )>
 
 This accepts a list of HTTP header values which
-each get passed to C<add_header_value>
+get parsed and loaded accordingly.
 
 =item C<index>
 
@@ -86,11 +79,6 @@ each get passed to C<add_header_value>
 =item C<add ( $quality, $choice )>
 
 Add in a new C<$choice> with a given C<$quality>.
-
-=item C<add_header_value ( $header_value )>
-
-This accepts an HTTP header value and parses out
-the quality and choice accordingly.
 
 =item C<get ( $quality )>
 

@@ -6,20 +6,9 @@ use warnings;
 
 use parent 'Web::Machine::Util::PriorityList';
 
-sub add_header_value {
-    my ($self, $c) = @_;
-
-    my $mt;
-    if ( ref $c ) {
-        my $type = shift @$c;
-        shift @$c; # will be undef
-        my @params = @$c;
-        $mt = Web::Machine::Util::MediaType->new( $type => @params );
-    }
-    else {
-        $mt = Web::Machine::Util::MediaType->new_from_string( $c );
-    }
-
+sub _add_header_value {
+    my $self = shift;
+    my $mt   = Web::Machine::Util::MediaType->new( @{ $_[0] } );
 
     # NOTE:
     # we delete the q param here because we

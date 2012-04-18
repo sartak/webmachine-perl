@@ -25,11 +25,6 @@ BEGIN {
 
     is_deeply($q->get(3.0), ["baz", "foobaz"], '... got the right item for the priority');
 
-    $q->add_header_value('application/xml;q=0.7');
-
-    is_deeply($q->get(0.7), ["application/xml"], '... got the right item for the priority');
-    is($q->priority_of("application/xml"), 0.7, '... got the right priority for the item');
-
     is_deeply(
         [ $q->iterable ],
         [
@@ -37,8 +32,22 @@ BEGIN {
             [ 3, 'foobaz' ],
             [ 2.5, 'gorch' ],
             [ 2, 'bar' ],
-            [ 1, 'foo' ],
-            [ 0.7, 'application/xml' ]
+            [ 1, 'foo' ]
+        ],
+        '... got the iterable form'
+    );
+}
+
+{
+    my $q = Web::Machine::Util::PriorityList->new_from_header_string( "application/xml;q=0.7" );
+
+    is_deeply($q->get(0.7), ["application/xml"], '... got the right item for the priority');
+    is($q->priority_of("application/xml"), 0.7, '... got the right priority for the item');
+
+    is_deeply(
+        [ $q->iterable ],
+        [
+            [ 0.7, "application/xml" ],
         ],
         '... got the iterable form'
     );
@@ -49,7 +58,7 @@ BEGIN {
     is_deeply(
         [ $q->iterable ],
         [
-            [ 1, "en-us" ],
+            [ 1, "en-US" ],
             [ 1, "es" ],
         ],
         '... got the iterable form'

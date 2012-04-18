@@ -4,9 +4,9 @@ package Web::Machine::Util::MediaType;
 use strict;
 use warnings;
 
-use Carp                qw[ confess ];
-use Scalar::Util        qw[ blessed ];
-use HTTP::Headers::Util qw[ split_header_words join_header_words ];
+use Carp               qw[ confess ];
+use Scalar::Util       qw[ blessed ];
+use Web::Machine::Util qw[ split_header_words join_header_words ];
 
 use overload '""' => 'to_string', fallback => 1;
 
@@ -36,17 +36,7 @@ sub _param_order { (shift)->{'param_order'} }
 
 sub new_from_string {
     my ($class, $media_type) = @_;
-
-    my ($tokens) = split_header_words( $media_type );
-
-    confess "Unable to parse media type from '$media_type'"
-        if defined $tokens->[1];
-
-    my $type = shift @$tokens;
-    shift @$tokens; # will be undef
-    my @params = @$tokens;
-
-    return $class->new( $type => @params );
+    $class->new( @{ (split_header_words( $media_type ))[0] } );
 }
 
 sub major { (split '/' => (shift)->type)[0] }
@@ -67,7 +57,7 @@ sub remove_param {
 sub to_string {
     my $self = shift;
     join_header_words(
-        $self->type, undef,
+        $self->type,
         map { $_, $self->params->{ $_ } } @{ $self->_param_order }
     );
 }
@@ -201,6 +191,10 @@ Remove a parameter from the media type.
 
 This stringifys the media type respecting the
 parameter order.
+
+NOTE: This will canonicalize the header such
+that it will add a space between each semicolon
+and quote all appropriate headers,
 
 =item C<matches_all>
 
