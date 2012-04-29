@@ -25,7 +25,10 @@ BEGIN {
     sub to_html { '<html><body>Hello World</body></html>' }
 }
 
-my $fsm = Web::Machine::FSM->new( tracing => 1 );
+my $app = Web::Machine->new(
+    resource => 'My::Resource',
+    fsm_args => { tracing => 1 }
+)->to_app;
 
 my @tests = (
     {
@@ -60,18 +63,11 @@ my @tests = (
     }
 );
 
-
 foreach my $test ( @tests ) {
-    my $r = My::Resource->new(
-        request  => Plack::Request->new( $test->{'env'} ),
-        response => Plack::Response->new
-    );
-    isa_ok($r, 'Web::Machine::Resource');
 
-    my $resp = $fsm->run( $r );
-
+    my $resp = $app->( $test->{'env'} );
     is_deeply(
-        $resp->finalize,
+        $resp,
         [
             200,
             [

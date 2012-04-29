@@ -4,10 +4,51 @@ package Web::Machine;
 use strict;
 use warnings;
 
+use Carp         qw[ confess ];
+use Scalar::Util qw[ blessed ];
+
 use Plack::Request;
 use Plack::Response;
 
+use HTTP::Headers::ActionPack;
+
 use Web::Machine::FSM;
+
+use parent 'Plack::Component';
+
+sub new {
+    my ($class, %args) = @_;
+
+    (exists $args{'resource'}
+        && (not blessed $args{'resource'})
+            && $args{'resource'}->isa('Web::Machine::Resource'))
+                || confess 'You must pass in a resource for this Web::Machine';
+
+    $class->SUPER::new( \%args );
+}
+
+sub inflate_request {
+    my ($self, $env) = @_;
+
+    my $request = Plack::Request->new( $env );
+
+    HTTP::Headers::ActionPack->new->inflate( $request );
+
+    $request;
+}
+
+sub call {
+    my ($self, $env) = @_;
+
+    my $request = $self->inflate_request( $env );
+
+    return Web::Machine::FSM->new( %{ $self->{'fsm_args'} || {} } )->run(
+        $self->{'resource'}->new(
+            request  => $request,
+            response => $request->new_response,
+        )
+    )->finalize;
+}
 
 1;
 
@@ -41,14 +82,7 @@ __END__
       }
   }
 
-  sub {
-      Web::Machine::FSM->new->run(
-          HelloWorld::Resource->new(
-              request  => Plack::Request->new( shift ),
-              response => Plack::Response->new,
-          )
-      )->finalize;
-  };
+  Web::Machine->new( resource => 'HelloWorld::Resource' )->to_app;
 
 =head1 DESCRIPTION
 
