@@ -49,7 +49,7 @@ sub run {
             elsif ( is_status_code( $result ) ) {
                 warn ".. terminating with " . ${ $result } . "\n" if $DEBUG;
                 $response->status( ${ $result } );
-                $resource->finish_request;
+                $resource->finish_request( $metadata );
 
                 if ( $DEBUG ) {
                     require Data::Dumper;
