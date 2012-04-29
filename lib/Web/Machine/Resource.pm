@@ -16,11 +16,16 @@ sub new {
     (exists $args{'response'} && blessed $args{'response'} && $args{'response'}->isa('Plack::Response'))
         || confess "You must supply a response and it must be a Plack::Response";
 
-    bless {
+    my $self = bless {
         request  => $args{'request'},
         response => $args{'response'},
     } => $class;
+
+    $self->init( \%args );
+    $self;
 }
+
+sub init {}
 
 sub request  { (shift)->{'request'}  }
 sub response { (shift)->{'response'} }
@@ -102,6 +107,16 @@ of webmachine.
 =head1 METHODS
 
 =over 4
+
+=item C<init( \%args )>
+
+This method is called right after the object is blessed
+and it is passed reference to the original C<%args> that
+were given to the constructor.
+
+The default method is a no-op, so there is no need to call
+the SUPER method, however it is still recommended to
+ensure proper initialization.
 
 =item C<resource_exists>
 
