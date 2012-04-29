@@ -172,6 +172,14 @@ $STATE_DESC{'b6'} = 'content_headers_okay';
 sub b6 {
     my ($resource, $request, $response, $metadata) = @_;
 
+    # FIX-ME
+    # there is a better way to do this,
+    # also, HTTP::Headers will usually
+    # group things into arrays, so we
+    # can either avoid or better take
+    # advantage of Hash::MultiValue.
+    # But we are almost certainly not
+    # handling that case properly maybe.
     my $content_headers = Hash::MultiValue->new;
     $request->headers->scan(sub {
         my ($name, $value) = @_;
