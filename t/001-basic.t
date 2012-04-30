@@ -27,7 +27,7 @@ BEGIN {
 
 my $app = Web::Machine->new(
     resource => 'My::Resource',
-    fsm_args => { tracing => 1 }
+    tracing  => 1
 )->to_app;
 
 my @tests = (
