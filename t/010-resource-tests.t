@@ -602,17 +602,16 @@ my @tests = (
 foreach my $test ( @tests ) {
 
     my $resource = Plack::Util::load_class( $test->{'resource'} );
+    my $request  = HTTP::Headers::ActionPack->new->inflate( Plack::Request->new( $test->{'request'} ) );
 
-    my $request = $resource->new(
-        request  => Plack::Request->new( $test->{'request'} ),
+    my $r = $resource->new(
+        request  => $request,
         response => Plack::Response->new
     );
-    isa_ok($request, $test->{'resource'}, '... make sure we loaded the right class');
-    isa_ok($request, 'Web::Machine::Resource', '... created resource (' . $test->{'resource'}. ') successfully');
 
     my $response;
     is(exception {
-        $response = $fsm->run( $request );
+        $response = $fsm->run( $r );
     }, undef, '... ran resource (' . $test->{'resource'}. ') successfully');
     isa_ok($response, 'Plack::Response');
 

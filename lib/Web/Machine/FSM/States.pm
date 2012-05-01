@@ -12,7 +12,6 @@ use Carp qw[ confess ];
 
 use Web::Machine::Util qw[
     first
-    str2time
     pair_key
     pair_value
 ];
@@ -371,7 +370,7 @@ sub h10 {
 $STATE_DESC{'h11'} = 'if_unmodified_since_is_valid_date';
 sub h11 {
     my ($resource, $request, $response, $metadata) = @_;
-    if ( my $date = str2time( $request->header('If-Unmodified-Since') ) ) {
+    if ( my $date = $request->header('If-Unmodified-Since') ) {
         $metadata->{'If-Unmodified-Since'} = $date;
         return \&h12;
     }
@@ -383,7 +382,7 @@ sub h12 {
     my ($resource, $request, $response, $metadata) = @_;
     defined $resource->last_modified
         &&
-    (str2time( $resource->last_modified ) > $metadata->{'If-Unmodified-Since'})
+    ($resource->last_modified->epoch > $metadata->{'If-Unmodified-Since'}->epoch)
         ? \412 : \&i12;
 }
 
@@ -479,7 +478,7 @@ sub l13 {
 $STATE_DESC{'l14'} = 'if_modified_since_is_valid_date';
 sub l14 {
     my ($resource, $request, $response, $metadata) = @_;
-    if ( my $date = str2time( $request->header('If-Modified-Since') ) ) {
+    if ( my $date = $request->header('If-Modified-Since') ) {
         $metadata->{'If-Modified-Since'} = $date;
         return \&l15;
     }
@@ -489,7 +488,7 @@ sub l14 {
 $STATE_DESC{'l15'} = 'if_modified_since_greater_than_now';
 sub l15 {
     my ($resource, $request, $response, $metadata) = @_;
-    ($metadata->{'If-Modified-Since'} > (scalar time)) ? \&m16 : \&l17;
+    ($metadata->{'If-Modified-Since'}->epoch > (scalar time)) ? \&m16 : \&l17;
 }
 
 $STATE_DESC{'l17'} = 'last_modified_is_greater_than_if_modified_since';
@@ -497,7 +496,7 @@ sub l17 {
     my ($resource, $request, $response, $metadata) = @_;
     defined $resource->last_modified
         &&
-    (str2time( $resource->last_modified ) > $metadata->{'If-Modified-Since'})
+    ($resource->last_modified->epoch > $metadata->{'If-Modified-Since'}->epoch)
         ? \&m16 : \304;
 }
 

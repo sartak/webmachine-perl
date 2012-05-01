@@ -4,22 +4,31 @@ package Web::Machine::Util;
 use strict;
 use warnings;
 
-use Carp       qw[ confess ];
-use List::Util qw[ first ];
-use HTTP::Date qw[ str2time ];
+use Carp         qw[ confess ];
+use Scalar::Util qw[ blessed ];
+use List::Util   qw[ first ];
+
+use HTTP::Headers::ActionPack::DateHeader;
 
 use Sub::Exporter -setup => {
     exports => [qw[
         first
-        str2time
         pair_key
         pair_value
         bind_path
+        create_date
     ]]
 };
 
 sub pair_key   { ( keys   %{ $_[0] } )[0] }
 sub pair_value { ( values %{ $_[0] } )[0] }
+
+sub create_date {
+    my $date = shift;
+    blessed $date
+        ? HTTP::Headers::ActionPack::DateHeader->new( $date )
+        : HTTP::Headers::ActionPack::DateHeader->new_from_string( $date );
+}
 
 sub bind_path {
     my ($spec, $path) = @_;
@@ -73,11 +82,6 @@ in here.
 =item C<first>
 
 This is imported from L<List::Util> and passed on here
-for export.
-
-=item C<str2time>
-
-This is imported from L<HTTP::Date> and passed on here
 for export.
 
 =item C<pair_key>

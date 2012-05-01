@@ -188,12 +188,20 @@ If the 'Content-Type' on PUT or POST is unknown, this should
 return false, which will result in a '415 Unsupported Media
 Type' response.
 
+The C<$content_type> provided should be an instance of
+L<HTTP::Headers::ActionPack::MediaType>.
+
 Defaults to true.
 
 =item C<valid_content_headers( $content_headers )>
 
 Parameter C<$content_header> is a HASH ref of the Request
-headers that begin with prefix 'Content-'.
+headers that begin with prefix 'Content-'. It will contain
+instances of L<HTTP::Headers::ActionPack::MediaType>,
+L<HTTP::Headers::ActionPack::MediaTypeList> and
+L<HTTP::Headers::ActionPack::PriorityList> based on the
+headers included. See L<HTTP::Headers::ActionPack> for
+details of the mappings.
 
 If the request includes any invalid Content-* headers, this
 should return false, which will result in a '501 Not
@@ -377,14 +385,17 @@ Default is to return false.
 
 This method should return the last modified date/time of the
 resource which will be added as the Last-Modified header in the
-response and used in negotiating conditional requests.
+response and used in negotiating conditional requests. This
+should be in the form of an instance of
+L<HTTP::Headers::ActionPack::DateHeader>.
 
 Default is undef.
 
 =item C<expires>
 
 If the resource expires, this method should return the date/time
-it expires.
+it expires. This should be in the form of an instance of
+L<HTTP::Headers::ActionPack::DateHeader>.
 
 Default is nil.
 
