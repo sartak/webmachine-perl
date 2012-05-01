@@ -18,6 +18,8 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
     use strict;
     use warnings;
 
+    use Web::Machine::Util qw[ bind_path ];
+
     use parent 'Web::Machine::Resource';
 
     use JSON::XS ();
@@ -47,8 +49,7 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
 
     sub resource_exists {
         my $self = shift;
-        my $var  = $self->_get_path;
-        if ( $var ) {
+        if ( my $var = bind_path( '/:id', $self->request->path_info ) ) {
             $self->context( $ENV{ $var } ) if exists $ENV{ $var };
         }
         else {
@@ -60,9 +61,8 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
 
     sub from_json {
         my $self = shift;
-        my $var  = $self->_get_path;
         my $data = $JSON->decode( $self->request->content );
-        if ( $var ) {
+        if ( my $var = bind_path( '/:id', $self->request->path_info ) ) {
             $ENV{ $var } = $data;
         }
         else {
@@ -70,16 +70,7 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
         }
     }
 
-    sub delete_resource { delete $ENV{ (shift)->_get_path } }
-
-    # ...
-
-    sub _get_path {
-        my $self = shift;
-        my $var  = $self->request->path_info;
-        $var =~ s/^\///;
-        $var;
-    }
+    sub delete_resource { delete $ENV{ bind_path( '/:id', (shift)->request->path_info ) } }
 }
 
 Web::Machine->new( resource => 'Env::Resource' )->to_app
