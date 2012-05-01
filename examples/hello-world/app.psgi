@@ -3,9 +3,7 @@
 use strict;
 use warnings;
 
-use Plack::Request;
-use Plack::Response;
-use Web::Machine::FSM;
+use Web::Machine;
 
 {
     package HelloWorld::Resource;
@@ -29,11 +27,4 @@ use Web::Machine::FSM;
     }
 }
 
-sub {
-    Web::Machine::FSM->new->run(
-        HelloWorld::Resource->new(
-            request  => Plack::Request->new( shift ),
-            response => Plack::Response->new,
-        )
-    )->finalize;
-};
+Web::Machine->new( resource => 'HelloWorld::Resource' )->to_app;

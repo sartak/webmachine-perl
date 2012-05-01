@@ -3,9 +3,7 @@
 use strict;
 use warnings;
 
-use Plack::Request;
-use Plack::Response;
-use Web::Machine::FSM;
+use Web::Machine;
 
 =pod
 
@@ -84,11 +82,4 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
     }
 }
 
-sub {
-    Web::Machine::FSM->new->run(
-        Env::Resource->new(
-            request  => Plack::Request->new( shift ),
-            response => Plack::Response->new,
-        )
-    )->finalize;
-};
+Web::Machine->new( resource => 'Env::Resource' )->to_app
