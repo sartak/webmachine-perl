@@ -33,18 +33,15 @@ sub bind_path {
             last;
         }
         elsif ( $spec[ $i ] =~ /^\:/ ) {
-            (defined $parts[ $i ])
-                || confess "Missing part for spec (" . $spec[$i] . ")";
+            return unless defined $parts[ $i ];
             push @results => $parts[ $i ];
         }
         elsif ( $spec[ $i ] =~ /^\?\:/ ) {
             push @results => $parts[ $i ] if defined $parts[ $i ];
         }
         else {
-            (defined $parts[ $i ])
-                || confess "Missing part for spec (" . $spec[$i] . ")";
-            ($spec[$i] eq $parts[$i])
-                || confess "Literal part (" . $parts[$i] . ") did not match spec (" . $spec[$i] . ")";
+            return unless defined $parts[ $i ];
+            return unless $spec[$i] eq $parts[$i];
         }
     }
 
