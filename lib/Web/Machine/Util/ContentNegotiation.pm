@@ -4,6 +4,8 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
+use Scalar::Util qw[ blessed ];
+
 use HTTP::Headers::ActionPack::MediaType;
 use HTTP::Headers::ActionPack::MediaTypeList;
 use HTTP::Headers::ActionPack::PriorityList;
@@ -22,7 +24,7 @@ use Sub::Exporter -setup => {
 
 sub choose_media_type {
     my ($provided, $header) = @_;
-    my $requested       = HTTP::Headers::ActionPack::MediaTypeList->new_from_string( $header );
+    my $requested       = blessed $header ? $header :HTTP::Headers::ActionPack::MediaTypeList->new_from_string( $header );
     my $parsed_provided = [ map { HTTP::Headers::ActionPack::MediaType->new_from_string( $_ ) } @$provided ];
 
     my $chosen;
@@ -37,7 +39,7 @@ sub choose_media_type {
 
 sub match_acceptable_media_type {
     my ($to_match, $accepted) = @_;
-    my $content_type = HTTP::Headers::ActionPack::MediaType->new_from_string( $to_match );
+    my $content_type = blessed $to_match ? $to_match : HTTP::Headers::ActionPack::MediaType->new_from_string( $to_match );
     if ( my $acceptable = first { $content_type->match( pair_key( $_ ) ) } @$accepted ) {
         return $acceptable;
     }
@@ -50,7 +52,7 @@ sub choose_language {
     return 1 if scalar @$provided == 0;
 
     my $language;
-    my $requested     = HTTP::Headers::ActionPack::PriorityList->new_from_string( $header );
+    my $requested     = blessed $header ? $header : HTTP::Headers::ActionPack::PriorityList->new_from_string( $header );
     my $star_priority = $requested->priority_of('*');
     my $any_ok        = $star_priority && $star_priority > 0.0;
 
@@ -122,7 +124,7 @@ sub make_choice {
 
     $choices = [ map { lc $_ } @$choices ];
 
-    my $accepted         = HTTP::Headers::ActionPack::PriorityList->new_from_string( $header );
+    my $accepted         = blessed $header ? $header : HTTP::Headers::ActionPack::PriorityList->new_from_string( $header );
     my $default_priority = $accepted->priority_of( $default );
     my $star_priority    = $accepted->priority_of( '*' );
 
