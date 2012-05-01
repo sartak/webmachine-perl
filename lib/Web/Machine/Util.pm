@@ -45,7 +45,11 @@ sub bind_path {
         }
     }
 
-    @results;
+    wantarray
+        ? @results
+        : (scalar @results == 1)
+            ? $results[0]
+            : @results;
 }
 
 1;
