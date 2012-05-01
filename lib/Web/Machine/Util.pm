@@ -14,11 +14,42 @@ use Sub::Exporter -setup => {
         str2time
         pair_key
         pair_value
+        bind_path
     ]]
 };
 
 sub pair_key   { ( keys   %{ $_[0] } )[0] }
 sub pair_value { ( values %{ $_[0] } )[0] }
+
+sub bind_path {
+    my ($spec, $path) = @_;
+    my @parts = split /\// => $path;
+    my @spec  = split /\// => $spec;
+
+    my @results;
+    foreach my $i ( 0 .. $#spec ) {
+        if ( $spec[ $i ] =~ /^\*$/ ) {
+            push @results => @parts[ $i .. $#parts ];
+            last;
+        }
+        elsif ( $spec[ $i ] =~ /^\:/ ) {
+            (defined $parts[ $i ])
+                || confess "Missing part for spec (" . $spec[$i] . ")";
+            push @results => $parts[ $i ];
+        }
+        elsif ( $spec[ $i ] =~ /^\?\:/ ) {
+            push @results => $parts[ $i ] if defined $parts[ $i ];
+        }
+        else {
+            (defined $parts[ $i ])
+                || confess "Missing part for spec (" . $spec[$i] . ")";
+            ($spec[$i] eq $parts[$i])
+                || confess "Literal part (" . $parts[$i] . ") did not match spec (" . $spec[$i] . ")";
+        }
+    }
+
+    @results;
+}
 
 1;
 
