@@ -18,18 +18,12 @@ https://bitbucket.org/bryan/wmexamples/src/fa8104e75550/src/env_resource.erl
     use strict;
     use warnings;
 
+    use JSON::XS ();
     use Web::Machine::Util qw[ bind_path ];
 
     use parent 'Web::Machine::Resource';
 
-    use JSON::XS ();
     my $JSON = JSON::XS->new->allow_nonref->pretty;
-
-    sub new {
-        my $self = shift->SUPER::new( @_ );
-        $self->{'context'} = undef;
-        $self;
-    }
 
     sub context {
         my $self = shift;
