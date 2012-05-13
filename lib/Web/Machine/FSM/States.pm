@@ -285,7 +285,7 @@ sub f6 {
         $metadata->{'Content-Type'}->add_param( 'charset' => $charset );
     }
     # put the content type in the header now ...
-    $response->header( 'Content-Type' => $metadata->{'Content-Type'}->to_string );
+    $response->header( 'Content-Type' => $metadata->{'Content-Type'}->as_string );
 
     if ( $request->header('Accept-Encoding') ) {
         return \&f7
