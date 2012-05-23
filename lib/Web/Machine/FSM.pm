@@ -1,6 +1,9 @@
 package Web::Machine::FSM;
 # ABSTRACT: The State Machine runner
 
+use strict;
+use warnings;
+
 use Try::Tiny;
 use Web::Machine::FSM::States qw[
     start_state
