@@ -16,6 +16,9 @@ __END__
 
 =head1 DESCRIPTION
 
+This is basic support for internationalization of HTTP
+information. Currently it just provides response bodies
+for HTTP errors.
 
 
 

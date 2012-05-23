@@ -57,9 +57,11 @@ __END__
 
   use Web::Machine::I18N;
 
-=head1 DESCRIPTION
+  my $lang = Web::Machine::I18N->get_handle('en');
 
+=head1 SEE ALSO
 
+L<Web::Machine::I18N>
 
 
 
