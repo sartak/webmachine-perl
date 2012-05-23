@@ -46,6 +46,10 @@ sub run {
             push @trace => get_state_name( $state ) if $tracing;
             my $result = $state->( $resource, $request, $response, $metadata );
             if ( ! ref $result ) {
+                # TODO:
+                # We should be I18N this
+                # specific error
+                # - SL
                 warn "! ERROR with " . ($result || 'undef') . "\n" if $DEBUG;
                 $response->status( 500 );
                 $response->body( [ "Got bad state: " . ($result || 'undef') ] );
@@ -57,6 +61,16 @@ sub run {
 
                 if ( is_error( $$result ) && !$response->body ) {
                     my $lang = Web::Machine::I18N->get_handle( $metadata->{'Language'} || 'en' );
+                    # TODO:
+                    # The reality is that we should be
+                    # setting the Content-Length, the
+                    # Content-Type and perhaps even the
+                    # Content-Language (assuming none
+                    # of them aren't already set). However
+                    # these are just error cases, so I
+                    # question the level of importance.
+                    # In other words,.. patches welcome.
+                    # - SL
                     $response->body([ $lang->maketext( $$result ) ]);
                 }
 
@@ -74,6 +88,9 @@ sub run {
             }
         }
     } catch {
+        # TODO:
+        # We should be I18N the errors
+        # - SL
         warn $_ if $DEBUG;
         $response->status( 500 );
         $response->body( [ $_ ] );
