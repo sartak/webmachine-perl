@@ -50,7 +50,7 @@ test_psgi
             my $res = $cb->(GET "/WEB_MACHINE_TESTING");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         $ENV{'WEB_MACHINE_TESTING'} = __FILE__;
@@ -77,7 +77,7 @@ test_psgi
             my $res = $cb->(GET "/WEB_MACHINE_TESTING");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         # now through the web-service
@@ -86,7 +86,7 @@ test_psgi
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         {
@@ -123,7 +123,7 @@ test_psgi
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         # test loading multiples
@@ -132,14 +132,14 @@ test_psgi
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_FOO");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_BAR");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         {
@@ -201,14 +201,14 @@ test_psgi
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_FOO");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_BAR");
             is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Found', '... got the expected content');
         }
 
         ## check some of the expected errors ...
@@ -217,21 +217,21 @@ test_psgi
             my $res = $cb->(POST "/");
             is($res->code, 405, '... got the expected status');
             is($res->header('Allow'), 'GET, HEAD, PUT', '... got the expected Allow header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Method Not Allowed', '... got the expected content');
         }
 
         {
             my $res = $cb->(DELETE "/");
             is($res->code, 405, '... got the expected status');
             is($res->header('Allow'), 'GET, HEAD, PUT', '... got the expected Allow header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Method Not Allowed', '... got the expected content');
         }
 
         {
             my $res = $cb->(POST "/FOO");
             is($res->code, 405, '... got the expected status');
             is($res->header('Allow'), 'GET, HEAD, PUT, DELETE', '... got the expected Allow header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Method Not Allowed', '... got the expected content');
         }
 
         {
@@ -240,13 +240,13 @@ test_psgi
             ));
             is($res->code, 415, '... got the expected status');
             is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Unsupported Media Type', '... got the expected content');
         }
 
         {
             my $res = $cb->(GET "/", 'Accept' => 'text/html');
             is($res->code, 406, '... got the expected status');
-            is($res->content, '', '... got the expected content');
+            is($res->content, 'Not Acceptable', '... got the expected content');
         }
 
     };

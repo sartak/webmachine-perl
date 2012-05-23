@@ -5,6 +5,8 @@ use strict;
 use warnings;
 
 use Try::Tiny;
+use HTTP::Status qw[ is_error ];
+use Web::Machine::I18N;
 use Web::Machine::FSM::States qw[
     start_state
     is_status_code
@@ -51,8 +53,12 @@ sub run {
             }
             elsif ( is_status_code( $result ) ) {
                 warn ".. terminating with " . ${ $result } . "\n" if $DEBUG;
-                $response->status( ${ $result } );
-                $resource->finish_request( $metadata );
+                $response->status( $$result );
+
+                if ( is_error( $$result ) && !$response->body ) {
+                    my $lang = Web::Machine::I18N->get_handle( $metadata->{'Language'} || 'en' );
+                    $response->body([ $lang->maketext( $$result ) ]);
+                }
 
                 if ( $DEBUG ) {
                     require Data::Dumper;
@@ -73,6 +79,7 @@ sub run {
         $response->body( [ $_ ] );
     };
 
+    $resource->finish_request( $metadata );
     $response->header( $self->tracing_header, (join ',' => @trace) )
         if $tracing;
 
