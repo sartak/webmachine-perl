@@ -274,13 +274,13 @@ my @tests = (
     {
         resource => 'J18',
         request  => { REQUEST_METHOD => 'GET', HTTP_IF_NONE_MATCH => '*'  },
-        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 304, [ 'ETag' => '"0xDEADBEEF"', 'Last-Modified' => 'Sun, 18 Mar 2012 15:45:00 GMT' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,j18'
     },
     {
         resource => 'J18',
         request  => { REQUEST_METHOD => 'HEAD', HTTP_IF_NONE_MATCH => '*'  },
-        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 304, [ 'ETag' => '"0xDEADBEEF"', 'Last-Modified' => 'Sun, 18 Mar 2012 15:45:00 GMT'  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,j18'
     },
     {
@@ -293,13 +293,13 @@ my @tests = (
     {
         resource => 'J18',
         request  => { REQUEST_METHOD => 'GET', HTTP_IF_NONE_MATCH => '*', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT'  },
-        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 304, [ 'ETag' => '"0xDEADBEEF"', 'Last-Modified' => 'Sun, 18 Mar 2012 15:45:00 GMT'  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,h11,h12,i12,i13,j18'
     },
     {
         resource => 'J18',
         request  => { REQUEST_METHOD => 'HEAD', HTTP_IF_NONE_MATCH => '*', HTTP_IF_UNMODIFIED_SINCE => '18 Mar 2012 15:49:00 GMT'  },
-        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 304, [ 'ETag' => '"0xDEADBEEF"', 'Last-Modified' => 'Sun, 18 Mar 2012 15:45:00 GMT'  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,h11,h12,i12,i13,j18'
     },
     {
@@ -312,13 +312,13 @@ my @tests = (
     {
         resource => 'J18',
         request  => { REQUEST_METHOD => 'GET', HTTP_IF_NONE_MATCH => '0xDEADBEEF'  },
-        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 304, [ 'ETag' => '"0xDEADBEEF"', 'Last-Modified' => 'Sun, 18 Mar 2012 15:45:00 GMT'  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,j18'
     },
     {
         resource => 'J18',
         request  => { REQUEST_METHOD => 'HEAD', HTTP_IF_NONE_MATCH => '0xDEADBEEF'  },
-        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 304, [ 'ETag' => '"0xDEADBEEF"', 'Last-Modified' => 'Sun, 18 Mar 2012 15:45:00 GMT'  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,j18'
     },
     {
@@ -521,7 +521,7 @@ my @tests = (
     {
         resource => 'L17',
         request  => { REQUEST_METHOD => 'GET', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2001 15:49:00 GMT' },
-        response => [ 304, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
+        response => [ 304, [ 'ETag' => '"0xDEADBEEF"', 'Last-Modified' => 'Sat, 18 Mar 2000 15:45:00 GMT'  ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,l17'
     },
     # M20 via L15,M16

@@ -86,6 +86,15 @@ sub _add_caching_headers {
     }
 }
 
+sub _handle_304 {
+    my ($resource, $response) = @_;
+    $response->headers->remove_header('Content-Type');
+    $response->headers->remove_header('Content-Encoding');
+    $response->headers->remove_header('Content-Language');
+    _add_caching_headers($resource, $response);
+    return \304;
+}
+
 sub _is_redirect {
     my ($response) = @_;
     # NOTE:
@@ -420,7 +429,9 @@ sub i13 {
 $STATE_DESC{'j18'} = 'method_is_get_or_head';
 sub j18 {
     my ($resource, $request, $response, $metadata) = @_;
-    $request->method eq 'GET' || $request->method eq 'HEAD' ? \304 : \412
+    $request->method eq 'GET' || $request->method eq 'HEAD'
+        ? _handle_304( $resource, $response )
+        : \412
 }
 
 $STATE_DESC{'k5'} = 'moved_permanently';
@@ -497,7 +508,7 @@ sub l17 {
     defined $resource->last_modified
         &&
     ($resource->last_modified->epoch > $metadata->{'If-Modified-Since'}->epoch)
-        ? \&m16 : \304;
+        ? \&m16 : _handle_304( $resource, $response );
 }
 
 $STATE_DESC{'m5'} = 'method_is_post';
