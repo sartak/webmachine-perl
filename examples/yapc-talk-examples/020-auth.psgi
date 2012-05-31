@@ -10,7 +10,7 @@ use Web::Machine;
 =cut
 
 {
-    package YAPC::NA::2012::Example001::Resource;
+    package YAPC::NA::2012::Example020::Resource;
     use strict;
     use warnings;
     use MIME::Base64;
@@ -35,4 +35,4 @@ use Web::Machine;
 
 }
 
-Web::Machine->new( resource => 'YAPC::NA::2012::Example001::Resource' )->to_app;
+Web::Machine->new( resource => 'YAPC::NA::2012::Example020::Resource' )->to_app;

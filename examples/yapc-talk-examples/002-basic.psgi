@@ -14,7 +14,7 @@ the order of items in content_types_provided
 curl -v http://0:5000/
 
 # and you must ask specifically for JSON
-curl -v http://0:5000/ -H 'Accept: text/html'
+curl -v http://0:5000/ -H 'Accept: application/json'
 
 =cut
 

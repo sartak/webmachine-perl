@@ -12,6 +12,15 @@ use Plack::Util;
 
 use HTTP::Request::Common;
 
+BEGIN {
+    eval "use JSON::XS;";
+    if ( $@ ) {
+        diag('JSON::XS is required for this test');
+        done_testing;
+        exit;
+    }
+}
+
 test_psgi
     Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/000-basic.psgi" ),
     sub {
