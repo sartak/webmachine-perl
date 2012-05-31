@@ -27,17 +27,7 @@ curl -v http://0:5000/ -H 'If-Modified-Since: Sun, 27 May 2012 17:35:00 EDT'
     sub last_modified { create_date('Sun, 27 May 2012 17:35:00 EDT') }
     sub generate_etag { '0xDEADBEEF' }
 
-    sub to_html {
-        join "" =>
-        '<html>',
-            '<head>',
-                '<title>Hello World Resource</title>',
-            '</head>',
-            '<body>',
-                '<h1>Hello World</h1>',
-            '</body>',
-        '</html>'
-    }
+    sub to_html { '<html><body><h1>Hello World</h1></body></html>' }
 }
 
 Web::Machine->new( resource => 'YAPC::NA::2012::Example001::Resource' )->to_app;

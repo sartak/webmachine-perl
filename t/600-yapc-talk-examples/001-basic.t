@@ -13,7 +13,7 @@ use Plack::Util;
 use HTTP::Request::Common;
 
 test_psgi
-    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/000-basic.psgi" ),
+    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/001-basic.psgi" ),
     sub {
         my $cb  = shift;
 
@@ -30,13 +30,13 @@ test_psgi
         }
 
         {
-            my $res = $cb->(GET "/" => ('Accept' => 'image/jpeg'));
-            is($res->code, 406, '... got the expected status');
-            is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
-            is($res->header('Content-Length'), undef, '... got the expected Content-Length header');
+            my $res = $cb->(GET "/" => ('Accept' => 'text/html'));
+            is($res->code, 200, '... got the expected status');
+            is($res->header('Content-Type'), 'text/html', '... got the expected Content-Type header');
+            is($res->header('Content-Length'), 46, '... got the expected Content-Length header');
             is(
                 $res->content,
-                'Not Acceptable',
+                '<html><body><h1>Hello World</h1></body></html>',
                 '... got the expected content'
             );
         }
