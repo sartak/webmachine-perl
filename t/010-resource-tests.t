@@ -12,6 +12,8 @@ use Plack::Request;
 use Plack::Response;
 use Plack::Util;
 
+use Web::Machine::Util qw[ inflate_headers ];
+
 BEGIN {
     use_ok('Web::Machine');
 }
@@ -602,7 +604,7 @@ my @tests = (
 foreach my $test ( @tests ) {
 
     my $resource = Plack::Util::load_class( $test->{'resource'} );
-    my $request  = HTTP::Headers::ActionPack->new->inflate( Plack::Request->new( $test->{'request'} ) );
+    my $request  = inflate_headers( Plack::Request->new( $test->{'request'} ) );
 
     my $r = $resource->new(
         request  => $request,

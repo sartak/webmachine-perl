@@ -6,7 +6,6 @@ use warnings;
 
 use B ();
 use Hash::MultiValue;
-use HTTP::Headers::ActionPack::MediaType;
 
 use Carp qw[ confess ];
 
@@ -14,6 +13,7 @@ use Web::Machine::Util qw[
     first
     pair_key
     pair_value
+    create_header
 ];
 use Web::Machine::Util::BodyEncoding qw[
     encode_body_if_set
@@ -223,9 +223,9 @@ $STATE_DESC{'c3'} = 'accept_header_exists';
 sub c3 {
     my ($resource, $request, $response, $metadata) = @_;
     if ( !$request->header('Accept') ) {
-        $metadata->{'Content-Type'} = HTTP::Headers::ActionPack::MediaType->new_from_string(
+        $metadata->{'Content-Type'} = create_header( MediaType => (
             pair_key( $resource->content_types_provided->[0] )
-        );
+        ));
         return \&d4
     }
     return \&c4;
@@ -632,7 +632,7 @@ sub o18 {
 
         my $content_type = $metadata->{'Content-Type'};
         my $match        = first {
-            my $ct = HTTP::Headers::ActionPack::MediaType->new_from_string( pair_key( $_ ) );
+            my $ct = create_header( MediaType => pair_key( $_ ) );
             $content_type->match( $ct )
         } @{ $resource->content_types_provided };
 

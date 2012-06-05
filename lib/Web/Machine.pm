@@ -10,8 +10,7 @@ use Scalar::Util qw[ blessed ];
 use Plack::Request;
 use Plack::Response;
 
-use HTTP::Headers::ActionPack;
-
+use Web::Machine::Util qw[ inflate_headers ];
 use Web::Machine::FSM;
 
 use parent 'Plack::Component';
@@ -29,7 +28,7 @@ sub new {
 
 sub inflate_request {
     my ($self, $env) = @_;
-    HTTP::Headers::ActionPack->new->inflate( Plack::Request->new( $env ) );
+    inflate_headers( Plack::Request->new( $env ) );
 }
 
 sub create_fsm {

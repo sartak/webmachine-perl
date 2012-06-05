@@ -8,7 +8,7 @@ use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
 use List::Util   qw[ first ];
 
-use HTTP::Headers::ActionPack::DateHeader;
+use HTTP::Headers::ActionPack;
 
 use Sub::Exporter -setup => {
     exports => [qw[
@@ -17,17 +17,19 @@ use Sub::Exporter -setup => {
         pair_value
         bind_path
         create_date
+        create_header
+        inflate_headers
     ]]
 };
 
 sub pair_key   { ( keys   %{ $_[0] } )[0] }
 sub pair_value { ( values %{ $_[0] } )[0] }
 
-sub create_date {
-    my $date = shift;
-    blessed $date
-        ? HTTP::Headers::ActionPack::DateHeader->new( $date )
-        : HTTP::Headers::ActionPack::DateHeader->new_from_string( $date );
+{
+    my $ACTION_PACK = HTTP::Headers::ActionPack->new;
+    sub create_header   { $ACTION_PACK->create( @_ ) }
+    sub create_date     { $ACTION_PACK->create( 'DateHeader' => shift ) }
+    sub inflate_headers { $ACTION_PACK->inflate( @_ ) }
 }
 
 sub bind_path {
@@ -91,6 +93,14 @@ for export.
 These two functions are used for fetching the key
 and value out of a pair in the L<Web::Machine> internals.
 We represent a pair simply as a HASH ref with one key.
+
+=item C<inflate_headers( $request )>
+
+This will call C<inflate> on an instance of L<HTTP::Headers::ActionPack>.
+
+=item C<create_headers( @args )>
+
+This will call C<create> on an instance of L<HTTP::Headers::ActionPack>.
 
 =item C<create_date( $date_string | $time_peice )>
 

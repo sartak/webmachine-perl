@@ -13,7 +13,7 @@ use Web::Machine;
     package YAPC::NA::2012::Example020::Resource;
     use strict;
     use warnings;
-    use HTTP::Headers::ActionPack::WWWAuthenticate;
+    use Web::Machine::Util qw[ create_header ];
 
     use parent 'Web::Machine::Resource';
 
@@ -28,7 +28,7 @@ use Web::Machine;
             return 0;
         }
         else {
-            return HTTP::Headers::ActionPack::WWWAuthenticate->new( 'Basic' => ( realm => 'Webmachine' ) );
+            return create_header( 'WWWAuthenticate' => [ 'Basic' => ( realm => 'Webmachine' ) ] );
         }
     }
 
