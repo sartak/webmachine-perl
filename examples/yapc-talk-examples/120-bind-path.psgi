@@ -9,7 +9,7 @@ use Web::Machine;
 
 curl -v http://0:5000/
 
-curl -v http://0:5000/user/edit/100
+curl -v http://0:5000/edit/100
 
 =cut
 
@@ -25,11 +25,11 @@ curl -v http://0:5000/user/edit/100
 
     sub to_html {
         my $self = shift;
-        if ( my ($controller, $action, $id) = bind_path('/:controller/:action/:id', $self->request->path_info) ) {
-            return "<html><body>You are performing the '$action' action on the '$controller' controller for '$id'.</body></html>";
+        if ( my ($action, $id) = bind_path( '/:action/:id', $self->request->path_info ) ) {
+            return "<html><body><h1>action('$action') id('$id')</h1></body></html>";
         }
         else {
-            return "<html><body>Please specify and controller, action and an id.</body></html>";
+            return \404;
         }
     }
 }

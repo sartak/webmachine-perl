@@ -19,24 +19,23 @@ test_psgi
 
         {
             my $res = $cb->(GET "/");
-            is($res->code, 200, '... got the expected status');
+            is($res->code, 404, '... got the expected status');
             is($res->header('Content-Type'), 'text/html', '... got the expected Content-Type header');
-            is($res->header('Content-Length'), 74, '... got the expected Content-Length header');
             is(
                 $res->content,
-                '<html><body>Please specify and controller, action and an id.</body></html>',
+                'Not Found',
                 '... got the expected content'
             );
         }
 
         {
-            my $res = $cb->(GET "/user/edit/10");
+            my $res = $cb->(GET "/edit/10");
             is($res->code, 200, '... got the expected status');
             is($res->header('Content-Type'), 'text/html', '... got the expected Content-Type header');
-            is($res->header('Content-Length'), 97, '... got the expected Content-Length header');
+            is($res->header('Content-Length'), 58, '... got the expected Content-Length header');
             is(
                 $res->content,
-                "<html><body>You are performing the 'edit' action on the 'user' controller for '10'.</body></html>",
+                "<html><body><h1>action('edit') id('10')</h1></body></html>",
                 '... got the expected content'
             );
         }
