@@ -60,7 +60,8 @@ sub run {
                 $response->status( $$result );
 
                 if ( is_error( $$result ) && !$response->body ) {
-                    my $lang = Web::Machine::I18N->get_handle( $metadata->{'Language'} || 'en' );
+                    my $lang = Web::Machine::I18N->get_handle( $metadata->{'Language'} || 'en' )
+                        or die "Could not get language handle for " . $metadata->{'Language'};
                     # TODO:
                     # The reality is that we should be
                     # setting the Content-Length, the
