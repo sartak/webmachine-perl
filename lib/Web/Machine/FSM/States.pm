@@ -641,8 +641,10 @@ sub o18 {
 
         return $result if is_status_code( $result );
 
-        $response->body( $result );
-        encode_body( $resource, $response, $metadata );
+        unless($request->method eq 'HEAD') {
+            $response->body( $result );
+            encode_body( $resource, $response, $metadata );
+        }
         return \&o18b;
     }
     else {

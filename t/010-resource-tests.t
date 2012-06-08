@@ -590,7 +590,7 @@ my @tests = (
     {
         resource => 'O18e',
         request  => { REQUEST_METHOD => 'HEAD', CONTENT_TYPE => 'text/plain' },
-        response => [ 200, [ 'Content-Length' => 11, 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
+        response => [ 200, [ 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,l13,m16,n16,o16,o18,o18b'
     },
     {
