@@ -48,9 +48,8 @@ test_psgi
         }
 
         {
-            my $res = $cb->(POST "/", Content_Type => 'application/json', Content => '"bar"');
-            is($res->code, 301, '... got the expected status');
-            is($res->header('Location'), '/', '... got the right Location header');
+            my $res = $cb->(PUT "/", Content_Type => 'application/json', Content => '"bar"');
+            is($res->code, 204, '... got the expected status');
         }
 
         {
