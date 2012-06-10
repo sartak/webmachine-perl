@@ -18,7 +18,7 @@ use Web::Machine;
     sub get_messages { @MESSAGES }
 
     sub allowed_methods        { [qw[ GET POST ]] }
-    sub content_types_provided { [ { 'text/html' => 'to_html'   } ] }
+    sub content_types_provided { [ { 'text/html' => 'to_html' } ] }
 
     sub to_html {
         my $self = shift;
