@@ -23,13 +23,10 @@ use Web::Machine;
 
     sub is_authorized {
         my ($self, $auth_header) = @_;
-        if ( my $auth = $self->request->header('Authorization') ) {
-            return 1 if $auth->username eq 'foo' && $auth->password eq 'bar';
-            return 0;
+        if ( $auth_header ) {
+            return 1 if $auth_header->username eq 'foo' && $auth_header->password eq 'bar';
         }
-        else {
-            return create_header( 'WWWAuthenticate' => [ 'Basic' => ( realm => 'Webmachine' ) ] );
-        }
+        return create_header( 'WWWAuthenticate' => [ 'Basic' => ( realm => 'Webmachine' ) ] );
     }
 
 }

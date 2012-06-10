@@ -49,6 +49,18 @@ test_psgi
                 '... got the expected content'
             );
         }
+
+        {
+            my $res = $cb->(GET "/" => ('Authorization' => 'Basic ZOMGBBQLOL=='));
+            is($res->code, 401, '... got the expected status');
+            is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
+            is($res->header('WWW-Authenticate'), 'Basic realm="Webmachine"', '... got the expected WWW-Authenticate header');
+            is(
+                $res->content,
+                'Unauthorized',
+                '... got the expected content'
+            );
+        }
     };
 
 done_testing;
