@@ -8,7 +8,7 @@ use Web::Machine;
 
 BEGIN {
     eval {
-        require( "$FindBin::Bin/030-postback-w-json.psgi" ) &&
+        require( "$FindBin::Bin/030-postback.psgi" ) &&
         require( "$FindBin::Bin/031-postback-w-json.psgi" )
     }
 }
