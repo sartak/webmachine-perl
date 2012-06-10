@@ -21,10 +21,11 @@ BEGIN {
     }
 }
 
-Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/030-postback.psgi" ),
+Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/030-postback.psgi" );
+Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/031-postback-w-json.psgi" );
 
 test_psgi
-    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/031-postback-w-auth.psgi" ),
+    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/032-postback-w-auth.psgi" ),
     sub {
         my $cb  = shift;
 

@@ -12,8 +12,10 @@ use Plack::Util;
 
 use HTTP::Request::Common;
 
+Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/030-postback.psgi" );
+
 test_psgi
-    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/030-postback.psgi" ),
+    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/031-postback-w-json.psgi" ),
     sub {
         my $cb  = shift;
 
@@ -47,6 +49,27 @@ test_psgi
             );
         }
 
+        {
+            my $res = $cb->(PUT "/", Content_Type => 'application/json', Content => '"bar"');
+            is($res->code, 204, '... got the expected status');
+        }
+
+        {
+            my $res = $cb->(POST "/", Content_Type => 'application/json', Content => '"bar"');
+            is($res->code, 415, '... got the expected status');
+        }
+
+        {
+            my $res = $cb->(GET "/");
+            is($res->code, 200, '... got the expected status');
+            is($res->header('Content-Type'), 'text/html', '... got the expected Content-Type header');
+            is($res->header('Content-Length'), 150, '... got the expected Content-Length header');
+            is(
+                $res->content,
+                '<html><body><form method="POST"><input type="text" name="message" /><input type="submit" /></form><hr/><ul><li>foo</li><li>bar</li></ul></body></html>',
+                '... got the expected content'
+            );
+        }
     };
 
 done_testing;

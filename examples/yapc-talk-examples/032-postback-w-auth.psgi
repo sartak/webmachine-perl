@@ -6,15 +6,20 @@ use FindBin;
 
 use Web::Machine;
 
-BEGIN { eval { require( "$FindBin::Bin/030-postback.psgi" ) } }
+BEGIN {
+    eval {
+        require( "$FindBin::Bin/030-postback-w-json.psgi" ) &&
+        require( "$FindBin::Bin/031-postback-w-json.psgi" )
+    }
+}
 
 {
-    package YAPC::NA::2012::Example031::Resource;
+    package YAPC::NA::2012::Example032::Resource;
     use strict;
     use warnings;
     use Web::Machine::Util qw[ create_header ];
 
-    use base 'YAPC::NA::2012::Example030::Resource';
+    use base 'YAPC::NA::2012::Example031::Resource';
 
     sub is_authorized {
         my ($self, $auth_header) = @_;
@@ -27,4 +32,4 @@ BEGIN { eval { require( "$FindBin::Bin/030-postback.psgi" ) } }
 
 }
 
-Web::Machine->new( resource => 'YAPC::NA::2012::Example031::Resource' )->to_app;
+Web::Machine->new( resource => 'YAPC::NA::2012::Example032::Resource' )->to_app;
