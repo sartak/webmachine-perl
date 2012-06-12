@@ -60,6 +60,11 @@ sub run {
                 $response->status( $$result );
 
                 if ( is_error( $$result ) && !$response->body ) {
+                    # NOTE:
+                    # this will default to en, however I
+                    # am not really confident that this
+                    # will end up being sufficient.
+                    # - SL
                     my $lang = Web::Machine::I18N->get_handle( $metadata->{'Language'} || 'en' )
                         or die "Could not get language handle for " . $metadata->{'Language'};
                     # TODO:
