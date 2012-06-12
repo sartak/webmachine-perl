@@ -12,8 +12,19 @@ use Plack::Util;
 
 use HTTP::Request::Common;
 
+BEGIN {
+    eval "use Path::Class;";
+    if ( $@ ) {
+        diag('Path::Class is required for this test');
+        done_testing;
+        exit;
+    }
+}
+
+my $dir = file(__FILE__)->parent->parent->parent->subdir('examples')->subdir('yapc-talk-examples');
+
 test_psgi
-    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/130-tracing-header.psgi" ),
+    Plack::Util::load_psgi( $dir->file('130-tracing-header.psgi')->stringify ),
     sub {
         my $cb  = shift;
 

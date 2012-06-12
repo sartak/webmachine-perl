@@ -19,10 +19,18 @@ BEGIN {
         done_testing;
         exit;
     }
+    eval "use Path::Class;";
+    if ( $@ ) {
+        diag('Path::Class is required for this test');
+        done_testing;
+        exit;
+    }
 }
 
+my $dir = file(__FILE__)->parent->parent->parent->subdir('examples')->subdir('yapc-talk-examples');
+
 test_psgi
-    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/000-basic.psgi" ),
+    Plack::Util::load_psgi( $dir->file('000-basic.psgi')->stringify ),
     sub {
         my $cb  = shift;
 

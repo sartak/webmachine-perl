@@ -21,8 +21,10 @@ BEGIN {
     }
 }
 
+my $dir = file(__FILE__)->parent->parent->parent->subdir('examples')->subdir('yapc-talk-examples');
+
 test_psgi
-    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/110-service-unavailable.psgi" ),
+    Plack::Util::load_psgi( $dir->file('110-service-unavailable.psgi')->stringify ),
     sub {
         my $cb = shift;
         my $f  = Path::Class::File->new("$FindBin::Bin/../../site_down");

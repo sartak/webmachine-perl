@@ -19,14 +19,22 @@ BEGIN {
         done_testing;
         exit;
     }
+    eval "use Path::Class;";
+    if ( $@ ) {
+        diag('Path::Class is required for this test');
+        done_testing;
+        exit;
+    }
 }
 
-Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/030-postback.psgi" );
-Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/031-postback-w-json.psgi" );
-Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/032-postback-w-auth.psgi" );
+my $dir = file(__FILE__)->parent->parent->parent->subdir('examples')->subdir('yapc-talk-examples');
+
+Plack::Util::load_psgi( $dir->file('030-postback.psgi')->stringify );
+Plack::Util::load_psgi( $dir->file('031-postback-w-json.psgi')->stringify );
+Plack::Util::load_psgi( $dir->file('032-postback-w-auth.psgi')->stringify );
 
 test_psgi
-    Plack::Util::load_psgi( "$FindBin::Bin/../../examples/yapc-talk-examples/033-postback-w-hateoas.psgi" ),
+    Plack::Util::load_psgi( $dir->file('033-postback-w-hateoas.psgi')->stringify ),
     sub {
         my $cb  = shift;
 
