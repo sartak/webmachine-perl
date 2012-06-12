@@ -10,15 +10,10 @@ use Test::Fatal;
 use Plack::Test;
 use Plack::Util;
 
+use MIME::Base64;
 use HTTP::Request::Common;
 
 BEGIN {
-    eval "use MIME::Base64;";
-    if ( $@ ) {
-        diag('MIME::Base64 is required for this test');
-        done_testing;
-        exit;
-    }
     eval "use Path::Class;";
     if ( $@ ) {
         diag('Path::Class is required for this test');
