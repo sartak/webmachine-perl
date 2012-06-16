@@ -15,13 +15,13 @@ use HTTP::Request::Common;
 BEGIN {
     eval "use JSON::XS;";
     if ( $@ ) {
-        diag('JSON::XS is required for this test');
+        pass('JSON::XS is required for this test');
         done_testing;
         exit;
     }
     eval "use Path::Class;";
     if ( $@ ) {
-        diag('Path::Class is required for this test');
+        pass('Path::Class is required for this test');
         done_testing;
         exit;
     }

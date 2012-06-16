@@ -15,7 +15,7 @@ use HTTP::Request::Common;
 BEGIN {
     eval "use Path::Class;";
     if ( $@ ) {
-        diag('Path::Class is required for this test');
+        pass('Path::Class is required for this test');
         done_testing;
         exit;
     }

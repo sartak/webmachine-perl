@@ -15,7 +15,7 @@ use HTTP::Request::Common qw[ GET HEAD PUT POST DELETE ];
 BEGIN {
     eval "use JSON::XS;";
     if ( $@ ) {
-        diag('JSON::XS is required for this test');
+        pass('JSON::XS is required for this test');
         done_testing;
         exit;
     }
