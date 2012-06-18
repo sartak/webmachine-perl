@@ -20,4 +20,9 @@ sub process_post {
     1;
 }
 
+sub finish_request {
+    my ($self, $metadata) = @_;
+    $self->response->body([ $metadata->{'exception'} ]);
+}
+
 1;

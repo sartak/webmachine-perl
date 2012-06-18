@@ -99,7 +99,13 @@ sub run {
         # - SL
         warn $_ if $DEBUG;
         $response->status( 500 );
-        $response->body( [ $_ ] );
+
+        # NOTE:
+        # this way you can handle the
+        # exception if you like via
+        # the finish_request call below
+        # - SL
+        $metadata->{'exception'} = $_;
     };
 
     $resource->finish_request( $metadata );
