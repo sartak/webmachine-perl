@@ -15,7 +15,7 @@ use HTTP::Request::Common;
 BEGIN {
     eval "use JSON::XS;";
     if ( $@ ) {
-        pass('JSON::XS is required for this test')
+        pass('JSON::XS is required for this test');
         done_testing;
         exit;
     }
