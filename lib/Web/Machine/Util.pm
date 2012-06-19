@@ -34,27 +34,32 @@ sub pair_value { ( values %{ $_[0] } )[0] }
 
 sub bind_path {
     my ($spec, $path) = @_;
-    my @parts = split /\// => $path;
-    my @spec  = split /\// => $spec;
+    my @parts = grep { $_ } split /\// => $path;
+    my @spec  = grep { $_ } split /\// => $spec;
 
     my @results;
     foreach my $i ( 0 .. $#spec ) {
         if ( $spec[ $i ] =~ /^\*$/ ) {
-            push @results => @parts[ $i .. $#parts ];
+            push @results => @parts;
+            @parts = ();
             last;
         }
         elsif ( $spec[ $i ] =~ /^\:/ ) {
-            return unless defined $parts[ $i ];
-            push @results => $parts[ $i ];
+            return unless defined $parts[ 0 ];
+            push @results => shift @parts;
         }
         elsif ( $spec[ $i ] =~ /^\?\:/ ) {
-            push @results => $parts[ $i ] if defined $parts[ $i ];
+            push @results => shift @parts
+                if defined $parts[ 0 ];
         }
         else {
-            return unless defined $parts[ $i ];
-            return unless $spec[$i] eq $parts[$i];
+            return unless defined $parts[ 0 ];
+            return unless $spec[ $i ] eq $parts[ 0 ];
+            shift @parts;
         }
     }
+
+    return if @parts;
 
     wantarray
         ? @results
