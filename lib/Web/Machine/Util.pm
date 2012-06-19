@@ -132,17 +132,20 @@ makes it easy to use the following idiom:
 
 The C<$path_spec> follows a pretty standard convention. Literal
 path parts must match corresponding literal. Variable path parts
-are prefixed by a colon and are captured for returning later.
-And lastly the "splat" operator (C<*>) is supported and causes
-all the rest of the path segements to be returned. Below are a
-few examples of this:
+are prefixed by a colon and are captured for returning later, if
+a question mark (?) prefixes the colon, that element will be
+considered optional. And lastly the "splat" operator (C<*>) is
+supported and causes all the rest of the path segements to be
+returned. Below are a few examples of this:
 
   spec                  path             result
   ------------------------------------------------------------
   /test/:foo/:bar       /test/1/2        ( 1, 2 )
+  /test/:foo/:bar       /test/1/         undef #failure-case
   /test/*               /test/1/2/3      ( 1, 2, 3 )
   /user/:id/:action     /user/1/edit     ( 1, 'edit' )
-  /:id                  /201             ( 201 )
+  /?:id                 /201             ( 201 )
+  /?:id                 /                ( )
 
 This function is kept deliberately simple and it is expected
 that the user will use C<my> in the array form to assign
@@ -154,6 +157,16 @@ In the future we might add a C<bind_path_hash> function which
 captures the variable names as well, but to be honest, if you
 feel you need that, you likely want one of the many excellent
 path dispatching modules available on CPAN.
+
+B<NOTE:> Some care should be taken when using path specs in
+which the only things are either optional parameters
+(prefixed with C<?:>) or the "splat" operator (C<*>)
+as they can return empty arrays, which in certain
+contexts can look like match failure. In these cases you
+can test the match in scalar context to verify, a match
+failure will be C<undef> whereas a match success (in
+which nothing was matched) will return C<0> (indicating
+an array with zero size).
 
 =back
 
