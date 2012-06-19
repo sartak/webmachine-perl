@@ -1,5 +1,12 @@
 Revision history for Perl extension Web::Machine
 
+0.03 Tues. June 19th, 2012
+    - fixing a missing semicolon (thanks to bricas)
+    - fixing missing $VERSION numbers (also thanks to bricas)
+    - allow the resource to choose how to handle exceptions
+      instead of always writing them to the body
+        - adjusted tests accordingly
+
 0.02 Sun. June 17th, 2012
     - forgot to add some dependencies
 
