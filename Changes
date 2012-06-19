@@ -3,6 +3,7 @@ Revision history for Perl extension Web::Machine
 0.04
     - improve the bind_path function in Util
         - improve existing and add more tests for this
+        - improve the docs on this too
 
 0.03 Tues. June 19th, 2012
     - fixing a missing semicolon (thanks to bricas)
