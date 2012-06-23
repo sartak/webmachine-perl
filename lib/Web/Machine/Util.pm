@@ -30,6 +30,7 @@ sub pair_value { ( values %{ $_[0] } )[0] }
     sub create_header   { $ACTION_PACK->create( @_ ) }
     sub create_date     { $ACTION_PACK->create( 'DateHeader' => shift ) }
     sub inflate_headers { $ACTION_PACK->inflate( @_ ) }
+    sub get_action_pack { $ACTION_PACK }
 }
 
 sub bind_path {
