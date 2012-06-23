@@ -1,6 +1,11 @@
 Revision history for Perl extension Web::Machine
 
 0.04
+    - moves all the content negotation code to
+      HTTP::Headers::ActionPack
+        - adjusted the Util module accordingly
+        - added/adjusted tests accordingly
+
     - improve the bind_path function in Util
         - improve existing and add more tests for this
         - improve the docs on this too
