@@ -42,7 +42,7 @@ test_psgi
         # conditional GET still returns 200
         {
             my $res = $cb->(GET "/" => (
-                'If-Modified-Since' => 'Sun, 27 May 2012 17:34:59 EDT'
+                'If-Modified-Since' => 'Sun, 27 May 2012 21:34:59 GMT'
             ));
             is($res->code, 200, '... got the expected status');
             is($res->header('Content-Type'), 'text/html', '... got the expected Content-Type header');
@@ -57,7 +57,7 @@ test_psgi
         # conditional GET now returns 304
         {
             my $res = $cb->(GET "/" => (
-                'If-Modified-Since' => 'Sun, 27 May 2012 17:35:00 EDT'
+                'If-Modified-Since' => 'Sun, 27 May 2012 21:35:00 GMT'
             ));
             is($res->code, 304, '... got the expected status');
             is($res->header('Content-Type'), undef, '... got the expected Content-Type header');

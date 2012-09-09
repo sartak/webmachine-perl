@@ -7,9 +7,9 @@ use Web::Machine;
 
 =pod
 
-curl -v http://0:5000/ -H 'If-Modified-Since: Sun, 27 May 2012 17:34:59 EDT'
+curl -v http://0:5000/ -H 'If-Modified-Since: Sun, 27 May 2012 21:34:59 GMT'
 
-curl -v http://0:5000/ -H 'If-Modified-Since: Sun, 27 May 2012 17:35:00 EDT'
+curl -v http://0:5000/ -H 'If-Modified-Since: Sun, 27 May 2012 21:35:00 GMT'
 
 =cut
 
@@ -24,7 +24,7 @@ curl -v http://0:5000/ -H 'If-Modified-Since: Sun, 27 May 2012 17:35:00 EDT'
 
     sub content_types_provided { [{ 'text/html' => 'to_html' }] }
 
-    sub last_modified { create_date('Sun, 27 May 2012 17:35:00 EDT') }
+    sub last_modified { create_date('Sun, 27 May 2012 21:35:00 GMT') }
     sub generate_etag { '0xDEADBEEF' }
 
     sub to_html { '<html><body><h1>Hello World</h1></body></html>' }
