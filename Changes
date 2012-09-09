@@ -1,6 +1,6 @@
 Revision history for Perl extension Web::Machine
 
-0.04
+0.04 Sun. Sept. 9th, 2012
     - moves all the content negotation code to
       HTTP::Headers::ActionPack
         - adjusted the Util module accordingly
