@@ -8,6 +8,11 @@ use lib 't/010-resources/';
 use Test::More;
 use Test::Fatal;
 
+# Needs to come before use Test::NoWarnings - see
+# https://github.com/schwern/test-more/issues/16
+END { done_testing; }
+use Test::NoWarnings;
+
 use Plack::Request;
 use Plack::Response;
 use Plack::Util;
@@ -66,6 +71,12 @@ my @tests = (
     },
     {
         resource => 'B8c',
+        request  => { REQUEST_METHOD => 'GET' },
+        response => [ 401, [], ['Unauthorized'] ],
+        trace    => 'b13,b12,b11,b10,b9,b8'
+    },
+    {
+        resource => 'B8d',
         request  => { REQUEST_METHOD => 'GET' },
         response => [ 401, [], ['Unauthorized'] ],
         trace    => 'b13,b12,b11,b10,b9,b8'
@@ -632,5 +643,3 @@ foreach my $test ( @tests ) {
 
 
 }
-
-done_testing;

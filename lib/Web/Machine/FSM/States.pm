@@ -156,7 +156,7 @@ sub b8 {
     }
     # if we just get back true, then
     # move onto the next state
-    elsif ( "$result" eq "1" ) {
+    elsif ( defined $result && "$result" eq "1" ) {
         return \&b7
     }
     # anything else will either be
