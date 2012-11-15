@@ -1,6 +1,10 @@
 Revision history for Perl extension Web::Machine
 
 {{$NEXT}
+    - when a resource throws an error, log this to the logger defined in the
+      Plack::Request object if one is available (Dave Rolsky)
+
+0.05 Mon. Oct. 29th, 2012
     - if a resource returned undef from is_authorized this caused an
       uninitialized value warning (Dave Rolsky)
 

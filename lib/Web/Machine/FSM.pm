@@ -98,6 +98,11 @@ sub run {
         # We should be I18N the errors
         # - SL
         warn $_ if $DEBUG;
+
+        if ( $request->logger ) {
+            $request->logger->( { level => 'error', message => $_ } );
+        }
+
         $response->status( 500 );
 
         # NOTE:
