@@ -235,7 +235,7 @@ an ARRAY ref of strings in all capitals.
 
 Defaults to C<['GET','HEAD']>.
 
-=items C<known_methods>
+=item C<known_methods>
 
 HTTP methods that are known to the resource. Like C<allowed_methods>,
 this must return an ARRAY ref of strings in all capitals. One could
