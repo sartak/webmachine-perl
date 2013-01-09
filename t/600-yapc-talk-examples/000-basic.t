@@ -44,7 +44,7 @@ test_psgi
             my $res = $cb->(GET "/" => ('Accept' => 'image/jpeg'));
             is($res->code, 406, '... got the expected status');
             is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
-            is($res->header('Content-Length'), undef, '... got the expected Content-Length header');
+            is($res->header('Content-Length'), 14, '... got the expected Content-Length header');
             is(
                 $res->content,
                 'Not Acceptable',

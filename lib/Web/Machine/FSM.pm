@@ -4,6 +4,8 @@ package Web::Machine::FSM;
 use strict;
 use warnings;
 
+use IO::Handle::Util 'io_from_getline';
+use Plack::Util;
 use Try::Tiny;
 use HTTP::Status qw[ is_error ];
 use Web::Machine::I18N;
@@ -113,11 +115,38 @@ sub run {
         $metadata->{'exception'} = $_;
     };
 
+    $self->filter_response( $response, $metadata );
     $resource->finish_request( $metadata );
     $response->header( $self->tracing_header, (join ',' => @trace) )
         if $tracing;
 
     $response;
+}
+
+sub filter_response {
+    my $self = shift;
+    my ($response, $metadata) = @_;
+
+    # XXX patch Plack::Response to make _body not private?
+    my $body = $response->_body;
+
+    for my $filter (@{ $metadata->{_content_filters} || [] }) {
+        if (ref($body) eq 'ARRAY') {
+            @$body = map { $filter->($_) } @$body;
+        }
+        else {
+            my $old_body = $body;
+            $body = io_from_getline sub { $filter->($old_body->getline) };
+            $response->body($body);
+        }
+    }
+
+    if (ref($body) eq 'ARRAY'
+     && !Plack::Util::status_with_no_entity_body($response->status)) {
+        $response->header(
+            'Content-Length' => Plack::Util::content_length($body)
+        );
+    }
 }
 
 1;

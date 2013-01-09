@@ -634,8 +634,13 @@ foreach my $test ( @tests ) {
 
     my $finalized = $response->finalize;
     if ( ref $test->{'response'} eq 'ARRAY' ) {
+        my $got_headers = { @{ $finalized->[1] } };
+        my $expected_headers = { @{ $test->{'response'}[1] } };
+        if ( !Plack::Util::status_with_no_entity_body($test->{'response'}[0] ) ) {
+            $expected_headers->{'Content-Length'} = Plack::Util::content_length( $test->{'response'}[2] );
+        }
         is( $finalized->[0], $test->{'response'}[0], '... got the status for resource (' . $test->{'resource'} . ') we expected' );
-        is_deeply( { @{ $finalized->[1] } }, { @{ $test->{'response'}[1] } }, '... got the headers for resource (' . $test->{'resource'} . ') we expected' );
+        is_deeply( $got_headers, $expected_headers, '... got the headers for resource (' . $test->{'resource'} . ') we expected' );
         is_deeply( $finalized->[2], $test->{'response'}[2], '... got the body for resource (' . $test->{'resource'} . ') we expected' );
     }
     else {

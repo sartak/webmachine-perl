@@ -44,7 +44,7 @@ test_psgi
             my $res = $cb->(GET "/");
             is($res->code, 503, '... got the expected status');
             is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
-            is($res->header('Content-Length'), undef, '... got the expected Content-Length header');
+            is($res->header('Content-Length'), 77, '... got the expected Content-Length header');
             is(
                 $res->content,
                 '<html><body><h1>Service Unavailable</h1>Please come back later.</body></html>',
