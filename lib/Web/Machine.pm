@@ -120,7 +120,7 @@ set forward by that module.
 
 =over 4
 
-=item C<new( resource => $resource_classname, ?tracing => 1|0 )>
+=item C<< new( resource => $resource_classname, ?tracing => 1|0 ) >>
 
 The constructor expects to get a C<$resource_classname> and can take an optional
 C<tracing> parameter which it will pass onto the L<Web::Machine::FSM>.
