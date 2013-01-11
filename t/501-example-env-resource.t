@@ -46,7 +46,7 @@ test_psgi
         {
             my $res = $cb->(GET "/WEB_MACHINE_TESTING");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
@@ -73,7 +73,7 @@ test_psgi
         {
             my $res = $cb->(GET "/WEB_MACHINE_TESTING");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
@@ -82,7 +82,7 @@ test_psgi
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
@@ -119,7 +119,7 @@ test_psgi
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
@@ -128,14 +128,14 @@ test_psgi
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_FOO");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_BAR");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
@@ -197,14 +197,14 @@ test_psgi
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_FOO");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
         {
             my $res = $cb->(GET "/WEB_MACHINE_AUTOMATED_TESTING_BULK_BAR");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Not Found', '... got the expected content');
         }
 
@@ -236,7 +236,7 @@ test_psgi
                 'Content-Type' => 'application/xml', 'Content' => '<FOOBAR/>'
             ));
             is($res->code, 415, '... got the expected status');
-            is($res->header('Content-Type'), 'application/json', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->content, 'Unsupported Media Type', '... got the expected content');
         }
 

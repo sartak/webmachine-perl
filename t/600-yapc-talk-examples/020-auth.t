@@ -29,7 +29,7 @@ test_psgi
         {
             my $res = $cb->(GET "/");
             is($res->code, 401, '... got the expected status');
-            is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->header('WWW-Authenticate'), 'Basic realm="Webmachine"', '... got the expected WWW-Authenticate header');
             is(
                 $res->content,
@@ -53,7 +53,7 @@ test_psgi
         {
             my $res = $cb->(GET "/" => ('Authorization' => 'Basic ' . MIME::Base64::encode_base64('foo:baz')));
             is($res->code, 401, '... got the expected status');
-            is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->header('WWW-Authenticate'), 'Basic realm="Webmachine"', '... got the expected WWW-Authenticate header');
             is(
                 $res->content,

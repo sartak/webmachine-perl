@@ -28,7 +28,7 @@ test_psgi
         {
             my $res = $cb->(GET "/");
             is($res->code, 404, '... got the expected status');
-            is($res->header('Content-Type'), 'text/html', '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is(
                 $res->content,
                 'Not Found',

@@ -54,6 +54,7 @@ sub run {
                 # - SL
                 warn "! ERROR with " . ($result || 'undef') . "\n" if $DEBUG;
                 $response->status( 500 );
+                $response->header( 'Content-Type' => 'text/plain' );
                 $response->body( [ "Got bad state: " . ($result || 'undef') ] );
                 last;
             }
@@ -69,16 +70,7 @@ sub run {
                     # - SL
                     my $lang = Web::Machine::I18N->get_handle( $metadata->{'Language'} || 'en' )
                         or die "Could not get language handle for " . $metadata->{'Language'};
-                    # TODO:
-                    # The reality is that we should be
-                    # setting the Content-Length, the
-                    # Content-Type and perhaps even the
-                    # Content-Language (assuming none
-                    # of them aren't already set). However
-                    # these are just error cases, so I
-                    # question the level of importance.
-                    # In other words,.. patches welcome.
-                    # - SL
+                    $response->header( 'Content-Type' => 'text/plain' );
                     $response->body([ $lang->maketext( $$result ) ]);
                 }
 

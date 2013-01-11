@@ -65,7 +65,7 @@ test_psgi
                 Content       => '"bar"'
             );
             is($res->code, 401, '... got the expected status');
-            is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->header('WWW-Authenticate'), 'Basic realm="Webmachine"', '... got the expected WWW-Authenticate header');
             is(
                 $res->content,
