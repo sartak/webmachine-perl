@@ -13,11 +13,8 @@ use Plack::Util;
 use HTTP::Request::Common qw[ GET HEAD PUT POST DELETE ];
 
 BEGIN {
-    eval "use JSON::XS;";
-    if ( $@ ) {
-        pass('JSON::XS is required for this test');
-        done_testing;
-        exit;
+    if (!eval { require JSON::XS; 1 }) {
+        plan skip_all => "JSON::XS is required for this test";
     }
 }
 
