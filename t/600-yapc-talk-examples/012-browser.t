@@ -13,17 +13,11 @@ use Plack::Util;
 use HTTP::Request::Common;
 
 BEGIN {
-    eval "use GD::Simple;";
-    if ( $@ ) {
-        pass('GD::Simple is required for this test');
-        done_testing;
-        exit;
+    if (!eval { require GD::Simple; 1 }) {
+        plan skip_all => "GD::Simple is required for this test";
     }
-    eval "use Path::Class;";
-    if ( $@ ) {
-        pass('Path::Class is required for this test');
-        done_testing;
-        exit;
+    if (!eval { require Path::Class; Path::Class->import; 1 }) {
+        plan skip_all => "Path::Class is required for this test";
     }
 }
 

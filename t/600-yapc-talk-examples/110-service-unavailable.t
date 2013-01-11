@@ -13,11 +13,8 @@ use Plack::Util;
 use HTTP::Request::Common;
 
 BEGIN {
-    eval "use Path::Class;";
-    if ( $@ ) {
-        pass('Path::Class is required for this test');
-        done_testing;
-        exit;
+    if (!eval { require Path::Class; Path::Class->import; 1 }) {
+        plan skip_all => "Path::Class is required for this test";
     }
 }
 
@@ -47,7 +44,7 @@ test_psgi
             my $res = $cb->(GET "/");
             is($res->code, 503, '... got the expected status');
             is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
-            is($res->header('Content-Length'), undef, '... got the expected Content-Length header');
+            is($res->header('Content-Length'), 77, '... got the expected Content-Length header');
             is(
                 $res->content,
                 '<html><body><h1>Service Unavailable</h1>Please come back later.</body></html>',

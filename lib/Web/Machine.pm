@@ -56,8 +56,16 @@ sub call {
     my $resource = $self->create_resource( $request );
     my $fsm      = $self->create_fsm;
 
-    my $response = $fsm->run( $resource );
-    $self->finalize_response( $response );
+    if ($self->{'streaming'}) {
+        return sub {
+            shift->(
+                $self->finalize_response( $fsm->run( $resource ) )
+            );
+        }
+    }
+    else {
+        return $self->finalize_response( $fsm->run( $resource ) );
+    }
 }
 
 1;
@@ -120,10 +128,13 @@ set forward by that module.
 
 =over 4
 
-=item C<new( resource => $resource_classname, ?tracing => 1|0 )>
+=item C<< new( resource => $resource_classname, ?tracing => 1|0, ?streaming => 1|0 ) >>
 
 The constructor expects to get a C<$resource_classname> and can take an optional
-C<tracing> parameter which it will pass onto the L<Web::Machine::FSM>.
+C<tracing> parameter which it will pass onto the L<Web::Machine::FSM>. It can
+also take an optional C<streaming> parameter, which if true will run the
+request in a L<PSGI> streaming response, which can be useful if you need to run
+your content generation asynchronously.
 
 =item C<inflate_request( $env )>
 
