@@ -634,7 +634,9 @@ foreach my $test ( @tests ) {
 
     my $finalized = $response->finalize;
     if ( ref $test->{'response'} eq 'ARRAY' ) {
-        is_deeply( $finalized, $test->{'response'}, '... got the response for resource (' . $test->{'resource'}. ') we expected' );
+        is( $finalized->[0], $test->{'response'}[0], '... got the status for resource (' . $test->{'resource'} . ') we expected' );
+        is_deeply( { @{ $finalized->[1] } }, { @{ $test->{'response'}[1] } }, '... got the headers for resource (' . $test->{'resource'} . ') we expected' );
+        is_deeply( $finalized->[2], $test->{'response'}[2], '... got the body for resource (' . $test->{'resource'} . ') we expected' );
     }
     else {
         is( $finalized->[0], 500, '... got the error status for resource (' . $test->{'resource'}. ') we expected' );
