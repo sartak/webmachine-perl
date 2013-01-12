@@ -14,11 +14,8 @@ use HTTP::Request::Common;
 use MIME::Base64;
 
 BEGIN {
-    eval "use Path::Class;";
-    if ( $@ ) {
-        pass('Path::Class is required for this test');
-        done_testing;
-        exit;
+    if (!eval { require Path::Class; Path::Class->import; 1 }) {
+        plan skip_all => "Path::Class is required for this test";
     }
 }
 
@@ -69,7 +66,7 @@ test_psgi
                 Content       => '"bar"'
             );
             is($res->code, 401, '... got the expected status');
-            is($res->header('Content-Type'), undef, '... got the expected Content-Type header');
+            is($res->header('Content-Type'), 'text/plain', '... got the expected Content-Type header');
             is($res->header('WWW-Authenticate'), 'Basic realm="Webmachine"', '... got the expected WWW-Authenticate header');
             is(
                 $res->content,

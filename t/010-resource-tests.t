@@ -30,85 +30,85 @@ my @tests = (
     {
         resource => 'B13',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 503, [], ['Service Unavailable'] ],
+        response => [ 503, [ 'Content-Type' => 'text/plain' ], ['Service Unavailable'] ],
         trace    => 'b13'
     },
     {
         resource => 'B12',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 501, [], ['Not Implemented'] ],
+        response => [ 501, [ 'Content-Type' => 'text/plain' ], ['Not Implemented'] ],
         trace    => 'b13,b12'
     },
     {
         resource => 'B11',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 414, [], ['Request-URI Too Large'] ],
+        response => [ 414, [ 'Content-Type' => 'text/plain' ], ['Request-URI Too Large'] ],
         trace    => 'b13,b12,b11'
     },
     {
         resource => 'B10',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 405, [ 'Allow' => 'PUT, DELETE' ], ['Method Not Allowed'] ],
+        response => [ 405, [ 'Content-Type' => 'text/plain', 'Allow' => 'PUT, DELETE' ], ['Method Not Allowed'] ],
         trace    => 'b13,b12,b11,b10'
     },
     {
         resource => 'B9',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 400, [], ['Bad Request'] ],
+        response => [ 400, [ 'Content-Type' => 'text/plain' ], ['Bad Request'] ],
         trace    => 'b13,b12,b11,b10,b9'
     },
     {
         resource => 'B8',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 401, [ 'WWW-Authenticate' => 'Basic realm="Test"' ], ['Unauthorized'] ],
+        response => [ 401, [ 'Content-Type' => 'text/plain', 'WWW-Authenticate' => 'Basic realm="Test"' ], ['Unauthorized'] ],
         trace    => 'b13,b12,b11,b10,b9,b8'
     },
     {
         resource => 'B8b',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 500, [], ['Internal Server Error'] ],
+        response => [ 500, [ 'Content-Type' => 'text/plain' ], ['Internal Server Error'] ],
         trace    => 'b13,b12,b11,b10,b9,b8'
     },
     {
         resource => 'B8c',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 401, [], ['Unauthorized'] ],
+        response => [ 401, [ 'Content-Type' => 'text/plain' ], ['Unauthorized'] ],
         trace    => 'b13,b12,b11,b10,b9,b8'
     },
     {
         resource => 'B8d',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 401, [], ['Unauthorized'] ],
+        response => [ 401, [ 'Content-Type' => 'text/plain' ], ['Unauthorized'] ],
         trace    => 'b13,b12,b11,b10,b9,b8'
     },
     {
         resource => 'B7',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 403, [], ['Forbidden'] ],
+        response => [ 403, [ 'Content-Type' => 'text/plain' ], ['Forbidden'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7'
     },
     {
         resource => 'B7b',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 403, [], ['Forbidden'] ],
+        response => [ 403, [ 'Content-Type' => 'text/plain' ], ['Forbidden'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7'
     },
     {
         resource => 'B6',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 501, [], ['Not Implemented'] ],
+        response => [ 501, [ 'Content-Type' => 'text/plain' ], ['Not Implemented'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6'
     },
     {
         resource => 'B5',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 415, [], ['Unsupported Media Type'] ],
+        response => [ 415, [ 'Content-Type' => 'text/plain' ], ['Unsupported Media Type'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5'
     },
     {
         resource => 'B4',
         request  => { REQUEST_METHOD => 'GET' },
-        response => [ 413, [], ['Request Entity Too Large'] ],
+        response => [ 413, [ 'Content-Type' => 'text/plain' ], ['Request Entity Too Large'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4'
     },
     {
@@ -120,52 +120,52 @@ my @tests = (
     {
         resource => 'C4',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/html' },
-        response => [ 406, [], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Type' => 'text/plain' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4'
     },
     # ... (langauge doesn't match, but content type does)
     {
         resource => 'D5',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'en' },
-        response => [ 406, [], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Type' => 'text/plain' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5'
     },
     {
         resource => 'D5',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'en' },
-        response => [ 406, [], ['Not Acceptable'] ], # won't have written the content type header yet
+        response => [ 406, [ 'Content-Type' => 'text/plain' ], ['Not Acceptable'] ], # won't have written the content type header yet
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5'
     },
     # ... (content type and language match, but charset doesn't)
     {
         resource => 'E6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
-        response => [ 406, [ 'Content-Language' => 'de' ], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Type' => 'text/plain', 'Content-Language' => 'de' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5,e5,e6'
     },
     {
         resource => 'E6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
-        response => [ 406, [ 'Content-Language' => 'de' ], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Type' => 'text/plain', 'Content-Language' => 'de' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5,e5,e6'
     },
     {
         resource => 'E6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
-        response => [ 406, [ 'Content-Language' => 'de' ], ['Not Acceptable'] ], # won't have written the content type header yet
+        response => [ 406, [ 'Content-Type' => 'text/plain', 'Content-Language' => 'de' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6'
     },
     # ... (no encoding asked for, and no identity provided, but content-type, language and charset matches)
     {
         resource => 'F6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"' ], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6'
     },
     {
         resource => 'F6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"' ], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5,e5,e6,f6'
     },
     {
@@ -184,13 +184,13 @@ my @tests = (
     {
         resource => 'F7',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"' ], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7'
     },
     {
         resource => 'F7',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip' },
-        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"' ], ['Not Acceptable'] ],
+        response => [ 406, [ 'Content-Language' => 'de', 'Content-Type' => 'text/plain' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5,e5,e6,f6,f7'
     },
     {
@@ -209,37 +209,37 @@ my @tests = (
     {
         resource => 'H7',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept, Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"',  ], ['Precondition Failed'] ],
+        response => [ 412, [ 'Vary' => 'Accept, Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain',  ], ['Precondition Failed'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7b',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"',  ], ['Precondition Failed'] ],
+        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain',  ], ['Precondition Failed'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7c',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"',  ], ['Precondition Failed'] ],
+        response => [ 412, [ 'Vary' => 'Accept-Encoding, Accept-Charset', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain',  ], ['Precondition Failed'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7d',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept-Encoding', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"',  ], ['Precondition Failed'] ],
+        response => [ 412, [ 'Vary' => 'Accept-Encoding', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain',  ], ['Precondition Failed'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7e',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"',  ], ['Precondition Failed'] ],
+        response => [ 412, [ 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain',  ], ['Precondition Failed'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     {
         resource => 'H7f',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'utf-8', HTTP_ACCEPT_ENCODING => 'gzip', HTTP_IF_MATCH => '*' },
-        response => [ 412, [ 'Vary' => 'Accept, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain; charset="utf-8"',  ], ['Precondition Failed'] ],
+        response => [ 412, [ 'Vary' => 'Accept, Accept-Language', 'Content-Encoding' => 'gzip', 'Content-Language' => 'de', 'Content-Type' => 'text/plain',  ], ['Precondition Failed'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6,f6,f7,g7,h7'
     },
     # ...
@@ -634,7 +634,14 @@ foreach my $test ( @tests ) {
 
     my $finalized = $response->finalize;
     if ( ref $test->{'response'} eq 'ARRAY' ) {
-        is_deeply( $finalized, $test->{'response'}, '... got the response for resource (' . $test->{'resource'}. ') we expected' );
+        my $got_headers = { @{ $finalized->[1] } };
+        my $expected_headers = { @{ $test->{'response'}[1] } };
+        if ( !Plack::Util::status_with_no_entity_body($test->{'response'}[0] ) ) {
+            $expected_headers->{'Content-Length'} = Plack::Util::content_length( $test->{'response'}[2] );
+        }
+        is( $finalized->[0], $test->{'response'}[0], '... got the status for resource (' . $test->{'resource'} . ') we expected' );
+        is_deeply( $got_headers, $expected_headers, '... got the headers for resource (' . $test->{'resource'} . ') we expected' );
+        is_deeply( $finalized->[2], $test->{'response'}[2], '... got the body for resource (' . $test->{'resource'} . ') we expected' );
     }
     else {
         is( $finalized->[0], 500, '... got the error status for resource (' . $test->{'resource'}. ') we expected' );
