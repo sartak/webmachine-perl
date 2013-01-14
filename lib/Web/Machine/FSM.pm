@@ -36,6 +36,7 @@ sub run {
     my $request  = $resource->request;
     my $response = $resource->response;
     my $metadata = {};
+    $request->env->{'web.machine.context'} = $metadata;
 
     my @trace;
     my $tracing = $self->tracing;

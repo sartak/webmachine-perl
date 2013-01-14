@@ -14,13 +14,14 @@ use Sub::Exporter -setup => {
 };
 
 sub encode_body_if_set {
-    my ($resource, $response, $metadata) = @_;
-    encode_body( $resource, $response, $metadata ) if $response->body;
+    my ($resource, $response) = @_;
+    encode_body( $resource, $response ) if $response->body;
 }
 
 sub encode_body {
-    my ($resource, $response, $metadata) = @_;
+    my ($resource, $response) = @_;
 
+    my $metadata        = $resource->request->env->{'web.machine.context'};
     my $chosen_encoding = $metadata->{'Content-Encoding'};
     my $encoder         = $resource->encodings_provided->{ $chosen_encoding };
 
