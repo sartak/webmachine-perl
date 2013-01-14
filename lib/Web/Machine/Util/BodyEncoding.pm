@@ -30,11 +30,12 @@ sub encode_body {
                         && (first { $_ && $chosen_charset && pair_key( $_ ) eq $chosen_charset } @{ $resource->charsets_provided })
                         || sub { $_[1] };
 
-    push @{ $metadata->{'_content_filters'} ||= [] }, sub {
-        my $chunk = shift;
-        return unless defined $chunk;
-        return $resource->$encoder($resource->$charsetter($chunk));
-    };
+    push @{ $resource->request->env->{'web.machine.content_filters'} ||= [] },
+        sub {
+            my $chunk = shift;
+            return unless defined $chunk;
+            return $resource->$encoder($resource->$charsetter($chunk));
+        };
 }
 
 
