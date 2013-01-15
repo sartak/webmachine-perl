@@ -108,9 +108,7 @@ sub run {
         $metadata->{'exception'} = $_;
     };
 
-    $self->filter_response(
-        $response, $request->env->{'web.machine.content_filters'}
-    );
+    $self->filter_response( $resource );
     $resource->finish_request( $metadata );
     $response->header( $self->tracing_header, (join ',' => @trace) )
         if $tracing;
@@ -120,7 +118,10 @@ sub run {
 
 sub filter_response {
     my $self = shift;
-    my ($response, $filters) = @_;
+    my ($resource) = @_;
+
+    my $response = $resource->response;
+    my $filters = $resource->request->env->{'web.machine.content_filters'};
 
     # XXX patch Plack::Response to make _body not private?
     my $body = $response->_body;
