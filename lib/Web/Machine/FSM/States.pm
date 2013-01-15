@@ -659,7 +659,12 @@ sub o18 {
         return $result if is_status_code( $result );
 
         unless($request->method eq 'HEAD') {
-            $response->body( $result );
+            if (ref($result) eq 'CODE') {
+                $request->env->{'web.machine.streaming_push'} = $result;
+            }
+            else {
+                $response->body( $result );
+            }
             encode_body( $resource, $response );
         }
         return \&o18b;

@@ -108,7 +108,8 @@ sub run {
         $metadata->{'exception'} = $_;
     };
 
-    $self->filter_response( $resource );
+    $self->filter_response( $resource )
+        unless $request->env->{'web.machine.streaming_push'};
     $resource->finish_request( $metadata );
     $response->header( $self->tracing_header, (join ',' => @trace) )
         if $tracing;

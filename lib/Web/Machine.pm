@@ -58,13 +58,30 @@ sub call {
 
     if ($self->{'streaming'}) {
         return sub {
-            shift->(
-                $self->finalize_response( $fsm->run( $resource ) )
-            );
+            my $responder = shift;
+
+            my $response = $self->finalize_response( $fsm->run( $resource ) );
+
+            if (my $cb = $env->{'web.machine.streaming_push'}) {
+                pop @$response;
+                my $writer = $responder->($response);
+                $cb->($writer);
+            }
+            else {
+                $responder->($response);
+            }
         }
     }
     else {
-        return $self->finalize_response( $fsm->run( $resource ) );
+        my $response = $self->finalize_response( $fsm->run( $resource ) );
+
+        if ($env->{'web.machine.streaming_push'}) {
+            die "Can't do a streaming push response "
+              . "unless the 'streaming' option was set";
+        }
+        else {
+            return $response;
+        }
     }
 }
 
