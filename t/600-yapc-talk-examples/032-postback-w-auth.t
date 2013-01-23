@@ -14,6 +14,9 @@ use HTTP::Request::Common;
 use MIME::Base64;
 
 BEGIN {
+    if (!eval { require JSON::XS; 1 }) {
+        plan skip_all => "JSON::XS is required for this test";
+    }
     if (!eval { require Path::Class; Path::Class->import; 1 }) {
         plan skip_all => "Path::Class is required for this test";
     }

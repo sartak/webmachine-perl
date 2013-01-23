@@ -7,6 +7,12 @@ use FindBin;
 use Test::More;
 use Test::Fatal;
 
+BEGIN {
+    if (!eval { require JSON::XS; 1 }) {
+        plan skip_all => "JSON::XS is required for this test";
+    }
+}
+
 use Plack::Test;
 use Plack::Util;
 

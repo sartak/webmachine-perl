@@ -7,7 +7,7 @@ BEGIN {
     if (!eval { require Test::TCP; Test::TCP->import; 1 }) {
         plan skip_all => "Test::TCP is required for this test";
     }
-    if (!eval { require JSON; JSON->import; 1 }) {
+    if (!eval { require JSON::XS; JSON::XS->import; 1 }) {
         plan skip_all => "JSON is required for this test";
     }
 }
