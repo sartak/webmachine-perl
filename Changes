@@ -1,8 +1,26 @@
 Revision history for Perl extension Web::Machine
 
-{{$NEXT}
-    - when a resource throws an error, log this to the logger defined in the
-      Plack::Request object if one is available (Dave Rolsky)
+0.06 Wed. Jan. 23th, 2013
+    COMPATABILITY BREAKAGE:
+        - removed the $metadata variable in the FSM
+          and moved this into the PSGI $env instead
+            - blame Jesse Luehrs if this is a problem
+        - Content-Type is a required header (Jesse Luehrs)
+
+    NEW FEATURES:
+        - implement PSGI style streaming responses (Jesse Luehrs)
+            - added tests for this
+        - allow IO handle responses (Jesse Luehrs)
+            - added tests for that
+
+    MISC:
+        - fix some tests (Jesse Luehrs)
+            - skiping them properly
+            - not relying on header order
+            - fixing typos
+
+        - when a resource throws an error, log this to the logger defined in the
+          Plack::Request object if one is available (Dave Rolsky)
 
 0.05 Mon. Oct. 29th, 2012
     - if a resource returned undef from is_authorized this caused an
