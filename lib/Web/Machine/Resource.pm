@@ -30,6 +30,12 @@ sub init {}
 sub request  { (shift)->{'request'}  }
 sub response { (shift)->{'response'} }
 
+# NOTE:
+# this is where we deviate from
+# the Erlang/Ruby versions
+# - SL
+sub create_path_after_handler { 0 }
+
 sub resource_exists           { 1 }
 sub service_available         { 1 }
 sub is_authorized             { 1 }

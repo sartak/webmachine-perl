@@ -563,33 +563,47 @@ sub n5 {
     $resource->allow_missing_post ? \&n11 : \410
 }
 
+sub _n11_create_path {
+    my ($resource, $request, $response) = @_;
+
+    my $uri = $resource->create_path;
+    confess "Create Path Nil" unless $uri;
+    my $base_uri = $resource->base_uri || $request->base;
+
+    # do a little cleanup
+    $base_uri =~ s!/$!! if $uri =~ m!^/!;
+    $base_uri .= '/'    if $uri !~ m!^/! && $base_uri !~ m!/$!;
+    my $new_uri = URI->new( $base_uri . $uri )->canonical;
+    # NOTE:
+    # the ruby and JS versions will set the path_info
+    # for the request object here, but since our requests
+    # are immutable, we don't allow that. I don't see
+    # where this ends up being useful so I am going to
+    # skip it and not bother.
+    # - SL
+    $response->header( 'Location' => $new_uri->path );
+}
+
 $STATE_DESC{'n11'} = 'redirect';
 sub n11 {
     my ($resource, $request, $response) = @_;
     if ( $resource->post_is_create ) {
-        my $uri = $resource->create_path;
-        confess "Create Path Nil" unless $uri;
-        my $base_uri = $resource->base_uri || $request->base;
 
-        # do a little cleanup
-        $base_uri =~ s!/$!! if $uri =~ m!^/!;
-        $base_uri .= '/'    if $uri !~ m!^/! && $base_uri !~ m!/$!;
-        my $new_uri = URI->new( $base_uri . $uri )->canonical;
-        # NOTE:
-        # the ruby and JS versions will set the path_info
-        # for the request object here, but since our requests
-        # are immutable, we don't allow that. I don't see
-        # where this ends up being useful so I am going to
-        # skip it and not bother.
-        # - SL
-        $response->header( 'Location' => $new_uri->path );
+        # the default behavior as specified by
+        # the Erlang/Ruby versions, however this
+        # is a very unpopular "feature" so we are
+        # allowing it to be bypassed here.
+        _n11_create_path( $resource, $request, $response )
+            if not $resource->create_path_after_handler;
 
         my $handler = _get_acceptable_content_type_handler( $resource, $request );
         return $handler if is_status_code( $handler );
 
-        my $result  = $resource->$handler();
-
+        my $result = $resource->$handler();
         return $result if is_status_code( $result );
+
+        _n11_create_path( $resource, $request, $response )
+            if $resource->create_path_after_handler;
     }
     else {
         my $result = $resource->process_post;

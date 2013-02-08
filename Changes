@@ -1,5 +1,9 @@
 Revision history for Perl extension Web::Machine
 
+0.07 Thurs. Jan. 24th, 2013
+
+    - fixing some broken test dependencies
+
 0.06 Wed. Jan. 23th, 2013
     COMPATABILITY BREAKAGE:
         - removed the $metadata variable in the FSM
