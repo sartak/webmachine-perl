@@ -1,8 +1,22 @@
 Revision history for Perl extension Web::Machine
 
-0.07 Thurs. Jan. 24th, 2013
+0.07 Tues. Feb. 12th, 2013
+    NEW FEATURES:
+        - It is now possible to have the create_path
+          resource method fire *after* the entity is
+          processed. This resolves RT #78631, which
+          also has an excellent description of the
+          problem in it.
+            - added tests for this
 
-    - fixing some broken test dependencies
+        - adding support for logging exceptions in
+          the FSM if PSGI logger is available
+          (Thanks to Dave Rolsky for this)
+            - added test for this
+
+    MISC:
+
+        - fixing some broken test dependencies
 
 0.06 Wed. Jan. 23th, 2013
     COMPATABILITY BREAKAGE:

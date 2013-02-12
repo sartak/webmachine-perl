@@ -282,6 +282,15 @@ This will be called on a POST request if post_is_create? returns
 true. The path returned should be a valid URI part following the
 dispatcher prefix.
 
+=item C<create_path_after_handler>
+
+This changes the behavior of C<create_path> so that it will fire
+I<after> the content handler has processed the request body. This
+allows the creation of paths that are more tightly tied to the
+newly created entity.
+
+Default is false.
+
 =item C<base_uri>
 
 This will be called after C<create_path> but before setting the
