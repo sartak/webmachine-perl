@@ -1,6 +1,6 @@
 Revision history for Perl extension Web::Machine
 
-0.07 Tues. Feb. 12th, 2013
+0.08 Tues. Feb. 12th, 2013
     NEW FEATURES:
         - It is now possible to have the create_path
           resource method fire *after* the entity is
@@ -14,7 +14,7 @@ Revision history for Perl extension Web::Machine
           (Thanks to Dave Rolsky for this)
             - added test for this
 
-    MISC:
+0.07 Thurs. Jan. 24th, 2013
 
         - fixing some broken test dependencies
 
