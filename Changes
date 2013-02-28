@@ -9,11 +9,6 @@ Revision history for Perl extension Web::Machine
           problem in it.
             - added tests for this
 
-        - adding support for logging exceptions in
-          the FSM if PSGI logger is available
-          (Thanks to Dave Rolsky for this)
-            - added test for this
-
 0.07 Thurs. Jan. 24th, 2013
 
         - fixing some broken test dependencies
@@ -39,6 +34,7 @@ Revision history for Perl extension Web::Machine
 
         - when a resource throws an error, log this to the logger defined in the
           Plack::Request object if one is available (Dave Rolsky)
+            - added test for this
 
 0.05 Mon. Oct. 29th, 2012
     - if a resource returned undef from is_authorized this caused an
