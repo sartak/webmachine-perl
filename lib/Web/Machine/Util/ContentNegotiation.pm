@@ -74,7 +74,7 @@ This module provides a set of functions used in content negotiation.
 =item C<choose_media_type ( $provided, $header )>
 
 Given an ARRAY ref of media type strings and an HTTP header, this will
-return the matching L<Web::Machine::Util::MediaType> instance.
+return the matching L<HTTP::Headers::ActionPack::MediaType> instance.
 
 =item C<match_acceptable_media_type ( $to_match, $accepted )>
 
