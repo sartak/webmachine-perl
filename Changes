@@ -1,5 +1,4 @@
 {{$NEXT}}
-
     MISC:
         - Malformed headers no longer cause a 500 error (Greg Oschwald)
             - added tests for this
@@ -14,7 +13,7 @@
             - added tests for this
 
 0.07 Thu. Jan. 24th, 2013
-
+    MISC:
         - fixing some broken test dependencies
 
 0.06 Wed. Jan. 23th, 2013
