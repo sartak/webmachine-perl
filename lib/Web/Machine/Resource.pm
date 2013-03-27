@@ -352,7 +352,7 @@ Default includes only the 'identity' encoding.
 
 If this method is implemented, it should return a list of
 strings with header names that should be included in a given
-response's Vary header. The standard conneg headers (Accept,
+response's Vary header. The standard content negotiation headers (Accept,
 Accept-Encoding, Accept-Charset, Accept-Language) do not need to
 be specified here as Webmachine will add the correct elements of
 those automatically depending on resource behavior.
