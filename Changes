@@ -1,4 +1,6 @@
-Revision history for Perl extension Web::Machine
+    MISC:
+        - Malformed headers no longer cause a 500 error (Greg Oschwald)
+            - added tests for this
 
 0.08 Tues. Feb. 12th, 2013
     NEW FEATURES:
