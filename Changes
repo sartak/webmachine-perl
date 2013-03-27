@@ -1,8 +1,10 @@
+{{$NEXT}}
+
     MISC:
         - Malformed headers no longer cause a 500 error (Greg Oschwald)
             - added tests for this
 
-0.08 Tues. Feb. 12th, 2013
+0.08 Tue. Feb. 12th, 2013
     NEW FEATURES:
         - It is now possible to have the create_path
           resource method fire *after* the entity is
@@ -11,7 +13,7 @@
           problem in it.
             - added tests for this
 
-0.07 Thurs. Jan. 24th, 2013
+0.07 Thu. Jan. 24th, 2013
 
         - fixing some broken test dependencies
 
@@ -42,7 +44,7 @@
     - if a resource returned undef from is_authorized this caused an
       uninitialized value warning (Dave Rolsky)
 
-0.04 Sun. Sept. 9th, 2012
+0.04 Sun. Sep. 9th, 2012
     - moves all the content negotation code to
       HTTP::Headers::ActionPack
         - adjusted the Util module accordingly
@@ -52,15 +54,15 @@
         - improve existing and add more tests for this
         - improve the docs on this too
 
-0.03 Tues. June 19th, 2012
+0.03 Tue. Jun. 19th, 2012
     - fixing a missing semicolon (thanks to bricas)
     - fixing missing $VERSION numbers (also thanks to bricas)
     - allow the resource to choose how to handle exceptions
       instead of always writing them to the body
         - adjusted tests accordingly
 
-0.02 Sun. June 17th, 2012
+0.02 Sun. Jun. 17th, 2012
     - forgot to add some dependencies
 
-0.01 Tues. June 12th, 2012
+0.01 Tue. Jun. 12th, 2012
     - First release
