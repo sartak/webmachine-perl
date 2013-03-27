@@ -62,7 +62,7 @@ If the C<$response> has a body, this will call C<encode_body>.
 =item C<encode_body ( $resource, $response, $metadata )>
 
 This will find the right encoding (from the 'Content-Encoding' entry
-in the C<$metadata> HASH ref) adnd the right charset (from the 'Charset'
+in the C<$metadata> HASH ref) and the right charset (from the 'Charset'
 entry in the C<$metadata> HASH ref), then find the right transformers
 in the C<$resource>. After that it will attempt to convert the charset
 and encode the body of the C<$response>. Once completed it will set

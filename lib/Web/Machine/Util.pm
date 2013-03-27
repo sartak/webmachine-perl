@@ -80,7 +80,7 @@ __END__
 =head1 DESCRIPTION
 
 This is just a basic utility module used internally by
-L<Web::Machine>. There is no real user servicable parts
+L<Web::Machine>. There are no real user serviceable parts
 in here.
 
 =head1 FUNCTIONS
@@ -136,7 +136,7 @@ path parts must match corresponding literal. Variable path parts
 are prefixed by a colon and are captured for returning later, if
 a question mark (?) prefixes the colon, that element will be
 considered optional. And lastly the "splat" operator (C<*>) is
-supported and causes all the rest of the path segements to be
+supported and causes all the rest of the path segments to be
 returned. Below are a few examples of this:
 
   spec                  path             result

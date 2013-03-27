@@ -733,7 +733,7 @@ __END__
 
 For now I am going to say that there is nothing to see here and that
 if you really want to know what is going on, you should read the
-source (and consult the diagram linked to below). Eventualy I might
+source (and consult the diagram linked to below). Eventually I might
 try and document this, but for now the task is simply too daunting.
 
 =head1 SEE ALSO
