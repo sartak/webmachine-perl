@@ -4,6 +4,7 @@ package Web::Machine;
 use strict;
 use warnings;
 
+use Try::Tiny;
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
 
@@ -53,7 +54,11 @@ sub finalize_response {
 sub call {
     my ($self, $env) = @_;
 
-    my $request  = $self->inflate_request( $env );
+    my $request  = try { $self->inflate_request( $env ) };
+
+    return $self->finalize_response( Plack::Response->new( 400 ) )
+        unless defined $request;
+
     my $resource = $self->create_resource( $request );
     my $fsm      = $self->create_fsm;
 
