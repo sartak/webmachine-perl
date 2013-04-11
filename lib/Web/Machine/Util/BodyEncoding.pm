@@ -4,7 +4,7 @@ package Web::Machine::Util::BodyEncoding;
 use strict;
 use warnings;
 
-use Web::Machine::Util qw[ first pair_key ];
+use Web::Machine::Util qw[ first pair_key pair_value ];
 
 use Sub::Exporter -setup => {
     exports => [qw[
@@ -25,10 +25,18 @@ sub encode_body {
     my $chosen_encoding = $metadata->{'Content-Encoding'};
     my $encoder         = $resource->encodings_provided->{ $chosen_encoding };
 
-    my $chosen_charset  = $metadata->{'Charset'};
-    my $charsetter      = $resource->charsets_provided
-                        && (first { $_ && $chosen_charset && pair_key( $_ ) eq $chosen_charset } @{ $resource->charsets_provided })
-                        || sub { $_[1] };
+    my $chosen_charset = $metadata->{'Charset'};
+    my $charsetter;
+    if ( $chosen_charset && $resource->charsets_provided ) {
+        $charsetter = pair_value(
+            first {
+                $_ && pair_key($_) eq $chosen_charset;
+            }
+            @{ $resource->charsets_provided }
+        );
+    }
+
+    $charsetter ||= sub { $_[1] };
 
     push @{ $resource->request->env->{'web.machine.content_filters'} ||= [] },
         sub {
