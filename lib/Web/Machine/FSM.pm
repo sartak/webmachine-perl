@@ -129,7 +129,7 @@ sub filter_response {
 
     for my $filter (@$filters) {
         if (ref($body) eq 'ARRAY') {
-            @$body = map { $filter->($_) } @$body;
+            $response->body( [ map { $filter->($_) } @$body ] );
         }
         else {
             my $old_body = $body;
