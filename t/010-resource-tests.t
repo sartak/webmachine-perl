@@ -7,11 +7,7 @@ use lib 't/010-resources/';
 
 use Test::More;
 use Test::Fatal;
-
-# Needs to come before use Test::NoWarnings - see
-# https://github.com/schwern/test-more/issues/16
-END { done_testing; }
-use Test::NoWarnings;
+use Test::FailWarnings;
 
 use Plack::Request;
 use Plack::Response;
@@ -644,3 +640,5 @@ foreach my $test ( @tests ) {
 
 
 }
+
+done_testing;
