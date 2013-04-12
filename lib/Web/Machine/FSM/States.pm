@@ -471,7 +471,7 @@ sub k13 {
     my ($resource, $request, $response) = @_;
     my @etags = map { _unquote_header( $_ ) } split /\s*\,\s*/ => $request->header('If-None-Match');
     my $etag  = $resource->generate_etag;
-    (grep { $etag eq $_ } @etags) ? \&j18 : \&l13;
+    $etag && (grep { $etag eq $_ } @etags) ? \&j18 : \&l13;
 }
 
 $STATE_DESC{'l5'} = 'moved_temporarily';
