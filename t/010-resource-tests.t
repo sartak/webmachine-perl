@@ -145,12 +145,6 @@ my @tests = (
     },
     {
         resource => 'E6',
-        request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
-        response => [ 406, [ 'Content-Type' => 'text/plain', 'Content-Language' => 'de' ], ['Not Acceptable'] ],
-        trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,d5,e5,e6'
-    },
-    {
-        resource => 'E6',
         request  => { REQUEST_METHOD => 'GET', HTTP_ACCEPT => 'text/plain', HTTP_ACCEPT_LANGUAGE => 'de', HTTP_ACCEPT_CHARSET => 'iso-8859-5' },
         response => [ 406, [ 'Content-Type' => 'text/plain', 'Content-Language' => 'de' ], ['Not Acceptable'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,c4,d4,d5,e5,e6'
