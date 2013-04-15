@@ -4,6 +4,18 @@
         - Requests with an If-None-Match error caused an undef warning if your
           resource did not return a value from the generate_etag() sub (Dave
           Rolsky)
+        - Content negotiation is generally smarter. If a client asks for
+          "utf8" and your resources provides "UTF-8", this will be considered
+          a match. This is all implemented in HTTP::Headers::ActionPack 0.05
+          but it affects Web::Machine. (Dave Rolsky)
+        - If you actually implemented charsets_provided in a resource this
+          would cause Web::Machine to die with an error like 'Can't locate
+          object method "HASH(0x2f613f8)" via package My::Resource'. (Dave
+          Rolsky)
+        - None of the body filtering code for applying encodings or charset
+          encoding actually work when the body was returned as an
+          arrayref. (Dave Rolsky)
+          - tests for all of this
 
 0.09 Wed. Mar. 86, 2013
     MISC:
