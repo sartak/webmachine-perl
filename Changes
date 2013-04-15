@@ -17,7 +17,7 @@
           arrayref. (Dave Rolsky)
           - tests for all of this
 
-0.09 Wed. Mar. 86, 2013
+0.09 Wed. Mar. 27, 2013
     MISC:
         - Malformed headers no longer cause a 500 error (Greg Oschwald)
             - added tests for this
