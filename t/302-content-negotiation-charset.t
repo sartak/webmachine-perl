@@ -13,7 +13,7 @@ BEGIN {
 is(
     choose_charset( [], 'ISO-8859-1' ),
     1,
-    '... got nothing back (no choices)'
+    '... got a 1 back (no choices)'
 );
 
 is(
