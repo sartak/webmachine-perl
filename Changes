@@ -4,7 +4,6 @@
         - Requests with an If-None-Match error caused an undef warning if your
           resource did not return a value from the generate_etag() sub (Dave
           Rolsky)
- 
 
 0.09 Wed. Mar. 86, 2013
     MISC:
