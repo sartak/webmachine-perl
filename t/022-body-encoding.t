@@ -53,7 +53,15 @@ binmode $_, ':encoding(UTF-8)'
     };
 
     sub body {
-        return $Body;
+        my $self = shift;
+
+        if ($self->request->parameters->{stream}) {
+            open my $fh, '<:encoding(UTF-8)', \$Body;
+            return $fh;
+        }
+        else {
+            return $Body;
+        }
     }
 }
 
@@ -68,100 +76,98 @@ ok(
 
 my $app = Web::Machine->new( resource => 'My::Resource::Test022' )->to_app;
 
-{
+my %tests = (
+    'UTF-8' => [
+        0x48,    # H
+        0x65,    # e
+        0x6c,    # l
+        0x6c,    # l
+        0xc3,    # [UTF-8 o with umlauts - byte 1]
+        0xb6,    # [UTF-8 o with umlauts - byte 2]
+        0x20,    # [space]
+        0x57,    # W
+        0xc3,    # [UTF-8 o with umlauts - byte 1]
+        0xb6,    # [UTF-8 o with umlauts - byte 2]
+        0x72,    # r
+        0x6c,    # l
+        0x64,    # d
+    ],
+    'ISO-8859-1' => [
+        0x48,    # H
+        0x65,    # e
+        0x6c,    # l
+        0x6c,    # l
+        0xf6,    # [ISO-8859-1 o with umlauts]
+        0x20,    # [space]
+        0x57,    # W
+        0xf6,    # [ISO-8859-1 o with umlauts]
+        0x72,    # r
+        0x6c,    # l
+        0x64,    # d
+    ],
+);
+
+for my $stream ( 0, 1 ) {
+    for my $charset ( sort keys %tests ) {
+        test_charset(
+            charset => $charset,
+            bytes   => $tests{$charset},
+            stream  => $stream,
+        );
+    }
+
+    test_encoding( stream => $stream );
+}
+
+done_testing;
+
+sub test_charset {
+    my %args = @_;
+
+    my $uri = _uri(%args);
     my $env = GET(
-        '/',
-        'Accept-Charset' => 'UTF-8',
+        $uri,
+        'Accept-Charset' => $args{charset},
     )->to_psgi;
 
     my $response = $app->($env);
 
     ok(
         $response->[0],
-        'status code is 200'
+        _desc( "status code is 200 - Charset: $args{charset}", $args{stream} )
     );
 
-    my $body = join q{}, @{ $response->[2] };
+    my $body = _body( $response, $args{stream} );
+
     ok(
         !is_utf8($body),
-        'body is bytes, not characters'
+        _desc( "body is bytes, not characters - Charset: $args{charset}", $args{stream} )
     );
 
     is(
-        decode( 'UTF-8', $body ),
+        decode( $args{charset}, $body ),
         $My::Resource::Test022::Body,
-        'body decoded as UTF-8 matches original'
+        _desc(
+            "body decoded as $args{charset} matches original", $args{stream}
+        )
     );
 
     is_deeply(
         [ map { ord($_) } split //, $body ],
-        [
-            0x48,    # H
-            0x65,    # e
-            0x6c,    # l
-            0x6c,    # l
-            0xc3,    # [UTF-8 o with umlauts - byte 1]
-            0xb6,    # [UTF-8 o with umlauts - byte 2]
-            0x20,    # [space]
-            0x57,    # W
-            0xc3,    # [UTF-8 o with umlauts - byte 1]
-            0xb6,    # [UTF-8 o with umlauts - byte 2]
-            0x72,    # r
-            0x6c,    # l
-            0x64,    # d
-        ],
-        'body contains the expected UTF-8 bytes'
+        $args{bytes},
+        _desc(
+            "body contains the expected $args{charset} bytes", $args{stream}
+        )
     );
 }
 
-{
+sub test_encoding {
+    my %args = @_;
+
+    my $uri = _uri(%args);
     my $env = GET(
-        '/',
-        'Accept-Charset' => 'ISO-8859-1',
-    )->to_psgi;
-
-    my $response = $app->($env);
-
-    ok(
-        $response->[0],
-        'status code is 200'
-    );
-
-    my $body = join q{}, @{ $response->[2] };
-    ok(
-        !is_utf8($body),
-        'body is bytes, not characters'
-    );
-
-    is(
-        decode( 'ISO-8859-1', $body ),
-        $My::Resource::Test022::Body,
-        'body decoded as ISO-8859-1 matches original'
-    );
-
-    is_deeply(
-        [ map { ord($_) } split //, $body ],
-        [
-            0x48,    # H
-            0x65,    # e
-            0x6c,    # l
-            0x6c,    # l
-            0xf6,    # [ISO-8859-1 o with umlauts]
-            0x20,    # [space]
-            0x57,    # W
-            0xf6,    # [ISO-8859-1 o with umlauts]
-            0x72,    # r
-            0x6c,    # l
-            0x64,    # d
-        ],
-        'body contains the expected ISO-8859-1 bytes'
-    );
-}
-
-{
-    my $env = GET(
-        '/',
-        'Accept-Charset' => 'UTF-8',
+        $uri,
+        'Accept-Charset'  => 'UTF-8',
         'Accept-Encoding' => 'add-x',
     )->to_psgi;
 
@@ -169,20 +175,50 @@ my $app = Web::Machine->new( resource => 'My::Resource::Test022' )->to_app;
 
     ok(
         $response->[0],
-        'status code is 200'
+        _desc( 'status code is 200 - Charset & Encoding', $args{stream} )
     );
 
-    my $body = join q{}, @{ $response->[2] };
+    my $body = _body( $response, $args{stream} );
     ok(
         !is_utf8($body),
-        'body is bytes, not characters'
+        _desc( 'body is bytes, not characters - Charset & Encoding', $args{stream} )
     );
 
     is(
         decode( 'UTF-8', $body ),
         $My::Resource::Test022::Body . 'x',
-        'body has an x at the end with add-x encoding'
+        _desc(
+            'body has an x at the end with add-x encoding', $args{stream}
+        )
     );
 }
 
-done_testing;
+sub _uri {
+    my %args = @_;
+    return $args{stream} ? '/?stream=1' : '/';
+}
+
+sub _desc {
+    my $desc   = shift;
+    my $stream = shift;
+
+    my $suffix = $stream ? 'body as stream' : 'body as arrayref';
+
+    return "$desc - $suffix";
+}
+
+sub _body {
+    my $response = shift;
+    my $stream   = shift;
+
+    if ($stream) {
+        return do {
+            my $fh = $response->[2];
+            local $/;
+            <$fh>;
+        };
+    }
+    else {
+        return join q{}, @{ $response->[2] };
+    }
+}
