@@ -8,7 +8,7 @@ use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
 use List::Util   qw[ first ];
 
-use HTTP::Headers::ActionPack 0.04;
+use HTTP::Headers::ActionPack 0.05;
 
 use Sub::Exporter -setup => {
     exports => [qw[
