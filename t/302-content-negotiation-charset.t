@@ -30,8 +30,8 @@ is(
 
 is(
    choose_charset( [{ "UTF-8", sub {} },{ "US-ASCII", sub {} }], 'ISO-8859-1' ),
-   undef,
-   '... got nothing back (charset is short circuited)'
+   'UTF-8',
+   '... got default back when it is acceptable'
 );
 
 is(
