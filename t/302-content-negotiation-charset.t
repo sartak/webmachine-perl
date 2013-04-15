@@ -24,11 +24,15 @@ is(
     '... got the right charset back'
 );
 
-is(choose_charset( [{ "UTF-8", sub {} },{ "US-ASCII", sub {} }], 'ISO-8859-1' ), undef, '... got nothing back (charset is short circuited)');
+is(
+   choose_charset( [{ "UTF-8", sub {} },{ "US-ASCII", sub {} }], 'ISO-8859-1' ),
+   undef,
+   '... got nothing back (charset is short circuited)'
+);
 
 is(
     choose_charset( [{ "UtF-8", sub {} },{ "US-ASCII", sub {} }], "iso-8859-1, utf-8" ),
-    'utf-8',
+    'UtF-8',
     '... got the right charset back'
 );
 
