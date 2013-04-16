@@ -1,0 +1,73 @@
+package Web::Machine::Manual;
+#ABSTRACT: Learn how to use Web::Machine
+
+__END__
+
+=pod
+
+=head1 Web::Machine IN A NUTSHELL
+
+The basic idea behind C<Web::Machine> is that the handling of a web request
+implemented as a state machine. If you're not familiar with state machines,
+think of a flowchart. We look at the request and the resource we provide and
+ask questions about them. Is our service available? Is this a GET, POST, PUT,
+etc.? Does the request ask for a content type our resource provides?
+
+The result of each question leads us to the next state (or flowchart
+box). Eventually we reach a point where we have a response for the
+client. Since this is all built on top of L<Plack> and
+L<PSGI|http://plackperl.org/>, the response consists of a status code, some
+headers, and an optional body.
+
+The best way to understand the full request/response cycle is to look at the
+original Erlang webmachine state diagram at
+https://github.com/basho/webmachine/wiki/Diagram. Each diamond in that diagram
+corresponds to a method that your L<Web::Machine::Resource> subclass can
+implement. The return value from your method determines what method to call
+next.
+
+However, unlike on that diagram, we often support return values beyond simple
+true/false values for methods. The L<Web::Machine::Resource> documentation
+describes what each method can return.
+
+=head1 Web::Machine and Plack
+
+C<Web::Machine> is built on top of Plack and follow the
+L<PSGI|http://plackperl.org/> spec. You can mix C<Web::Machine> apps with
+other Plack apps using standard Plack tools like L<Plack::Builder>
+
+=head2 Web::Machine and Plack Middleware
+
+Since C<Web::Machine> implements the complete request and response
+cycle, some L<Plack> middleware is not really needed with C<Web::Machine>. For
+example, it wouldn't make sense to use something like
+C<Plack::Middleware::XSLT> with C<Web::Machine>. C<Web::Machine> implements
+the full content negotiation process, so if you want to handle requests for
+C<text/html>, it probably makes more sense to do this in your resources. The
+benefit of doing so is that with C<Web::Machine> you can easily ensure that
+you return a proper C<406 Not Acceptable> status for content types you
+I<can't> handle.
+
+There are still many pieces of L<Plack> middleware that are useful with
+C<Web::Machine>, such as logging middleware, debugging/linting middleware,
+etc.
+
+That all said, C<Web::Machine> won't break if you use an inappropriate
+middleware, you'll just lose some of the benefits you get from implementing
+things the C<Web::Machine> way.
+
+=head2 Bodies Must be Bytes
+
+The PSGI spec requires that the body you return contain bytes, not Perl
+characters. In other words, strings you return must be passed through
+C<Encode::encode> so that Perl interprets their contents as bytes.
+
+If your data is not binary or ASCII, your resource should make sure to provide
+C<charset_provided()> and C<default_charset()> methods. This will make sure
+that C<Web::Machine> knows how to turn your response bodies into bytes.
+
+B<CAVEAT:> Note that currently C<Web::Machine> does not provide full charset
+or encoding support when the body is returned as a CODE ref. This is a bug to
+be remedied in the future, but currently you are responsible for making sure
+this code ref returns bytes.
+
