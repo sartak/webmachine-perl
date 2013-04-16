@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+    MISC:
+        - Fix test failures on 5.17.x.
+
 0.10 Mon. Apr. 15, 2013
 
     MISC:

@@ -56,7 +56,8 @@ binmode $_, ':encoding(UTF-8)'
         my $self = shift;
 
         if ($self->request->parameters->{stream}) {
-            open my $fh, '<:encoding(UTF-8)', \$Body;
+            my $bytes = encode( 'UTF-8', $Body );
+            open my $fh, '<:encoding(UTF-8)', \$bytes;
             return $fh;
         }
         else {
