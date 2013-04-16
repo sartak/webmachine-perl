@@ -4,6 +4,10 @@
         - A resource class can now provide a default_charset() sub. This is
           called if the client does not pass an Accept-Charset header,
           allowing you to ensure that responses are always encoded as bytes.
+        - Both charsets_provided and default_charset can return string, rather
+          that key/value hashref pairs. These strings are assumed to be
+          character set names, and Web::Machine will use Encode::encode() to
+          turn the body into bytes with that string.
 
     MISC:
         - Fix test failures on 5.17.x.
