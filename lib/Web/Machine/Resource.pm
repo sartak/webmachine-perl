@@ -369,6 +369,10 @@ characters. This will be used to encode the body you provide.
 The character set name will be appended to the Content-Type header returned
 the client.
 
+If a client specifies two the same preference for two or more character sets
+that your resource provides, then Web::Machine chooses the first character set
+in the returned ARRAY ref.
+
 Default is an empty list.
 
 =item C<default_charset>
