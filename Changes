@@ -8,6 +8,8 @@
           that key/value hashref pairs. These strings are assumed to be
           character set names, and Web::Machine will use Encode::encode() to
           turn the body into bytes with that string.
+        - Started working on a new Web::Machine::Manual document, and tweaked
+          some of the other docs in the distro.
 
     MISC:
         - Fix test failures on 5.17.x.
