@@ -81,4 +81,7 @@ in the C<$resource>. After that it will attempt to convert the charset
 and encode the body of the C<$response>. Once completed it will set
 the C<Content-Length> header in the response as well.
 
+B<CAVEAT:> Note that currently this subroutine doesn't do anything when the
+body is returned as a CODE ref. This is a bug to be remedied in the future.
+
 =back

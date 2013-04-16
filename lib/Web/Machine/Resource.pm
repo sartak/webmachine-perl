@@ -373,6 +373,10 @@ If a client specifies two the same preference for two or more character sets
 that your resource provides, then Web::Machine chooses the first character set
 in the returned ARRAY ref.
 
+B<CAVEAT:> Note that currently C<Web::Machine> does not support the use of
+encodings when the body is returned as a CODE ref. This is a bug to be
+remedied in the future.
+
 Default is an empty list.
 
 =item C<default_charset>
@@ -397,6 +401,10 @@ This should return a HASH of encodings mapped to encoding
 methods for Content-Encodings your resource wants to
 provide. The encoding will be applied to the response body
 automatically by Webmachine.
+
+B<CAVEAT:> Note that currently C<Web::Machine> does not support the use of
+encodings when the body is returned as a CODE ref. This is a bug to be
+remedied in the future.
 
 Default includes only the 'identity' encoding.
 
