@@ -303,7 +303,8 @@ sub f6 {
     # If the client doesn't provide an Accept-Charset header we should just
     # encode with the default.
     if ( $resource->default_charset && !$request->header('Accept-Charset') ) {
-        $metadata->{'Charset'} = pair_key( $resource->default_charset );
+        my $default = $resource->default_charset;
+        $metadata->{'Charset'} = ref $default ? pair_key($default) : $default;
     }
 
     if ( my $charset = $metadata->{'Charset'} ) {

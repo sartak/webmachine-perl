@@ -47,7 +47,7 @@ sub choose_language {
 sub choose_charset {
     my ($provided, $header) = @_;
     return 1 if scalar @$provided == 0;
-    $NEGOTIATOR->choose_charset( [ map { pair_key( $_ ) } @$provided ], $header );
+    $NEGOTIATOR->choose_charset( [ map { ref $_ ? pair_key( $_ ) : $_ } @$provided ], $header );
 }
 
 sub choose_encoding {

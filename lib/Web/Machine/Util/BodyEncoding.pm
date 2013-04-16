@@ -4,6 +4,7 @@ package Web::Machine::Util::BodyEncoding;
 use strict;
 use warnings;
 
+use Encode ();
 use Web::Machine::Util qw[ first pair_key pair_value ];
 
 use Sub::Exporter -setup => {
@@ -28,12 +29,16 @@ sub encode_body {
     my $chosen_charset = $metadata->{'Charset'};
     my $charsetter;
     if ( $chosen_charset && $resource->charsets_provided ) {
-        $charsetter = pair_value(
-            first {
-                $_ && pair_key($_) eq $chosen_charset;
+        my $match =             first {
+                my $name = $_ && ref $_ ? pair_key($_) : $_;
+                $name && $name eq $chosen_charset;
             }
-            @{ $resource->charsets_provided }
-        );
+            @{ $resource->charsets_provided };
+
+        $charsetter
+            = ref $match
+            ? pair_value($match)
+            : sub { Encode::encode( $match, $_[1] ) };
     }
 
     $charsetter ||= sub { $_[1] };

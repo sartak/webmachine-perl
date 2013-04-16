@@ -327,20 +327,59 @@ incoming entity.
 
 =item C<charsets_provided>
 
-If this is anything other than undef, it must be an ARRAY of pairs
-where each pair key is the charset name and the pair value is
-a CODE ref converter which is an arity-1 method which will be called
-on the produced body in a GET and ensure that it is in Charset.
+This specifies the charsets that your resource support. Returning a value from
+this method enable content negotiation based on the client's Accept-Charset
+header.
 
-Default is undef.
+The return value from this method must be an ARRAY ref. Each member of that
+array can be either a string or a HASH ref pair value. If the member is a
+string, it must be a valid character set name for the L<Encode>
+module. Web::Machine will call L<encode()> on the body using this character
+set if you set a body.
+
+  sub charsets_provided {
+      return qw( UTF-8 ISO-8859-1 shiftjis );
+  }
+
+If you return a HASHREF pair, the key must be a character set name and the
+value must be a CODE ref. This CODE ref will be called I<as a method> on the
+resource object. It will receive a single parameter, a string to be
+encoded. It is expected to return a scalar containing B<bytes>, not
+characters. This will be used to encode the body you provide.
+
+  sub charsets_provided {
+      return (
+          {
+              'UTF-8' => sub {
+                  my $self   = shift;
+                  my $string = shift;
+                  return make_some_bytes($string),;
+              },
+          },
+          {
+              'ISO-8859-1' => sub {
+                  my $self   = shift;
+                  my $string = shift;
+                  return strip_non_ascii($string),;
+              },
+          },
+      );
+  }
+
+The character set name will be appended to the Content-Type header returned
+the client.
+
+Default is an empty list.
 
 =item C<default_charset>
 
 If the client does not provide an Accept-Charset header, this sub is called to
-provide a default charset. This sub is expected to return a single pair of the
-form:
+provide a default charset. The return value must be either a string or a
+hashref consisting of a single pair, where the key is a character set name and
+the value is a subroutine.
 
-   { 'Charset' => sub { encode_that_charset($_[0]) }
+This works just like the C<charsets_provided()> method, except that you can
+only return a single value.
 
 =item C<languages_provided>
 
