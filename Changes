@@ -3,16 +3,17 @@
     NEW FEATURES:
         - A resource class can now provide a default_charset() sub. This is
           called if the client does not pass an Accept-Charset header,
-          allowing you to ensure that responses are always encoded as bytes.
+          allowing you to ensure that responses are always encoded as
+          bytes. (Dave Rolsky)
         - Both charsets_provided and default_charset can return string, rather
           that key/value hashref pairs. These strings are assumed to be
           character set names, and Web::Machine will use Encode::encode() to
-          turn the body into bytes with that string.
+          turn the body into bytes with that string. (Dave Rolsky)
         - Started working on a new Web::Machine::Manual document, and tweaked
-          some of the other docs in the distro.
+          some of the other docs in the distro. (Dave Rolsky)
 
     MISC:
-        - Fix test failures on 5.17.x.
+        - Fix test failures on 5.17.x. (Dave Rolsky)
 
 0.10 Mon. Apr. 15, 2013
 
