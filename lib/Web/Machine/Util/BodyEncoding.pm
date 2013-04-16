@@ -81,9 +81,4 @@ in the C<$resource>. After that it will attempt to convert the charset
 and encode the body of the C<$response>. Once completed it will set
 the C<Content-Length> header in the response as well.
 
-B<NOTE:> At the moment we do not correctly handle all the various
-body types that L<Plack> supports, and we really on handle the case
-where the body is a simple string. We plan to add more support onto this
-later.
-
 =back
