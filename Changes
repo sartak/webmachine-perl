@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+    NEW FEATURES:
+        - A resource class can now provide a default_charset() sub. This is
+          called if the client does not pass an Accept-Charset header,
+          allowing you to ensure that responses are always encoded as bytes.
+
     MISC:
         - Fix test failures on 5.17.x.
 

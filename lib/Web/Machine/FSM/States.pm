@@ -299,6 +299,13 @@ $STATE_DESC{'f6'} = 'accept_encoding_exists';
 sub f6 {
     my ($resource, $request, $response) = @_;
     my $metadata = _metadata($request);
+
+    # If the client doesn't provide an Accept-Charset header we should just
+    # encode with the default.
+    if ( $resource->default_charset && !$request->header('Accept-Charset') ) {
+        $metadata->{'Charset'} = pair_key( $resource->default_charset );
+    }
+
     if ( my $charset = $metadata->{'Charset'} ) {
         # Add the charset to the content type now ...
         $metadata->{'Content-Type'}->add_param( 'charset' => $charset );

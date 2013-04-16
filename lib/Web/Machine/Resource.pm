@@ -58,6 +58,7 @@ sub process_post              { 0 }
 sub content_types_provided    { [] }
 sub content_types_accepted    { [] }
 sub charsets_provided         { [] }
+sub default_charset           {}
 sub languages_provided        { [] }
 sub encodings_provided        { { 'identity' => sub { $_[1] } } }
 sub variances                 { [] }
@@ -332,6 +333,14 @@ a CODE ref converter which is an arity-1 method which will be called
 on the produced body in a GET and ensure that it is in Charset.
 
 Default is undef.
+
+=item C<default_charset>
+
+If the client does not provide an Accept-Charset header, this sub is called to
+provide a default charset. This sub is expected to return a single pair of the
+form:
+
+   { 'Charset' => sub { encode_that_charset($_[0]) }
 
 =item C<languages_provided>
 

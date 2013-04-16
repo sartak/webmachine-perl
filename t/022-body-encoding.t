@@ -45,6 +45,12 @@ binmode $_, ':encoding(UTF-8)'
         ];
     }
 
+    sub default_charset {
+        return {
+            'UTF-8' => sub { encode( 'UTF-8', $_[1] ) }
+        };
+    }
+
     # The o with umlauts is encoded as 0xc3 0xb6 in UTF-8 and as 0xf6 in
     # ISO-8859-1.
     our $Body = do{
@@ -111,11 +117,19 @@ my %tests = (
 for my $stream ( 0, 1 ) {
     for my $charset ( sort keys %tests ) {
         test_charset(
-            charset => $charset,
-            bytes   => $tests{$charset},
-            stream  => $stream,
+            charset        => $charset,
+            charset_header => 1,
+            bytes          => $tests{$charset},
+            stream         => $stream,
         );
     }
+
+    test_charset(
+        charset        => 'UTF-8',
+        charset_header => 0,
+        bytes          => $tests{'UTF-8'},
+        stream         => $stream,
+    );
 
     test_encoding( stream => $stream );
 }
@@ -126,39 +140,35 @@ sub test_charset {
     my %args = @_;
 
     my $uri = _uri(%args);
-    my $env = GET(
-        $uri,
-        'Accept-Charset' => $args{charset},
-    )->to_psgi;
+
+    my @headers
+        = $args{charset_header} ? ( 'Accept-Charset' => $args{charset} ) : ();
+    my $env = GET( $uri, @headers )->to_psgi;
 
     my $response = $app->($env);
 
     ok(
         $response->[0],
-        _desc( "status code is 200 - Charset: $args{charset}", $args{stream} )
+        _desc( "status code is 200 - Charset: $args{charset}", %args )
     );
 
     my $body = _body( $response, $args{stream} );
 
     ok(
         !is_utf8($body),
-        _desc( "body is bytes, not characters - Charset: $args{charset}", $args{stream} )
+        _desc( "body is bytes, not characters - Charset: $args{charset}", %args )
     );
 
     is(
         decode( $args{charset}, $body ),
         $My::Resource::Test022::Body,
-        _desc(
-            "body decoded as $args{charset} matches original", $args{stream}
-        )
+        _desc( "body decoded as $args{charset} matches original", %args )
     );
 
     is_deeply(
         [ map { ord($_) } split //, $body ],
         $args{bytes},
-        _desc(
-            "body contains the expected $args{charset} bytes", $args{stream}
-        )
+        _desc( "body contains the expected $args{charset} bytes", %args )
     );
 }
 
@@ -176,21 +186,19 @@ sub test_encoding {
 
     ok(
         $response->[0],
-        _desc( 'status code is 200 - Charset & Encoding', $args{stream} )
+        _desc( 'status code is 200 - Charset & Encoding', %args )
     );
 
     my $body = _body( $response, $args{stream} );
     ok(
         !is_utf8($body),
-        _desc( 'body is bytes, not characters - Charset & Encoding', $args{stream} )
+        _desc( 'body is bytes, not characters - Charset & Encoding', %args )
     );
 
     is(
         decode( 'UTF-8', $body ),
         $My::Resource::Test022::Body . 'x',
-        _desc(
-            'body has an x at the end with add-x encoding', $args{stream}
-        )
+        _desc( 'body has an x at the end with add-x encoding', %args )
     );
 }
 
@@ -200,10 +208,12 @@ sub _uri {
 }
 
 sub _desc {
-    my $desc   = shift;
-    my $stream = shift;
+    my $desc = shift;
+    my %args = @_;
 
-    my $suffix = $stream ? 'body as stream' : 'body as arrayref';
+    my $suffix = $args{stream} ? 'body as stream' : 'body as arrayref';
+    $suffix .= ' - no Accept-Charset header'
+        unless $args{charset_header};
 
     return "$desc - $suffix";
 }
