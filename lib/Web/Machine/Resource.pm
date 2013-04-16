@@ -338,7 +338,7 @@ module. Web::Machine will call L<encode()> on the body using this character
 set if you set a body.
 
   sub charsets_provided {
-      return qw( UTF-8 ISO-8859-1 shiftjis );
+      return [ qw( UTF-8 ISO-8859-1 shiftjis ) ];
   }
 
 If you return a HASHREF pair, the key must be a character set name and the
@@ -348,7 +348,7 @@ encoded. It is expected to return a scalar containing B<bytes>, not
 characters. This will be used to encode the body you provide.
 
   sub charsets_provided {
-      return (
+      return [
           {
               'UTF-8' => sub {
                   my $self   = shift;
@@ -363,7 +363,7 @@ characters. This will be used to encode the body you provide.
                   return strip_non_ascii($string),;
               },
           },
-      );
+      ];
   }
 
 The character set name will be appended to the Content-Type header returned
