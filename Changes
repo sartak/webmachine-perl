@@ -14,6 +14,9 @@
 
     MISC:
         - Fix test failures on 5.17.x. (Dave Rolsky)
+        - Tests on older Perls would fail when trying to parse a date in
+          2112. Reported by Bernhard Graf. (Dave Rolsky)
+
 
 0.10 Mon. Apr. 15, 2013
 
