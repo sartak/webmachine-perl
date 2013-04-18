@@ -8,7 +8,7 @@ __END__
 =head1 Web::Machine IN A NUTSHELL
 
 The basic idea behind C<Web::Machine> is that the handling of a web request
-implemented as a state machine. If you're not familiar with state machines,
+is implemented as a state machine. If you're not familiar with state machines,
 think of a flowchart. We look at the request and the resource we provide and
 ask questions about them. Is our service available? Is this a GET, POST, PUT,
 etc.? Does the request ask for a content type our resource provides?
@@ -32,9 +32,9 @@ describes what each method can return.
 
 =head1 Web::Machine and Plack
 
-C<Web::Machine> is built on top of Plack and follow the
+C<Web::Machine> is built on top of Plack and follows the
 L<PSGI|http://plackperl.org/> spec. You can mix C<Web::Machine> apps with
-other Plack apps using standard Plack tools like L<Plack::Builder>
+other Plack apps using standard Plack tools like L<Plack::Builder>.
 
 =head2 Web::Machine and Plack Middleware
 
@@ -53,7 +53,7 @@ C<Web::Machine>, such as logging middleware, debugging/linting middleware,
 etc.
 
 That all said, C<Web::Machine> won't break if you use an inappropriate
-middleware, you'll just lose some of the benefits you get from implementing
+middleware; you'll just lose some of the benefits you get from implementing
 things the C<Web::Machine> way.
 
 =head2 Bodies Must be Bytes

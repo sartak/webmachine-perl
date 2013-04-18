@@ -127,10 +127,11 @@ __END__
 
 =head1 DESCRIPTION
 
-C<Web::Machine> provides a RESTful web framework modeled as a state machine. You
-define one or more resource classes. Each resource represents a single RESTful
-URI end point, such as a user, an email, etc. The resource class can also be
-the target for C<POST> requests to create a new user, email, etc.
+C<Web::Machine> provides a RESTful web framework modeled as a state
+machine. You define one or more resource classes. Each resource represents a
+single RESTful URI end point, such as a user, an email, etc. The resource
+class can also be the target for C<POST> requests to create a new user, email,
+etc.
 
 Each resource is a state machine, and each request for a resource is handled
 by running the request through that state machine.

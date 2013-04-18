@@ -153,7 +153,7 @@ Is the client or request authorized?
 Parameter C<$authorization_header> is the contents of the
 'Authorization' header sent by the client, if present.
 
-Returning anything other than true will result in a
+Returning anything other than 1 will result in a
 '401 Unauthorized' response. If a string is returned, it
 will be used as the value in the 'WWW-Authenticate'
 response header, which can also be set manually.
@@ -369,9 +369,9 @@ characters. This will be used to encode the body you provide.
 The character set name will be appended to the Content-Type header returned
 the client.
 
-If a client specifies two the same preference for two or more character sets
-that your resource provides, then Web::Machine chooses the first character set
-in the returned ARRAY ref.
+If a client specifies the same preference for two or more character sets that
+your resource provides, then Web::Machine chooses the first character set in
+the returned ARRAY ref.
 
 B<CAVEAT:> Note that currently C<Web::Machine> does not support the use of
 encodings when the body is returned as a CODE ref. This is a bug to be
