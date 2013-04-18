@@ -530,54 +530,54 @@ my @tests = (
     # M20 via L15,M16
     {
         resource => 'M20',
-        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 202, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20,m20b'
     },
     {
         resource => 'M20b',
-        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 500, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], ['Internal Server Error'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20'
     },
     # O20
     {
         resource => 'O20c',
-        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 204, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20,m20b,o20'
     },
     # O18
     {
         resource => 'O18c',
-        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'DELETE', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 200, [ 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [ 'HELLO WORLD' ] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,m20,m20b,o20,o18,o18b'
     },
     # N11
     {
         resource => 'N11h',
-        request  => { REQUEST_METHOD => 'POST', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'POST', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 303, [ 'Location' => '/foo/bar', 'Content-Encoding' => 'gzip', 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,n11'
     },
     # O14
     {
         resource => 'O14',
-        request  => { REQUEST_METHOD => 'PUT', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'PUT', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 409, [ 'Content-Type' => 'text/plain' ], ['Conflict'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,o16,o14'
     },
     {
         resource => 'O14b',
-        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 500, [ 'Content-Type' => 'text/plain' ], ['Internal Server Error'] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,o16,o14'
     },
     # P11
     {
         resource => 'P11e',
-        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2112 15:49:00 GMT' },
+        request  => { REQUEST_METHOD => 'PUT', CONTENT_TYPE => 'text/plain', HTTP_IF_NONE_MATCH => '0xDEADPORK', HTTP_IF_MODIFIED_SINCE => '18 Mar 2036 15:49:00 GMT' },
         response => [ 201, [ 'Location' => '/foo/bar', 'Content-Type' => 'text/plain' ], [] ],
         trace    => 'b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,c3,d4,e5,f6,g7,g8,h10,i12,i13,k13,l13,l14,l15,m16,n16,o16,o14,p11'
     },
