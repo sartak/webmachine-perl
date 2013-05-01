@@ -334,7 +334,7 @@ header.
 The return value from this method must be an ARRAY ref. Each member of that
 array can be either a string or a HASH ref pair value. If the member is a
 string, it must be a valid character set name for the L<Encode>
-module. Web::Machine will call L<encode()> on the body using this character
+module. Web::Machine will call C<encode()> on the body using this character
 set if you set a body.
 
   sub charsets_provided {
