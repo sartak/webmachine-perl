@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.11 Wed. May. 01, 2013
+
     NEW FEATURES:
         - A resource class can now provide a default_charset() sub. This is
           called if the client does not pass an Accept-Charset header,
