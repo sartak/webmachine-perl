@@ -43,7 +43,7 @@ cycle, some L<Plack> middleware is not really needed with C<Web::Machine>. For
 example, it wouldn't make sense to use something like
 C<Plack::Middleware::XSLT> with C<Web::Machine>. C<Web::Machine> implements
 the full content negotiation process, so if you want to handle requests for
-C<text/html>, it probably makes more sense to do this in your resources. The
+C<text/html> it probably makes more sense to do this in your resources. The
 benefit of doing so is that with C<Web::Machine> you can easily ensure that
 you return a proper C<406 Not Acceptable> status for content types you
 I<can't> handle.
