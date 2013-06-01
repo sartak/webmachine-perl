@@ -7,6 +7,7 @@ use warnings;
 use Try::Tiny;
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
+use Module::Runtime qw[ use_package_optimistically ];
 
 use Plack::Request;
 use Plack::Response;
@@ -21,7 +22,7 @@ sub new {
 
     (exists $args{'resource'}
         && (not blessed $args{'resource'})
-            && $args{'resource'}->isa('Web::Machine::Resource'))
+            && use_package_optimistically($args{'resource'})->isa('Web::Machine::Resource'))
                 || confess 'You must pass in a resource for this Web::Machine';
 
     $class->SUPER::new( \%args );
