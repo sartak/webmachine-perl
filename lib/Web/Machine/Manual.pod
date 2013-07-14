@@ -20,10 +20,10 @@ L<PSGI|http://plackperl.org/>, the response consists of a status code, some
 headers, and an optional body.
 
 The best way to understand the full request/response cycle is to look at the
-original Erlang webmachine state diagram at
-https://github.com/basho/webmachine/wiki/Diagram. Each diamond in that diagram
-corresponds to a method that your L<Web::Machine::Resource> subclass can
-implement. The return value from your method determines what method to call
+original L<Erlang webmachine state
+diagram|https://github.com/basho/webmachine/wiki/Diagram>. Each diamond in that
+diagram corresponds to a method that your L<Web::Machine::Resource> subclass
+can implement. The return value from your method determines what method to call
 next.
 
 However, unlike on that diagram, we often support return values beyond simple
