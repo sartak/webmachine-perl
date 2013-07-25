@@ -8,6 +8,7 @@ use Test::More;
 use Encode qw( decode is_utf8 );
 use HTTP::Message::PSGI;
 use HTTP::Request::Common qw( GET );
+use Plack::Util;
 
 use Web::Machine;
 
@@ -212,6 +213,14 @@ sub test_charset {
         $args{bytes},
         "body contains the expected $args{charset} bytes - $args{description}"
     );
+
+    unless ($args{stream}) {
+        is(
+            Plack::Util::header_get($response->[1], "content-length"),
+            scalar @{$args{bytes}},
+            "content-length matches the expected number of $args{charset} bytes - $args{description}"
+        );
+    }
 }
 
 sub test_encoding {
