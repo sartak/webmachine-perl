@@ -1,5 +1,14 @@
 {{$NEXT}}
 
+0.12 Thu. Aug. 01, 2013
+
+    BUG FIX:
+        - Calculate Content-Length of the filtered body (Thomas Sibley)
+
+    MISC:
+        - Link state machine diagram (Andreas Marienborg)
+        - Fix a POD link to PSGI (Andreas Marienborg)
+
 0.11 Wed. May. 01, 2013
 
     NEW FEATURES:
