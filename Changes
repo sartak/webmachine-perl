@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+    MISC:
+        - Automatically load resources (Arthur Axel fREW Schmidt)
+
 0.12 Thu. Aug. 01, 2013
 
     BUG FIX:
