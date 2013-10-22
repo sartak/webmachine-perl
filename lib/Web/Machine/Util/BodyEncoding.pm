@@ -4,6 +4,7 @@ package Web::Machine::Util::BodyEncoding;
 use strict;
 use warnings;
 
+use Scalar::Util qw/ weaken isweak /;
 use Encode ();
 use Web::Machine::Util qw[ first pair_key pair_value ];
 
@@ -46,6 +47,7 @@ sub encode_body {
     push @{ $resource->request->env->{'web.machine.content_filters'} ||= [] },
         sub {
             my $chunk = shift;
+            weaken $resource unless isweak $resource;
             return unless defined $chunk;
             return $resource->$encoder($resource->$charsetter($chunk));
         };
