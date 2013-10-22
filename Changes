@@ -2,6 +2,9 @@
 
     MISC:
         - Automatically load resources (Arthur Axel fREW Schmidt)
+        - ensure closed-over $resource variable is weak in
+          Web::Machine::Util::BodyEncoding::encode_body
+          (Carlos Fernando Avila Gratz)
 
 0.12 Thu. Aug. 01, 2013
 
