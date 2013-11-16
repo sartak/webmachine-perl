@@ -5,6 +5,9 @@
         - ensure closed-over $resource variable is weak in
           Web::Machine::Util::BodyEncoding::encode_body
           (Carlos Fernando Avila Gratz)
+        - the n11 state was not taking into account any query
+          parameters that might have been passed back from
+          `create_path`, this is fixed now (Stevan Little)
 
 0.12 Thu. Aug. 01, 2013
 

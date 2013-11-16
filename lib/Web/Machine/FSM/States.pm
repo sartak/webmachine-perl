@@ -589,7 +589,7 @@ sub _n11_create_path {
     # where this ends up being useful so I am going to
     # skip it and not bother.
     # - SL
-    $response->header( 'Location' => $new_uri->path );
+    $response->header( 'Location' => $new_uri->path_query );
 }
 
 $STATE_DESC{'n11'} = 'redirect';
