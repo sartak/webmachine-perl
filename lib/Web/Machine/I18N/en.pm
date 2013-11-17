@@ -1,5 +1,5 @@
 package Web::Machine::I18N::en;
-# ABSTRACT: The English support for I18Ned HTTP information
+# ABSTRACT: The English support for I18N-ed HTTP information
 
 use strict;
 use warnings;
