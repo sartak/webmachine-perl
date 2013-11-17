@@ -33,8 +33,8 @@ describes what each method can return.
 =head1 Web::Machine and Plack
 
 C<Web::Machine> is built on top of Plack and follows the
-L<PSGI|http://plackperl.org/> spec. You can mix C<Web::Machine> apps with
-other Plack apps using standard Plack tools like L<Plack::Builder>.
+L<PSGI|http://plackperl.org/> spec. You can mix C<Web::Machine> applications
+with other Plack applications using standard Plack tools like L<Plack::Builder>.
 
 =head2 Web::Machine and Plack Middleware
 

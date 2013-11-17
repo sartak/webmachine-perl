@@ -105,11 +105,11 @@ through the state machine. It is important not to think
 of this as an instance of a single object, but as a web
 representation of a resource, there is a big difference.
 
-For now I am keeping the docs short, but much more needs
-to be written here. Below you will find a description of
-each method this object provides and what is expected of
-it. These docs were lovingly stolen from the ruby port
-of webmachine.
+For now I am keeping the documentation short, but much
+more needs to be written here. Below you will find a
+description of each method this object provides and what
+is expected of it. The documentation was lovingly stolen
+from the ruby port of webmachine.
 
 =head1 METHODS
 
