@@ -77,6 +77,7 @@ sub run {
 
                 if ( $DEBUG ) {
                     require Data::Dumper;
+                    local $Data::Dumper::Useqq = 1;
                     warn Data::Dumper::Dumper( $request->env );
                     warn Data::Dumper::Dumper( $response->finalize );
                 }
