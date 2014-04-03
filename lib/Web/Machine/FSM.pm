@@ -111,7 +111,18 @@ sub run {
 
     $self->filter_response( $resource )
         unless $request->env->{'web.machine.streaming_push'};
-    $resource->finish_request( $metadata );
+    try {
+        $resource->finish_request( $metadata );
+    }
+    catch {
+        warn $_ if $DEBUG;
+
+        if ( $request->logger ) {
+            $request->logger->( { level => 'error', message => $_ } );
+        }
+
+        $response->status( 500 );
+    };
     $response->header( $self->tracing_header, (join ',' => @trace) )
         if $tracing;
 
