@@ -150,6 +150,9 @@ L<the JavaScript version|https://github.com/tautologistics/nodemachine> and
 even some of L<the Python version|https://github.com/davisp/pywebmachine>
 thrown in for good measure.
 
+You can learn a bit about Web::Machine's history from the slides for my L<2012
+YAPC::NA talk|https://speakerdeck.com/stevan_little/rest-from-the-trenches>.
+
 =head1 CAVEAT
 
 This module is extremely young and it is a port of an pretty young (June 2011)
@@ -219,5 +222,7 @@ out information about the path taken through the state machine to STDERR.
 =item Node JS port - L<https://github.com/tautologistics/nodemachine>
 
 =item Python port - L<https://github.com/davisp/pywebmachine>
+
+=item 2012 YAPC::NA slides - L<https://speakerdeck.com/stevan_little/rest-from-the-trenches>
 
 =back
