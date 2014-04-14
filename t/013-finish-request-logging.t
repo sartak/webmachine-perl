@@ -18,6 +18,9 @@ use Web::Machine::FSM;
 
     use base 'Web::Machine::Resource';
 
+    sub content_types_provided { [{ 'text/html' => 'to_html' }] }
+    sub to_html { 'foo' }
+
     sub known_methods { [qw[ GET ]] }
 
     sub finish_request {
@@ -30,7 +33,12 @@ my $fsm = Web::Machine::FSM->new();
 my @errors;
 my $logger = sub { push @errors, @_ };
 
-my $request = Plack::Request->new( { 'psgix.logger' => $logger } );
+my $request = Plack::Request->new(
+    {
+        REQUEST_METHOD => 'GET',
+        'psgix.logger' => $logger
+    }
+);
 
 my $r = DieInFinishRequest->new(
     request  => $request,
