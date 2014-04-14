@@ -221,7 +221,7 @@ out information about the path taken through the state machine to STDERR.
 
 =item Node JS port - L<https://github.com/tautologistics/nodemachine>
 
-=item Python port - L<https://github.com/davisp/pywebmachine>
+=item Python port - L<https://github.com/benoitc/pywebmachine>
 
 =item 2012 YAPC::NA slides - L<https://speakerdeck.com/stevan_little/rest-from-the-trenches>
 
