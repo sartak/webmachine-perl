@@ -147,7 +147,7 @@ This is a port of L<Webmachine|https://github.com/basho/webmachine>, actually
 it is much closer to L<the Ruby
 version|https://github.com/seancribbs/webmachine-ruby>, with a little bit of
 L<the JavaScript version|https://github.com/tautologistics/nodemachine> and
-even some of L<the Python version|https://github.com/davisp/pywebmachine>
+even some of L<the Python version|https://github.com/benoitc/pywebmachine>
 thrown in for good measure.
 
 You can learn a bit about Web::Machine's history from the slides for my L<2012
