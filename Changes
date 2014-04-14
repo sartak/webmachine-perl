@@ -2,12 +2,13 @@
 
     MISC:
         - Automatically load resources (Arthur Axel fREW Schmidt)
-        - ensure closed-over $resource variable is weak in
+        - Ensure closed-over $resource variable is weak in
           Web::Machine::Util::BodyEncoding::encode_body
           (Carlos Fernando Avila Gratz)
-        - the n11 state was not taking into account any query
+        - The n11 state was not taking into account any query
           parameters that might have been passed back from
           `create_path`, this is fixed now (Stevan Little)
+        - Errors from $resource->finish_request are now logged (Greg Oschwald)
 
 0.12 Thu. Aug. 01, 2013
 
