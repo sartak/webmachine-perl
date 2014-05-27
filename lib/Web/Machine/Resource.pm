@@ -108,8 +108,15 @@ representation of a resource, there is a big difference.
 For now I am keeping the documentation short, but much
 more needs to be written here. Below you will find a
 description of each method this object provides and what
-is expected of it. The documentation was lovingly stolen
-from the ruby port of webmachine.
+is expected of it. Your resource classes should extend
+the base L<Web::Machine::Resource> class, overriding its
+methods as necessary.  Sane defaults are provided for
+most methods, but you will almost certainly want to
+create C<content_types_provided>, as without this your
+resource will not be able to return any useful content.
+
+The documentation was lovingly stolen from the ruby port
+of webmachine.
 
 =head1 METHODS
 
@@ -118,12 +125,61 @@ from the ruby port of webmachine.
 =item C<init( \%args )>
 
 This method is called right after the object is blessed
-and it is passed reference to the original C<%args> that
-were given to the constructor.
+and it is passed a reference to the original C<%args> that
+were given to the constructor.  By default, these will
+include C<request> (L<Plack::Request>) and C<response>
+(L<Plack::Response>) arguments.
 
-The default method is a no-op, so there is no need to call
-the SUPER method, however it is still recommended to
-ensure proper initialization.
+If your resource is instantiated via L<Web::Machine>, the
+contents of its C<resource_args> parameter will be appended
+to the L<Web::Machine::Resource> constructor arguments, and
+made available to C<init>:
+
+  use strict;
+  use warnings;
+
+  use Web::Machine;
+
+  {
+      package HelloWorld::Resource;
+      use strict;
+      use warnings;
+      use JSON::XS qw[ encode_json ];
+
+      use parent 'Web::Machine::Resource';
+
+      sub init {
+          my $self = shift;
+          my $args = shift;
+
+          # Plack::Request
+          # my $request = $args->{request};
+
+          # Plack::Response
+          # my $response = $args->{response};
+
+          $self->{json} = exists $args->{json}
+              ? $args->{json}
+              : {};
+      }
+
+      sub content_types_provided { [{ 'application/json' => 'to_json' }] }
+
+      sub to_json {
+          my $self = shift;
+
+          encode_json( $self->{json} );
+      }
+  }
+
+  Web::Machine->new(
+      resource      => 'HelloWorld::Resource',
+      resource_args => [
+          json => {
+              message => 'Hello World!',
+          },
+      ],
+  )->to_app;
 
 =item C<resource_exists>
 
@@ -195,8 +251,8 @@ If the 'Content-Type' on PUT or POST is unknown, this should
 return false, which will result in a '415 Unsupported Media
 Type' response.
 
-The C<$content_type> provided should be an instance of
-L<HTTP::Headers::ActionPack::MediaType>.
+C<$content_type> is derived from the L<Plack::Request> object,
+and will therefore be an instance of L<HTTP::Headers::ActionPack::MediaType>.
 
 Defaults to true.
 
@@ -307,13 +363,18 @@ process any POST request. If it succeeds, it should return true.
 
 =item C<content_types_provided>
 
-This should return an ARRAY of HASH ref pairs where the key is
-name of the media type and the value is a CODE ref of a method
-which can provide a resource representation in that media type.
+This should return an ARRAY of HASH ref pairs where the key is the
+name of the media type and the value is a CODE ref (or name of a
+method) which can provide a resource representation in that media
+type.
 
 For example, if a client request includes an 'Accept' header with
 a value that does not appear as a first element in any of the return
 pairs, then a '406 Not Acceptable' will be sent.
+
+The order of HASH ref pairs in the ARRAY is important.  If a media
+type is not requested (by way of the C<Accept> header), the first
+content type in the ARRAY will be used as the default.
 
 Default is an empty ARRAY ref.
 
@@ -328,7 +389,7 @@ incoming entity.
 =item C<charsets_provided>
 
 This specifies the charsets that your resource support. Returning a value from
-this method enable content negotiation based on the client's Accept-Charset
+this method enables content negotiation based on the client's Accept-Charset
 header.
 
 The return value from this method must be an ARRAY ref. Each member of that
@@ -400,7 +461,7 @@ in no specific language.
 This should return a HASH of encodings mapped to encoding
 methods for Content-Encodings your resource wants to
 provide. The encoding will be applied to the response body
-automatically by Webmachine.
+automatically by C<Web::Machine>.
 
 B<CAVEAT:> Note that currently C<Web::Machine> does not support the use of
 encodings when the body is returned as a CODE ref. This is a bug to be
@@ -414,7 +475,7 @@ If this method is implemented, it should return a list of
 strings with header names that should be included in a given
 response's Vary header. The standard content negotiation headers (Accept,
 Accept-Encoding, Accept-Charset, Accept-Language) do not need to
-be specified here as Webmachine will add the correct elements of
+be specified here as C<Web::Machine> will add the correct elements of
 those automatically depending on resource behavior.
 
 Default is [].
