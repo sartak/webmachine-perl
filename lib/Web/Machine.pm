@@ -25,12 +25,20 @@ sub new {
             && use_package_optimistically($args{'resource'})->isa('Web::Machine::Resource'))
                 || confess 'You must pass in a resource for this Web::Machine';
 
+    if (exists $args{'request_class'}) {
+        use_package_optimistically($args{'request_class'})->isa('Plack::Request')
+            || confess 'The request_class class must inherit from Plack::Request';
+    }
+    else {
+        $args{'request_class'} = 'Plack::Request';
+    }
+
     $class->SUPER::new( \%args );
 }
 
 sub inflate_request {
     my ($self, $env) = @_;
-    inflate_headers( Plack::Request->new( $env ) );
+    inflate_headers( $self->{request_class}->new( $env ) );
 }
 
 sub create_fsm {
@@ -167,7 +175,7 @@ set forward by that module.
 
 =over 4
 
-=item C<< new( resource => $resource_classname, ?resource_args => $arg_list, ?tracing => 1|0, ?streaming => 1|0 ) >>
+=item C<< new( resource => $resource_classname, ?resource_args => $arg_list, ?tracing => 1|0, ?streaming => 1|0, ?request_class => $request_class ) >>
 
 The constructor expects to get a C<$resource_classname>, which it will use to
 load and create an instance of the resource class. If that class requires any
@@ -180,6 +188,11 @@ pass on to L<Web::Machine::FSM> and an optional C<streaming> parameter, which
 if true will run the request in a L<PSGI|http://plackperl.org/> streaming
 response. This can be useful if you need to run your content generation
 asynchronously.
+
+The optional C<request_class> parameter accepts the name of a module that will
+be used as the request object.  The module must be a class that inherits from
+L<Plack::Request>.  Use this if you have a subclass of L<Plack::Request> that
+you would like to use in your L<Web::Machine::Resource>.
 
 =item C<inflate_request( $env )>
 
