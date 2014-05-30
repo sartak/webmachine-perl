@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+    MISC:
+        - The Web::Machine class now accepts an addition parameter,
+          request_class. This allows you to use a custom subclass of
+          Plack::Request. (Mike Raynham)
+
 0.14 Mon. Apr. 14, 2014
 
     MISC:
