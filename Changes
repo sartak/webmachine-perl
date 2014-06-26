@@ -4,6 +4,8 @@
         - The Web::Machine class now accepts an addition parameter,
           request_class. This allows you to use a custom subclass of
           Plack::Request. (Mike Raynham)
+        - Documented the request and response methods in
+          Web::Machine::Resource. Requested by Olaf Alders.
 
 0.14 Mon. Apr. 14, 2014
 

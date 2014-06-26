@@ -180,6 +180,16 @@ made available to C<init>:
         ],
     )->to_app;
 
+=item C<request>
+
+Returns the L<Plack::Request> (or subclass) request object for the current
+request.
+
+=item C<response>
+
+Returns the L<Plack::Response> (or subclass) response object for the current
+request.
+
 =item C<resource_exists>
 
 Does the resource exist?
