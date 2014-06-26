@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.15 Thu. Jun. 26, 2014
+
     MISC:
         - The Web::Machine class now accepts an addition parameter,
           request_class. This allows you to use a custom subclass of
