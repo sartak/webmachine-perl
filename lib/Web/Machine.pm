@@ -161,12 +161,8 @@ thrown in for good measure.
 You can learn a bit about Web::Machine's history from the slides for my L<2012
 YAPC::NA talk|https://speakerdeck.com/stevan_little/rest-from-the-trenches>.
 
-=head1 CAVEAT
-
-This module is extremely young and it is a port of an pretty young (June 2011)
-module in another language (ruby), which itself is a port of a still kind of
-young module (March 2009) in yet another language (Erlang). But that all said,
-it really seems like a sane idea and so I stole it and ported it to Perl.
+To learn more about Webmachine, take a look at the links in the SEE ALSO
+section.
 
 =head1 METHODS
 
@@ -232,6 +228,8 @@ out information about the path taken through the state machine to STDERR.
 
 =over 4
 
+=item The diagram - L<https://github.com/basho/webmachine/wiki/Diagram>
+
 =item Original Erlang - L<https://github.com/basho/webmachine>
 
 =item Ruby port - L<https://github.com/seancribbs/webmachine-ruby>
@@ -241,5 +239,9 @@ out information about the path taken through the state machine to STDERR.
 =item Python port - L<https://github.com/benoitc/pywebmachine>
 
 =item 2012 YAPC::NA slides - L<https://speakerdeck.com/stevan_little/rest-from-the-trenches>
+
+=item an elaborate machine is indispensable: a blog post by Justin Sheehy - L<http://blog.therestfulway.com/2008/09/webmachine-is-resource-server-for-web.html>
+
+=item Resources, For Real This Time (with Webmachine): a video by Sean Cribbs - L<http://www.youtube.com/watch?v=odRrLK87s_Y>
 
 =back
