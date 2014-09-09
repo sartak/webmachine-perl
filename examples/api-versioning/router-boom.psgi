@@ -53,16 +53,17 @@ curl -v http://0:5000/bar -H 'Accept: application/json; version=2'
     ]}
 }
 
+my $router = Router::Boom->new();
+
+# Map URIs to a destination.  Router::Boom allows the destination
+# to be any scalar value, so we can supply an arrayref containing
+# a list of Web::Machine::Resource classes.
+$router->add('/foo', ['Foo::V1', 'Foo::V2']);
+$router->add('/bar', ['Bar::V1']);
+
 my $app = sub {
     my $env    = shift;
     my $req    = Plack::Request->new($env);
-    my $router = Router::Boom->new();
-
-    # Map URIs to a destination.  Router::Boom allows the destination
-    # to be any scalar value, so we can supply an arrayref containing
-    # a list of Web::Machine::Resource classes.
-    $router->add('/foo', ['Foo::V1', 'Foo::V2']);
-    $router->add('/bar', ['Bar::V1']);
 
     # Attempt to match the request URI to a route.  On success, the
     # destination (our list of possible resources) will be returned,
