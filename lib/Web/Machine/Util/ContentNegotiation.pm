@@ -61,7 +61,7 @@ __END__
 
 =head1 SYNOPSIS
 
-  use Web::Machine::FSM::ContentNegotiation;
+  use Web::Machine::Util::ContentNegotiation;
 
 =head1 DESCRIPTION
 
