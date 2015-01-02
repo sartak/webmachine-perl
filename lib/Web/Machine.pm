@@ -7,6 +7,7 @@ use warnings;
 use Try::Tiny;
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
+use List::Util qw[ all ];
 use Module::Runtime qw[ use_package_optimistically ];
 
 use Plack::Request;
@@ -20,10 +21,14 @@ use parent 'Plack::Component';
 sub new {
     my ($class, %args) = @_;
 
-    (exists $args{'resource'}
-        && (not blessed $args{'resource'})
-            && use_package_optimistically($args{'resource'})->isa('Web::Machine::Resource'))
-                || confess 'You must pass in a resource for this Web::Machine';
+    if (exists $args{'resource'} && (ref($args{'resource'}) ne 'ARRAY')) {
+      $args{'resource'} = [ $args{'resource'} ];
+    }
+
+    ( exists $args{'resource'} &&
+      (all { (not blessed $_) &&
+               use_package_optimistically($_)->isa('Web::Machine::Resource') } @{ $args{'resource'} } ) )
+      || confess 'You must pass in a resource for this Web::Machine';
 
     if (exists $args{'request_class'}) {
         use_package_optimistically($args{'request_class'})->isa('Plack::Request')
@@ -48,11 +53,25 @@ sub create_fsm {
 
 sub create_resource {
     my ($self, $request) = @_;
-    $self->{'resource'}->new(
+
+    my %args = (
         request  => $request,
         response => $request->new_response,
         @{ $self->{'resource_args'} || [] },
     );
+
+    my $resource;
+    foreach my $opt (@{$self->{'resource'}}) {
+      $resource = try {
+        $opt->new(%args)
+      } catch {
+        $args{error} = $_;
+        return;
+      };
+      return $resource if $resource;
+    }
+
+    die $args{error};
 }
 
 sub finalize_response {
