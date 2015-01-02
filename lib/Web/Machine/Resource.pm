@@ -280,7 +280,7 @@ If the request includes any invalid Content-* headers, this
 should return false, which will result in a '501 Not
 Implemented' response.
 
-Defaults to false.
+Defaults to true.
 
 =item C<valid_entity_length( $length )>
 
