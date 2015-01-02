@@ -103,7 +103,7 @@ This is the core representation of the web resource in
 L<Web::Machine>. It is this object which is interrogated
 through the state machine. It is important not to think
 of this as an instance of a single object, but as a web
-representation of a resource, there is a big difference.
+representation of a resource: there is a big difference.
 
 For now I am keeping the documentation short, but much more needs to be
 written here. Below you will find a description of each method this object
@@ -117,6 +117,9 @@ The documentation was lovingly stolen from the ruby port
 of webmachine.
 
 =head1 METHODS
+
+Keep in mind that the methods may be called more than once
+per request, so your implementations should be idempotent.
 
 =over 4
 
@@ -280,7 +283,7 @@ If the request includes any invalid Content-* headers, this
 should return false, which will result in a '501 Not
 Implemented' response.
 
-Defaults to false.
+Defaults to true.
 
 =item C<valid_entity_length( $length )>
 

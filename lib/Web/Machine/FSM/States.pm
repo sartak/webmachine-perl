@@ -140,8 +140,9 @@ $STATE_DESC{'b10'} = 'method_allowed';
 sub b10 {
     my ($resource, $request, $response) = @_;
     my $method = $request->method;
-    return \&b9 if grep { $method eq $_ } @{ $resource->allowed_methods };
-    $response->header('Allow' => join ", " => @{ $resource->allowed_methods } );
+    my @allowed_methods = @{ $resource->allowed_methods };
+    return \&b9 if grep { $method eq $_ } @allowed_methods;
+    $response->header('Allow' => join ", " => @allowed_methods );
     return \405;
 }
 
