@@ -65,10 +65,15 @@ sub _ensure_quoted_header {
 
 sub _get_acceptable_content_type_handler {
     my ($resource, $request) = @_;
-    my $acceptable = match_acceptable_media_type(
-        ($request->header('Content-Type') || 'application/octet-stream'),
-        $resource->content_types_accepted
-    );
+    my $metadata = _metadata($request);
+    my $acceptable = $metadata->{'acceptable_request_handler'};
+    if ( not defined $acceptable ) {
+        $acceptable = match_acceptable_media_type(
+            ($request->header('Content-Type') || 'application/octet-stream'),
+            $resource->content_types_accepted
+        );
+        $metadata->{'acceptable_request_handler'} = $acceptable;
+    } 
     return \415 unless $acceptable;
     return pair_value( $acceptable );
 }
