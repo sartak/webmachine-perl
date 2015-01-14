@@ -61,8 +61,7 @@ sub content_types_accepted    { [] }
 
 sub get_acceptable_content_type_handler {
     my $self = shift;
-    my $handler = Web::Machine::FSM::States::_get_acceptable_content_type_handler( $self, $self->request );
-    return $handler;
+    Web::Machine::FSM::States::_get_acceptable_content_type_handler( $self, $self->request );
 }
 
 sub charsets_provided         { [] }
@@ -406,6 +405,16 @@ of mediatype/handler pairs, except that it is for incoming
 resource representations -- for example, PUT requests. Handler
 functions usually want to use C<< $request->body >> to access the
 incoming entity.
+
+=item C<get_acceptable_content_type_handler>
+
+On POST requests where C<post_is_create> is false, L<Web::Machine> does not
+call the acceptable content type handler. Instead, it calls C<process_post>. If
+your C<process_post> implementation needs to call the acceptable content type
+handler, you can get it using this method. On success the return value will
+be a code ref or method name (as specified in C<content_types_accepted>). On
+failure it will be a reference to a scalar variable containing the response
+status code, i.e.: C<\415>.
 
 =item C<charsets_provided>
 
