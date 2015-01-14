@@ -67,7 +67,7 @@ sub _get_acceptable_content_type_handler {
     my ($resource, $request) = @_;
     my $metadata = _metadata($request);
     my $acceptable = $metadata->{'acceptable_request_handler'};
-    if ( not defined $acceptable ) {
+    if ( !$acceptable ) {
         $acceptable = match_acceptable_media_type(
             ($request->header('Content-Type') || 'application/octet-stream'),
             $resource->content_types_accepted
