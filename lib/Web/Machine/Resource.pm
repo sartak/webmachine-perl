@@ -6,6 +6,7 @@ use warnings;
 
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
+use Web::Machine::FSM::States;
 
 sub new {
     my ($class, %args) = @_;
@@ -57,6 +58,13 @@ sub base_uri                  { undef }
 sub process_post              { 0 }
 sub content_types_provided    { [] }
 sub content_types_accepted    { [] }
+
+sub get_acceptable_content_type_handler {
+    my $self = shift;
+    my $handler = Web::Machine::FSM::States::_get_acceptable_content_type_handler( $self, $self->request );
+    return $handler;
+}
+
 sub charsets_provided         { [] }
 sub default_charset           {}
 sub languages_provided        { [] }
