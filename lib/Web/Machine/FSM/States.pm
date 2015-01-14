@@ -66,16 +66,14 @@ sub _ensure_quoted_header {
 sub _get_acceptable_content_type_handler {
     my ($resource, $request) = @_;
     my $metadata = _metadata($request);
-    my $acceptable = $metadata->{'acceptable_request_handler'};
-    if ( !$acceptable ) {
-        $acceptable = match_acceptable_media_type(
-            ($request->header('Content-Type') || 'application/octet-stream'),
-            $resource->content_types_accepted
-        );
-        $metadata->{'acceptable_request_handler'} = $acceptable;
-    } 
+    my $acceptable = match_acceptable_media_type(
+        ($request->header('Content-Type') || 'application/octet-stream'),
+        $resource->content_types_accepted
+    );
     return \415 unless $acceptable;
-    return pair_value( $acceptable );
+    my $subref = pair_value( $acceptable );
+    $metadata->{'acceptable_request_handler'} = $subref;
+    return $subref;
 }
 
 sub _add_caching_headers {
