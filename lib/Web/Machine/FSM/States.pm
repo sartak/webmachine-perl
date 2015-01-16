@@ -71,9 +71,7 @@ sub _get_acceptable_content_type_handler {
         $resource->content_types_accepted
     );
     return \415 unless $acceptable;
-    my $subref = pair_value( $acceptable );
-    $metadata->{'acceptable_request_handler'} = $subref;
-    return $subref;
+    return pair_value( $acceptable );
 }
 
 sub _add_caching_headers {
@@ -676,6 +674,7 @@ sub _get_acceptable_accept_handler {
         $content_type->match( $ct )
     } @{ $resource->content_types_provided };
 
+    return \406 unless $match;
     return pair_value( $match );
 }
 

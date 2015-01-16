@@ -421,6 +421,12 @@ be a code ref or method name (as specified in C<content_types_accepted>). On
 failure it will be a reference to a scalar variable containing the response
 status code, i.e.: C<\415>.
 
+=item C<get_acceptable_accept_handler>
+
+This is an analogous method to C<get_acceptable_content_type_handler>, except
+it returns the handler specified in C<content_types_provided>. On failure it
+returns C<\406>.
+
 =item C<charsets_provided>
 
 This specifies the charsets that your resource support. Returning a value from
