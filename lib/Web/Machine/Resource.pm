@@ -64,6 +64,11 @@ sub get_acceptable_content_type_handler {
     Web::Machine::FSM::States::_get_acceptable_content_type_handler( $self, $self->request );
 }
 
+sub get_acceptable_accept_handler {
+    my $self = shift;
+    Web::Machine::FSM::States::_get_acceptable_content_type_handler( $self, $self->request );
+}
+
 sub charsets_provided         { [] }
 sub default_charset           {}
 sub languages_provided        { [] }
