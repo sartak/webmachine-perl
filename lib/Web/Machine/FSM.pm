@@ -204,7 +204,7 @@ the state machine.
 
 =over 4
 
-=item L<Web Machine state diagram|http://wiki.basho.com/Webmachine-Diagram.html>
+=item L<Web Machine state diagram|https://github.com/Webmachine/webmachine/wiki/Diagram>
 
 =back
 

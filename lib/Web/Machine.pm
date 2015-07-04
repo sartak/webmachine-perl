@@ -228,7 +228,7 @@ out information about the path taken through the state machine to STDERR.
 
 =over 4
 
-=item The diagram - L<https://github.com/basho/webmachine/wiki/Diagram>
+=item The diagram - L<https://github.com/Webmachine/webmachine/wiki/Diagram>
 
 =item Original Erlang - L<https://github.com/basho/webmachine>
 
