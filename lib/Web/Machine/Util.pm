@@ -104,7 +104,7 @@ We represent a pair simply as a HASH ref with one key.
 
 This will call C<inflate> on an instance of L<HTTP::Headers::ActionPack>.
 
-=item C<create_headers( @args )>
+=item C<create_header( @args )>
 
 This will call C<create> on an instance of L<HTTP::Headers::ActionPack>.
 
