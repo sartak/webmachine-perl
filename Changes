@@ -3,9 +3,12 @@
 [MISC]
 
 * Made the state machine only called allowed_methods() on your resource class
-  once. Implemented by Nathan Cutler.
+  once. RT #101203. Implemented by Nathan Cutler.
 * Noted in the docs that resource methods may be called more than once and
-  that they should therefore by idempotent. Implemented by Nathan Cutler.
+  that they should therefore by idempotent. RT #101219. Implemented by Nathan
+  Cutler.
+* Removed the CAVEAT section of the docs warning people not to use this
+  module. RT #97534. Implemented by Nathan Cutler.
 
 [BUG FIXES]
 
