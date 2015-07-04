@@ -12,7 +12,7 @@
 * Fixed the docs for the valid_content_headers() method. This defaults to
   true, not false, as the docs previously said. Fixed by Nathan Cutler.
 
-0.15 Thu. Jun. 26, 2014
+0.15     2014-06-26
 
 [MISC]
 
@@ -23,7 +23,7 @@
 * Documented the request and response methods in
   Web::Machine::Resource. Requested by Olaf Alders.
 
-0.14 Mon. Apr. 14, 2014
+0.14     2014-04-14
 
 [MISC]
 
@@ -34,7 +34,7 @@
   have been passed back from `create_path`, this is fixed now (Stevan Little)
 * Errors from $resource->finish_request are now logged (Greg Oschwald)
 
-0.12 Thu. Aug. 01, 2013
+0.12     2013-08-01
 
 [BUG FIX]
 
@@ -45,7 +45,7 @@
 * Link state machine diagram (Andreas Marienborg)
 * Fix a POD link to PSGI (Andreas Marienborg)
 
-0.11 Wed. May. 01, 2013
+0.11     2013-05-01
 
 [NEW FEATURES]
 
@@ -66,7 +66,7 @@
   2112. Reported by Bernhard Graf. (Dave Rolsky)
 
 
-0.10 Mon. Apr. 15, 2013
+0.10     2013-04-15
 
 [MISC]
 
@@ -82,13 +82,13 @@
 * None of the body filtering code for applying encodings or charset encoding
   actually work when the body was returned as an arrayref. (Dave Rolsky)
 
-0.09 Wed. Mar. 27, 2013
+0.09     2013-03-27
 
 [MISC]
 
 * Malformed headers no longer cause a 500 error (Greg Oschwald)
 
-0.08 Tue. Feb. 12th, 2013
+0.08     2013-02-12
 
 [NEW FEATURES]
 
@@ -96,13 +96,13 @@
   entity is processed. This resolves RT #78631, which also has an excellent
   description of the problem in it.
 
-0.07 Thu. Jan. 24th, 2013
+0.07     2013-01-24
 
 [MISC]
 
 * Fixing some broken test dependencies
 
-0.06 Wed. Jan. 23th, 2013
+0.06     2013-01-23
 
 [COMPATABILITY BREAKAGE]
 
@@ -121,29 +121,29 @@
 * When a resource throws an error, log this to the logger defined in the
   Plack::Request object if one is available (Dave Rolsky)
 
-0.05 Mon. Oct. 29th, 2012
+0.05     2012-10-29
 
 * If a resource returned undef from is_authorized this caused an uninitialized
   value warning (Dave Rolsky)
 
-0.04 Sun. Sep. 9th, 2012
+0.04     2012-09-09
 
 * Move all the content negotation code to HTTP::Headers::ActionPack
 * Improve the bind_path function in Util
 * Improve existing and add more tests for this
 * Improve the docs on this too
 
-0.03 Tue. Jun. 19th, 2012
+0.03     2012-06-19
 
 * Fix a missing semicolon (thanks to bricas)
 * Fix missing $VERSION numbers (also thanks to bricas)
 * Allow the resource to choose how to handle exceptions instead of always
   writing them to the body
 
-0.02 Sun. Jun. 17th, 2012
+0.02     2012-06-17
 
 * Add missing dependencies
 
-0.01 Tue. Jun. 12th, 2012
+0.01     2012-06-12
 
 * First release
