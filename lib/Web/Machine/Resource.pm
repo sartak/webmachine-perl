@@ -4,6 +4,8 @@ package Web::Machine::Resource;
 use strict;
 use warnings;
 
+our $VERSION = '0.16';
+
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
 
@@ -75,6 +77,8 @@ sub finish_request            {}
 1;
 
 __END__
+
+=for Pod::Coverage new
 
 =head1 SYNOPSIS
 

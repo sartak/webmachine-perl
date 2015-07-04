@@ -4,6 +4,8 @@ package Web::Machine::FSM;
 use strict;
 use warnings;
 
+our $VERSION = '0.16';
+
 use IO::Handle::Util 'io_from_getline';
 use Plack::Util;
 use Try::Tiny;
@@ -162,6 +164,8 @@ sub filter_response {
 1;
 
 __END__
+
+=for Pod::Coverage filter_response
 
 =head1 SYNOPSIS
 

@@ -4,6 +4,8 @@ package Web::Machine::Util::BodyEncoding;
 use strict;
 use warnings;
 
+our $VERSION = '0.16';
+
 use Scalar::Util qw/ weaken isweak /;
 use Encode ();
 use Web::Machine::Util qw[ first pair_key pair_value ];

@@ -4,6 +4,8 @@ package Web::Machine;
 use strict;
 use warnings;
 
+our $VERSION = '0.16';
+
 use Try::Tiny;
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];

@@ -6,6 +6,8 @@ use warnings;
 
 use parent 'Web::Machine::I18N';
 
+our $VERSION = '0.16';
+
 our %Lexicon = (
     100 => 'Continue',
     101 => 'Switching Protocols',

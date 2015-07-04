@@ -4,6 +4,8 @@ package Web::Machine::Util::ContentNegotiation;
 use strict;
 use warnings;
 
+our $VERSION = '0.16';
+
 use Scalar::Util qw[ blessed ];
 
 use Web::Machine::Util qw[

@@ -4,6 +4,8 @@ package Web::Machine::FSM::States;
 use strict;
 use warnings;
 
+our $VERSION = '0.16';
+
 use B ();
 use Hash::MultiValue;
 

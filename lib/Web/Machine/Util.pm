@@ -4,6 +4,8 @@ package Web::Machine::Util;
 use strict;
 use warnings;
 
+our $VERSION = '0.16';
+
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];
 use List::Util   qw[ first ];
@@ -72,6 +74,8 @@ sub bind_path {
 1;
 
 __END__
+
+=for Pod::Coverage get_action_pack
 
 =head1 SYNOPSIS
 
