@@ -1,5 +1,17 @@
 {{$NEXT}}
 
+[MISC]
+
+* Made the state machine only called allowed_methods() on your resource class
+  once. Implemented by Nathan Cutler.
+* Noted in the docs that resource methods may be called more than once and
+  that they should therefore by idempotent. Implemented by Nathan Cutler.
+
+[BUG FIXES]
+
+* Fixed the docs for the valid_content_headers() method. This defaults to
+  true, not false, as the docs previously said. Fixed by Nathan Cutler.
+
 0.15 Thu. Jun. 26, 2014
 
 [MISC]
