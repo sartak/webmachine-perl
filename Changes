@@ -2,137 +2,136 @@
 
 0.15 Thu. Jun. 26, 2014
 
-    MISC:
-        - The Web::Machine class now accepts an addition parameter,
-          request_class. This allows you to use a custom subclass of
-          Plack::Request. (Mike Raynham)
-        - Documented the request and response methods in
-          Web::Machine::Resource. Requested by Olaf Alders.
+[MISC]
+
+* The Web::Machine class now accepts an addition parameter,
+  request_class. This allows you to use a custom subclass of
+  Plack::Request. (Mike Raynham)
+
+* Documented the request and response methods in
+  Web::Machine::Resource. Requested by Olaf Alders.
 
 0.14 Mon. Apr. 14, 2014
 
-    MISC:
-        - Automatically load resources (Arthur Axel fREW Schmidt)
-        - Ensure closed-over $resource variable is weak in
-          Web::Machine::Util::BodyEncoding::encode_body
-          (Carlos Fernando Avila Gratz)
-        - The n11 state was not taking into account any query
-          parameters that might have been passed back from
-          `create_path`, this is fixed now (Stevan Little)
-        - Errors from $resource->finish_request are now logged (Greg Oschwald)
+[MISC]
+
+* Automatically load resources (Arthur Axel fREW Schmidt)
+* Ensure closed-over $resource variable is weak in
+  Web::Machine::Util::BodyEncoding::encode_body (Carlos Fernando Avila Gratz)
+* The n11 state was not taking into account any query parameters that might
+  have been passed back from `create_path`, this is fixed now (Stevan Little)
+* Errors from $resource->finish_request are now logged (Greg Oschwald)
 
 0.12 Thu. Aug. 01, 2013
 
-    BUG FIX:
-        - Calculate Content-Length of the filtered body (Thomas Sibley)
+[BUG FIX]
 
-    MISC:
-        - Link state machine diagram (Andreas Marienborg)
-        - Fix a POD link to PSGI (Andreas Marienborg)
+* Calculate Content-Length of the filtered body (Thomas Sibley)
+
+[MISC]
+
+* Link state machine diagram (Andreas Marienborg)
+* Fix a POD link to PSGI (Andreas Marienborg)
 
 0.11 Wed. May. 01, 2013
 
-    NEW FEATURES:
-        - A resource class can now provide a default_charset() sub. This is
-          called if the client does not pass an Accept-Charset header,
-          allowing you to ensure that responses are always encoded as
-          bytes. (Dave Rolsky)
-        - Both charsets_provided and default_charset can return string, rather
-          that key/value hashref pairs. These strings are assumed to be
-          character set names, and Web::Machine will use Encode::encode() to
-          turn the body into bytes with that string. (Dave Rolsky)
-        - Started working on a new Web::Machine::Manual document, and tweaked
-          some of the other docs in the distro. (Dave Rolsky)
+[NEW FEATURES]
 
-    MISC:
-        - Fix test failures on 5.17.x. (Dave Rolsky)
-        - Tests on older Perls would fail when trying to parse a date in
-          2112. Reported by Bernhard Graf. (Dave Rolsky)
+* A resource class can now provide a default_charset() sub. This is called if
+  the client does not pass an Accept-Charset header, allowing you to ensure
+  that responses are always encoded as bytes. (Dave Rolsky)
+* Both charsets_provided and default_charset can return string, rather that
+  key/value hashref pairs. These strings are assumed to be character set
+  names, and Web::Machine will use Encode::encode() to turn the body into
+  bytes with that string. (Dave Rolsky)
+* Started working on a new Web::Machine::Manual document, and tweaked some of
+  the other docs in the distro. (Dave Rolsky)
+
+[MISC]
+
+* Fix test failures on 5.17.x. (Dave Rolsky)
+* Tests on older Perls would fail when trying to parse a date in
+  2112. Reported by Bernhard Graf. (Dave Rolsky)
 
 
 0.10 Mon. Apr. 15, 2013
 
-    MISC:
-        - Requests with an If-None-Match error caused an undef warning if your
-          resource did not return a value from the generate_etag() sub (Dave
-          Rolsky)
-        - Content negotiation is generally smarter. If a client asks for
-          "utf8" and your resources provides "UTF-8", this will be considered
-          a match. This is all implemented in HTTP::Headers::ActionPack 0.05
-          but it affects Web::Machine. (Dave Rolsky)
-        - If you actually implemented charsets_provided in a resource this
-          would cause Web::Machine to die with an error like 'Can't locate
-          object method "HASH(0x2f613f8)" via package My::Resource'. (Dave
-          Rolsky)
-        - None of the body filtering code for applying encodings or charset
-          encoding actually work when the body was returned as an
-          arrayref. (Dave Rolsky)
-          - tests for all of this
+[MISC]
+
+* Requests with an If-None-Match error caused an undef warning if your
+  resource did not return a value from the generate_etag() sub (Dave Rolsky)
+* Content negotiation is generally smarter. If a client asks for "utf8" and
+  your resources provides "UTF-8", this will be considered a match. This is
+  all implemented in HTTP::Headers::ActionPack 0.05 but it affects
+  Web::Machine. (Dave Rolsky)
+* If you actually implemented charsets_provided in a resource this would cause
+  Web::Machine to die with an error like 'Can't locate object method
+  "HASH(0x2f613f8)" via package My::Resource'. (Dave Rolsky)
+* None of the body filtering code for applying encodings or charset encoding
+  actually work when the body was returned as an arrayref. (Dave Rolsky)
 
 0.09 Wed. Mar. 27, 2013
-    MISC:
-        - Malformed headers no longer cause a 500 error (Greg Oschwald)
-            - added tests for this
+
+[MISC]
+
+* Malformed headers no longer cause a 500 error (Greg Oschwald)
 
 0.08 Tue. Feb. 12th, 2013
-    NEW FEATURES:
-        - It is now possible to have the create_path
-          resource method fire *after* the entity is
-          processed. This resolves RT #78631, which
-          also has an excellent description of the
-          problem in it.
-            - added tests for this
+
+[NEW FEATURES]
+
+* It is now possible to have the create_path resource method fire *after* the
+  entity is processed. This resolves RT #78631, which also has an excellent
+  description of the problem in it.
 
 0.07 Thu. Jan. 24th, 2013
-    MISC:
-        - fixing some broken test dependencies
+
+[MISC]
+
+* Fixing some broken test dependencies
 
 0.06 Wed. Jan. 23th, 2013
-    COMPATABILITY BREAKAGE:
-        - removed the $metadata variable in the FSM
-          and moved this into the PSGI $env instead
-            - blame Jesse Luehrs if this is a problem
-        - Content-Type is a required header (Jesse Luehrs)
 
-    NEW FEATURES:
-        - implement PSGI style streaming responses (Jesse Luehrs)
-            - added tests for this
-        - allow IO handle responses (Jesse Luehrs)
-            - added tests for that
+[COMPATABILITY BREAKAGE]
 
-    MISC:
-        - fix some tests (Jesse Luehrs)
-            - skiping them properly
-            - not relying on header order
-            - fixing typos
+* Removed the $metadata variable in the FSM and moved this into the PSGI $env
+  instead (blame Jesse Luehrs if this is a problem)
+* Content-Type is a required header (Jesse Luehrs)
 
-        - when a resource throws an error, log this to the logger defined in the
-          Plack::Request object if one is available (Dave Rolsky)
-            - added test for this
+[NEW FEATURES]
+
+* Implement PSGI style streaming responses (Jesse Luehrs)
+* Allow IO handle responses (Jesse Luehrs)
+
+[MISC]
+
+* Fix some tests (Jesse Luehrs)
+* When a resource throws an error, log this to the logger defined in the
+  Plack::Request object if one is available (Dave Rolsky)
 
 0.05 Mon. Oct. 29th, 2012
-    - if a resource returned undef from is_authorized this caused an
-      uninitialized value warning (Dave Rolsky)
+
+* If a resource returned undef from is_authorized this caused an uninitialized
+  value warning (Dave Rolsky)
 
 0.04 Sun. Sep. 9th, 2012
-    - moves all the content negotation code to
-      HTTP::Headers::ActionPack
-        - adjusted the Util module accordingly
-        - added/adjusted tests accordingly
 
-    - improve the bind_path function in Util
-        - improve existing and add more tests for this
-        - improve the docs on this too
+* Move all the content negotation code to HTTP::Headers::ActionPack
+* Improve the bind_path function in Util
+* Improve existing and add more tests for this
+* Improve the docs on this too
 
 0.03 Tue. Jun. 19th, 2012
-    - fixing a missing semicolon (thanks to bricas)
-    - fixing missing $VERSION numbers (also thanks to bricas)
-    - allow the resource to choose how to handle exceptions
-      instead of always writing them to the body
-        - adjusted tests accordingly
+
+* Fix a missing semicolon (thanks to bricas)
+* Fix missing $VERSION numbers (also thanks to bricas)
+* Allow the resource to choose how to handle exceptions instead of always
+  writing them to the body
 
 0.02 Sun. Jun. 17th, 2012
-    - forgot to add some dependencies
+
+* Add missing dependencies
 
 0.01 Tue. Jun. 12th, 2012
-    - First release
+
+* First release
