@@ -20,11 +20,6 @@ use HTTP::Request::Common;
 
 use Web::Machine;
 
-=pod
-
-
-=cut
-
 my %DB;
 {
     package My::Resource::Test021;
