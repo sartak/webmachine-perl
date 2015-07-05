@@ -208,7 +208,7 @@ sub b6 {
 $STATE_DESC{'b5'} = 'known_content_type';
 sub b5 {
     my ($resource, $request, $response) = @_;
-    $resource->known_content_type( $request->content_type ) ? \&b4 : \415;
+    $resource->known_content_type( $request->header('Content-Type') ) ? \&b4 : \415;
 }
 
 $STATE_DESC{'b4'} = 'request_entity_too_large';

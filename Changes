@@ -11,6 +11,9 @@
   module. RT #97534. Implemented by Nathan Cutler.
 * Setting the WM_DEBUG environtment variable to "diag" now sends debugging
   output to Test::More::diag() instead of printing directly to STDERR.
+* Resource classes were being passed a string for known_content_type() instead
+  of an HTTP::Headers::ActionPack::MediaType object. Reported by Robert
+  Rothenberg. GH #27.
 
 [BUG FIXES]
 
