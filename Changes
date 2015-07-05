@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.16     2015-07-05
+
 [MISC]
 
 * Made the state machine only called allowed_methods() on your resource class
