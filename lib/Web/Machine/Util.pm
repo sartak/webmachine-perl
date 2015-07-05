@@ -4,7 +4,7 @@ package Web::Machine::Util;
 use strict;
 use warnings;
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use Carp         qw[ confess ];
 use Scalar::Util qw[ blessed ];

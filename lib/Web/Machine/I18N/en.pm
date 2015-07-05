@@ -6,7 +6,7 @@ use warnings;
 
 use parent 'Web::Machine::I18N';
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 our %Lexicon = (
     100 => 'Continue',

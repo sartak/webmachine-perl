@@ -4,7 +4,7 @@ package Web::Machine;
 use strict;
 use warnings;
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use Try::Tiny;
 use Carp         qw[ confess ];

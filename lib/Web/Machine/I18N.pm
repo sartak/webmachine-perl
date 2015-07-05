@@ -6,7 +6,7 @@ use warnings;
 
 use parent 'Locale::Maketext';
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 1;
 
