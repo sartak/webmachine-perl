@@ -65,7 +65,7 @@ sub finalize_response {
 sub call {
     my ($self, $env) = @_;
 
-    my $request  = try { $self->inflate_request( $env ) };
+    my $request = try { $self->inflate_request($env) };
 
     return $self->finalize_response( Plack::Response->new( 400 ) )
         unless defined $request;
@@ -225,6 +225,9 @@ This is the C<call> method overridden from the L<Plack::Component> superclass.
 
 If you set the C<WM_DEBUG> environment variable to C<1> we will print
 out information about the path taken through the state machine to STDERR.
+
+If you set C<WM_DEBUG> to C<diag> then debugging information will be printed
+using L<Test::More>'s C<diag()> sub instead.
 
 =head1 SEE ALSO
 

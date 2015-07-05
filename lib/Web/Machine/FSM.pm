@@ -33,7 +33,13 @@ sub tracing_header { (shift)->{'tracing_header'} }
 sub run {
     my ( $self, $resource ) = @_;
 
-    my $DEBUG = $ENV{'WM_DEBUG'};
+    my $DEBUG;
+    if ( $ENV{WM_DEBUG} ) {
+        $DEBUG
+            = $ENV{WM_DEBUG} eq 'diag'
+            ? sub { Test::More::diag( $_[0] ) }
+            : sub { warn "$_[0]\n" };
+    }
 
     my $request  = $resource->request;
     my $response = $resource->response;
@@ -47,7 +53,11 @@ sub run {
 
     try {
         while (1) {
-            warn "entering " . get_state_name( $state ) . " (" . get_state_desc( $state ) . ")\n" if $DEBUG;
+            $DEBUG->( 'entering '
+                    . get_state_name($state) . ' ('
+                    . get_state_desc($state)
+                    . ')' )
+                if $DEBUG;
             push @trace => get_state_name( $state ) if $tracing;
             my $result = $state->( $resource, $request, $response, $metadata );
             if ( ! ref $result ) {
@@ -55,14 +65,15 @@ sub run {
                 # We should be I18N this
                 # specific error
                 # - SL
-                warn "! ERROR with " . ($result || 'undef') . "\n" if $DEBUG;
+                $DEBUG->( '! ERROR with ' . ( $result || 'undef' ) )
+                    if $DEBUG;
                 $response->status( 500 );
                 $response->header( 'Content-Type' => 'text/plain' );
                 $response->body( [ "Got bad state: " . ($result || 'undef') ] );
                 last;
             }
             elsif ( is_status_code( $result ) ) {
-                warn ".. terminating with " . ${ $result } . "\n" if $DEBUG;
+                $DEBUG->( '.. terminating with ' . ${$result} ) if $DEBUG;
                 $response->status( $$result );
 
                 if ( is_error( $$result ) && !$response->body ) {
@@ -77,17 +88,23 @@ sub run {
                     $response->body([ $lang->maketext( $$result ) ]);
                 }
 
-                if ( $DEBUG ) {
+                if ($DEBUG) {
                     require Data::Dumper;
-                    local $Data::Dumper::Useqq = 1;
-                    warn Data::Dumper::Dumper( $request->env );
-                    warn Data::Dumper::Dumper( $response->finalize );
+                    local $Data::Dumper::Terse     = 1;
+                    local $Data::Dumper::Indent    = 1;
+                    local $Data::Dumper::Useqq     = 1;
+                    local $Data::Dumper::Deparse   = 1;
+                    local $Data::Dumper::Quotekeys = 0;
+                    local $Data::Dumper::Sortkeys  = 1;
+                    $DEBUG->( Data::Dumper::Dumper( $request->env ) );
+                    $DEBUG->( Data::Dumper::Dumper( $response->finalize ) );
                 }
 
                 last;
             }
             elsif ( is_new_state( $result ) ) {
-                warn "-> transitioning to " . get_state_name( $result ) . "\n" if $DEBUG;
+                $DEBUG->( '-> transitioning to ' . get_state_name($result) )
+                    if $DEBUG;
                 $state = $result;
             }
         }
@@ -95,7 +112,7 @@ sub run {
         # TODO:
         # We should be I18N the errors
         # - SL
-        warn $_ if $DEBUG;
+        $DEBUG->($_) if $DEBUG;
 
         if ( $request->logger ) {
             $request->logger->( { level => 'error', message => $_ } );
@@ -117,7 +134,7 @@ sub run {
         $resource->finish_request( $metadata );
     }
     catch {
-        warn $_ if $DEBUG;
+        $DEBUG->($_) if $DEBUG;
 
         if ( $request->logger ) {
             $request->logger->( { level => 'error', message => $_ } );
@@ -211,9 +228,3 @@ the state machine.
 =item L<Web Machine state diagram|https://github.com/Webmachine/webmachine/wiki/Diagram>
 
 =back
-
-
-
-
-
-

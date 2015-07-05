@@ -9,6 +9,8 @@
   Cutler.
 * Removed the CAVEAT section of the docs warning people not to use this
   module. RT #97534. Implemented by Nathan Cutler.
+* Setting the WM_DEBUG environtment variable to "diag" now sends debugging
+  output to Test::More::diag() instead of printing directly to STDERR.
 
 [BUG FIXES]
 
