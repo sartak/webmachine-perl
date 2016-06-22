@@ -11,6 +11,7 @@ BEGIN {
 }
 
 is_deeply( [ bind_path( '/test/:foo/:bar', '/test/1/2' ) ], [ 1, 2 ], '... got the right bindings' );
+is_deeply( [ bind_path( '/test/:foo/:bar', '/test/1/0' ) ], [ 1, 0 ], '... got the right bindings (with false part segement)' );
 is( bind_path( '/test/:foo/:bar', '/test/1/2/3' ), undef, '... binding failed, nothing returned' );
 
 is_deeply( [ bind_path( '/test/*', '/test/1/2' ) ], [ 1, 2 ], '... got the right bindings' );
