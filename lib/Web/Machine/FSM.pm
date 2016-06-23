@@ -4,7 +4,7 @@ package Web::Machine::FSM;
 use strict;
 use warnings;
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 use IO::Handle::Util 'io_from_getline';
 use Plack::Util;
