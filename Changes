@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.17     2016-06-23
+
 * Fixed bind_path() from Web::Machine::Util to handle path parts which
   evaluated to false, like "/user/0". Patch by Stevan Little. GH #34.
 

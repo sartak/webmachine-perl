@@ -142,24 +142,25 @@ bugs may be submitted through [https://github.com/houseabsolute/webmachine-perl/
 
 # AUTHORS
 
-- Stevan Little <stevan@cpan.org>
-- Dave Rolsky <autarch@urth.org>
+- Stevan Little &lt;stevan@cpan.org>
+- Dave Rolsky &lt;autarch@urth.org>
 
 # CONTRIBUTORS
 
-- Andreas Marienborg <andreas.marienborg@gmail.com>
-- Andrew Nelson <anelson@cpan.org>
-- Arthur Axel 'fREW' Schmidt <frioux@gmail.com>
-- Carlos Fernando Avila Gratz <cafe@q1software.com>
-- Fayland Lam <fayland@gmail.com>
-- George Hartzell <hartzell@alerce.com>
-- Gregory Oschwald <goschwald@maxmind.com>
-- Jesse Luehrs <doy@tozt.net>
-- John SJ Anderson <genehack@genehack.org>
-- Mike Raynham <enquiries@mikeraynham.co.uk>
-- Nathan Cutler <ncutler@suse.cz>
-- Olaf Alders <olaf@wundersolutions.com>
-- Thomas Sibley <tsibley@cpan.org>
+- Andreas Marienborg &lt;andreas.marienborg@gmail.com>
+- Andrew Nelson &lt;anelson@cpan.org>
+- Arthur Axel 'fREW' Schmidt &lt;frioux@gmail.com>
+- Carlos Fernando Avila Gratz &lt;cafe@q1software.com>
+- Fayland Lam &lt;fayland@gmail.com>
+- George Hartzell &lt;hartzell@alerce.com>
+- Gregory Oschwald &lt;goschwald@maxmind.com>
+- Jesse Luehrs &lt;doy@tozt.net>
+- John SJ Anderson &lt;genehack@genehack.org>
+- Mike Raynham &lt;enquiries@mikeraynham.co.uk>
+- Nathan Cutler &lt;ncutler@suse.cz>
+- Olaf Alders &lt;olaf@wundersolutions.com>
+- Stevan Little &lt;stevan.little@gmail.com>
+- Thomas Sibley &lt;tsibley@cpan.org>
 
 # COPYRIGHT AND LICENCE
 
