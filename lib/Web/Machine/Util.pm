@@ -37,8 +37,8 @@ sub pair_value { ( values %{ $_[0] } )[0] }
 
 sub bind_path {
     my ($spec, $path) = @_;
-    my @parts = grep defined $_, split /\// => $path;
-    my @spec  = grep defined $_, split /\// => $spec;
+    my @parts = grep defined $_ && $_ ne '', split /\// => $path;
+    my @spec  = grep defined $_ && $_ ne '', split /\// => $spec;
 
     my @results;
     foreach my $i ( 0 .. $#spec ) {
