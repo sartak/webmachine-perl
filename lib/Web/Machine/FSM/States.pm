@@ -67,6 +67,7 @@ sub _ensure_quoted_header {
 
 sub _get_acceptable_content_type_handler {
     my ($resource, $request) = @_;
+    my $metadata = _metadata($request);
     my $acceptable = match_acceptable_media_type(
         ($request->header('Content-Type') || 'application/octet-stream'),
         $resource->content_types_accepted
@@ -665,20 +666,27 @@ sub o16 {
     $request->method eq 'PUT' ? \&o14 : \&o18;
 }
 
+sub _get_acceptable_accept_handler {
+    my ( $resource, $request ) = @_;
+
+    my $metadata = _metadata($request);
+    my $content_type = $metadata->{'Content-Type'};
+    my $match        = first {
+        my $ct = create_header( MediaType => pair_key( $_ ) );
+        $content_type->match( $ct )
+    } @{ $resource->content_types_provided };
+
+    return \406 unless $match;
+    return pair_value( $match );
+}
+
 $STATE_DESC{'o18'} = 'multiple_representations';
 sub o18 {
     my ($resource, $request, $response) = @_;
-    my $metadata = _metadata($request);
     if ( $request->method eq 'GET' || $request->method eq 'HEAD' ) {
         _add_caching_headers( $resource, $response );
 
-        my $content_type = $metadata->{'Content-Type'};
-        my $match        = first {
-            my $ct = create_header( MediaType => pair_key( $_ ) );
-            $content_type->match( $ct )
-        } @{ $resource->content_types_provided };
-
-        my $handler = pair_value( $match );
+        my $handler = _get_acceptable_accept_handler( $resource, $request );
         my $result  = $resource->$handler();
 
         return $result if is_status_code( $result );
