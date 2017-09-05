@@ -7,7 +7,7 @@ use lib 't/010-resources/';
 
 use Test::More;
 use Test::Fatal;
-use Test::FailWarnings;
+use Test::FailWarnings -allow_from => [ qw/Cookie::Baker/ ];
 
 use Plack::Request;
 use Plack::Response;
